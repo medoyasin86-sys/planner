@@ -58,7 +58,14 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 }
 .h-title{ margin:0; font-size:18px; font-family:'Reem Kufi'; color:var(--gold-light); letter-spacing:.2px }
 
-/* بطاقات فخمة (أكثر فخامة) */
+/* شارة اليوم الحالي */
+.today-badge{
+  display:inline-block; margin-inline-start:8px;
+  background:linear-gradient(180deg,#ffe9b9,#e7cb83); color:#1a1a1a;
+  border:1px solid var(--gold); border-radius:999px; padding:3px 10px; font-weight:800; box-shadow:var(--shadow); font-size:12px
+}
+
+/* بطاقات فخمة */
 .card{
   border: 1.3px solid var(--gold); border-radius: 14px; padding: 8px; background:
     linear-gradient(180deg,#ffffff 0%, #fffdf6 100%);
@@ -80,10 +87,10 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 }
 
 /* تخطيطات مضغوطة */
-.grid-3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px }  /* ثلاثة أعمدة لبطاقات أصغر */
+.grid-3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px }
 .grid-2{ display:grid; grid-template-columns:repeat(2, 1fr); gap:8px }
 
-/* جدول الإمساكية المصغّر (أسفل الصفحة) */
+/* شريط الإمساكية المصغّر (أسفل الصفحة) */
 .imsak-mini{
   display:grid; grid-template-columns:repeat(8, auto) 1fr; gap:6px; align-items:center;
   background:linear-gradient(180deg,#ffffff,#fff8e6);
@@ -106,7 +113,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 /* مربعات التأشير */
 .checkbox{ display:inline-block; width:15px; height:15px; border:1.7px solid var(--gold); border-radius:4px; margin-inline-start:6px; box-shadow:var(--inner) }
 
-/* السنن (قبلية/بعدية + عدد الركعات) */
+/* السنن */
 .sunnah-row{ display:flex; gap:8px; align-items:center; justify-content:space-between; padding:4px 0; border-bottom:1px dashed var(--border) }
 .sunnah-label{ font-size:13.2px }
 .rb{ display:flex; gap:5px; align-items:center }
@@ -116,7 +123,14 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 
 /* شريط الورد القرآني (30 مربعًا) */
 .qstrip{ display:grid; grid-template-columns:repeat(30, 1fr); gap:3px; margin-top:4px }
-.qcell{ border:1.3px dashed var(--gold); height:16px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:#8c7a46; font-weight:700; font-size:10.5px; background:#fff }
+.qcell{ border:1.3px dashed var(--gold); height:16px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:#8c7a46; font-weight:700; font-size:10.5px; background:#fff; position:relative }
+.qcell.current{
+  background: linear-gradient(180deg,#1a4d2e,#0f2f1b); color:#fff; border-color:var(--gold);
+}
+.qcell.current::after{
+  content:'اليوم'; position:absolute; bottom:-18px; background:linear-gradient(180deg,#ffe9b9,#e7cb83);
+  color:#1a1a1a; border:1px solid var(--gold); border-radius:6px; padding:1px 6px; font-size:9.5px; font-weight:800;
+}
 
 /* صناديق نص */
 .input-line{border:1px solid var(--border); border-radius:8px; padding:6px; color:#555; font-size:13px; background:#fff}
@@ -169,6 +183,21 @@ function sectionLuxe(title, content){
   return box;
 }
 
+/* ================ حساب "اليوم الحالي" بتوقيت مسقط ================= */
+function nowInMuscat(){
+  // نضمن الحساب بحسب Asia/Muscat حتى لو كان المتصفح في منطقة أخرى
+  return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Muscat' }));
+}
+function dateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function getCurrentDayIndex(){
+  const today = dateOnly(nowInMuscat());
+  const start = dateOnly(START);
+  const diff = Math.floor((today - start) / 86400000); // فرق أيام
+  if(diff >= 0 && diff < DAYS) return diff + 1; // 1..30
+  return null;
+}
+const TODAY_IDX = getCurrentDayIndex();
+
 /* ================ تحويل الوقت إلى ١٢ ساعة (أرقام عربية + ص/م) ================== */
 const AR_DIG = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
 function toArabicDigits(s){ return s.replace(/\d/g, d => AR_DIG[d]); }
@@ -194,7 +223,14 @@ function buildDailyPage(dayIndex, dateObj){
   const weekdayAr = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][dateObj.getDay()];
   const isFriday  = (weekdayAr==='الجمعة');
   const dateStr = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
-  page.appendChild(headerBand(`اليوم ${String(dayIndex).padStart(2,'0')} – ${weekdayAr} – ${dateStr}`));
+
+  const header = headerBand(`اليوم ${String(dayIndex).padStart(2,'0')} – ${weekdayAr} – ${dateStr}`);
+  // شارة اليوم الحالي بجوار العنوان
+  if(TODAY_IDX && TODAY_IDX === dayIndex){
+    const badge = el('span',{class:'today-badge'}, 'اليوم الحالي');
+    header.querySelector('.h-title').appendChild(badge);
+  }
+  page.appendChild(header);
 
   /* 1) البطاقات تحت اليوم مباشرة */
   const cards3 = el('div',{class:'grid-3'});
@@ -256,7 +292,12 @@ function buildDailyPage(dayIndex, dateObj){
 
   /* 2) شريط الورد (30 مربعًا) */
   const qstrip = el('div',{class:'qstrip'});
-  for(let i=1;i<=30;i++) qstrip.appendChild(el('div',{class:'qcell'}, i));
+  for(let i=1;i<=30;i++){
+    const cell = el('div',{class:'qcell'}, i);
+    // وسم اليوم الحالي داخل الشريط
+    if(TODAY_IDX && TODAY_IDX === i){ cell.classList.add('current'); }
+    qstrip.appendChild(cell);
+  }
   page.appendChild(sectionLuxe('📖 شريط الورد القرآني (الشهر كاملًا – ضع ✓ في GoodNotes)', qstrip));
 
   /* 3) أدعية ونقاط اليوم */
@@ -284,7 +325,7 @@ function buildImsakMini(dayIndex, isFriday){
     const span = el('div',{class:'v', id:`v-${dayIndex}-${k}`}, '—');
     dataSlots[k]=span; ims.appendChild(span);
   });
-  ims.appendChild(el('div',{})); // عمود مرن للمحاذاة
+  ims.appendChild(el('div',{})); // عمود مرن
   return { imsEl: ims, dataSlots };
 }
 
