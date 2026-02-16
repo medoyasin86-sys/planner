@@ -1,341 +1,365 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>تقويم السحور والإفطار – صلالة 1447هـ (2026)</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>دفتر عبادات رمضان 1447هـ (2026)</title>
 
-  <!-- خطوط عربية -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- خط عربي جميل -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg:#fcfcfe; --card:#ffffff; --ink:#263238; --muted:#607d8b;
-      --accent:#7c8cff; --accent-2:#b7e0ff; --accent-3:#ffe0f0;
-      --ring:#e4e8ff; --today:#fff8e1; --border:#e7ecf3;
-      --shadow:0 6px 18px rgba(124,140,255,.18);
-    }
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
-    body{
-      margin:0; background:linear-gradient(180deg,var(--bg),#f6f8ff 60%,#fefcff);
-      color:var(--ink); font:16px/1.7 "Cairo", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
-      padding:24px;
-    }
-    .wrap{ max-width:1100px; margin:0 auto; }
-    header{
-      background:linear-gradient(140deg,var(--accent-2),var(--accent-3));
-      border:1px solid var(--ring); border-radius:16px; padding:20px 18px; margin-bottom:18px;
-      display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between;
-    }
-    header h1{ margin:0; font-size:clamp(18px,3vw,22px); font-weight:700; }
-    header .sub{ color:var(--muted); font-size:14px }
-    .note{ color:var(--muted); font-size:13px; margin-top:6px }
-    .bar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
-    .pill{ background:var(--card); border:1px solid var(--ring); border-radius:30px; padding:8px 12px; font-size:13px }
-    button{
-      background:var(--accent); color:#fff; border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:600;
-      box-shadow:var(--shadow);
-    }
-    button:hover{ filter:brightness(1.05) }
-    .table{
-      background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:auto;
-    }
-    table{ border-collapse:collapse; width:100%; min-width:680px }
-    thead th{
-      position:sticky; top:0; background:#f7f9ff; color:#334155; text-align:center; font-weight:700; font-size:14px; border-bottom:1px solid var(--border);
-      padding:12px 8px;
-    }
-    tbody td{ padding:10px 8px; text-align:center; border-bottom:1px solid var(--border); }
-    tbody tr:nth-child(even){ background:#fafbff }
-    tbody tr.today{ background:var(--today); outline:2px solid #ffe082 }
+<!-- jsPDF + html2canvas للتصدير إلى PDF -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-    /* بطاقات الأدعية */
-    .section-title{ margin:18px 4px 10px; font-weight:700; font-size:18px }
-    .duas{
-      display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
-      gap:14px; margin-top:10px;
-    }
-    .dua-card{
-      background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:var(--shadow);
-    }
-    .dua-title{ font-weight:700; margin:0 0 6px 0; }
-    .dua-text{ font-size:17px; line-height:1.9; margin:8px 0; }
-    .dua-tn{ color:var(--muted); font-size:13px; }
-    .dua-actions{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
-    .ghost{ background:#eef2ff; color:#283593; border:1px solid #dfe4ff; box-shadow:none; }
+<style>
+:root{
+  --bg:#fcfcfe; --card:#ffffff; --ink:#263238; --muted:#6b7b8c;
+  --accent:#7c8cff; --accent-2:#b7e0ff; --accent-3:#ffe0f0; --ring:#e4e8ff;
+  --gold:#c5a059; --today:#fff8e1; --border:#e7ecf3;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:linear-gradient(180deg,var(--bg),#f6f8ff 60%,#fefcff);
+  color:var(--ink); font:16px/1.7 "Cairo", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
+}
+.wrap{ max-width:1100px; margin:0 auto; padding:22px; }
 
-    .legend{ font-size:12px; color:var(--muted); margin:10px 2px }
-    footer{ margin:16px 2px; color:var(--muted); font-size:12.5px }
-    a{ color:#3949ab; text-decoration:none }
-    .small{ font-size:12px }
+header{
+  background:linear-gradient(140deg,var(--accent-2),var(--accent-3));
+  border:1px solid var(--ring); border-radius:16px; padding:16px; margin-bottom:16px;
+}
+h1{ margin:0 0 6px 0; font-size:22px }
+.sub{ color:var(--muted); font-size:13px }
+.toolbar{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
+button{
+  background:var(--accent); color:#fff; border:0; border-radius:10px; padding:10px 12px; cursor:pointer; font-weight:600;
+  box-shadow:0 6px 18px rgba(124,140,255,.22);
+}
+button.secondary{ background:#eef2ff; color:#283593; border:1px solid #dfe4ff; box-shadow:none }
+button.danger{ background:#ff6b6b }
+button:disabled{ opacity:.6; cursor:not-allowed }
 
-    /* الطباعة إلى PDF */
-    @media print{
-      header .bar .pill,
-      #downloadCsv,#exportPdf,#printPdf{ display:none !important; }
-      body{ padding:0; background:#fff; }
-      .table{ border:none; box-shadow:none; }
-      thead th{ position:static; }
-      .dua-card{ break-inside:avoid; }
-    }
-    .table.exporting table{ min-width:unset; width:100%; }
+.panel{
+  background:var(--card); border:1px solid var(--border); border-radius:16px; padding:12px; margin-bottom:14px;
+}
+.panel h2{ margin:0 0 10px 0; font-size:18px }
+.grid30{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px }
+.daybox{
+  border:1.5px dashed var(--ring); border-radius:10px; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+  font-weight:700; color:#607d8b; cursor:pointer; background:#fff;
+}
+.daybox.done{ background:#e9f7ef; color:#2e7d32; border-color:#b5e0c2 }
+.note{ color:var(--muted); font-size:12px }
 
-    /* الوضع الداكن */
-    @media (prefers-color-scheme: dark){
-      :root{
-        --bg:#0f1217; --card:#171a22; --ink:#e8eef7; --muted:#95a3b6; --accent:#8894ff; --accent-2:#213b5a; --accent-3:#3a2b3e;
-        --ring:#2b3142; --today:#1e2430; --border:#232a36;
-      }
-      header{ border-color:var(--border) }
-      button{ box-shadow:none }
-      thead th{ background:#1a1f2b; color:#cfe0ff }
-      .ghost{ background:#233156; color:#e5e9ff; border-color:#2c3c66; }
-    }
-  </style>
+details.day{ background:#fff; border:1px solid var(--border); border-radius:12px; padding:8px 10px; }
+details.day + details.day{ margin-top:10px }
+summary{ cursor:pointer; font-weight:700; color:#334155; display:flex; align-items:center; gap:8px }
+summary .badge{ background:#eef2ff; border:1px solid #dfe4ff; padding:2px 8px; border-radius:999px; color:#283593; font-size:12px; font-weight:700 }
+summary small{ color:var(--muted); font-weight:400 }
+.daybody{ padding:10px 4px 2px }
+
+.section{ border:1px dashed var(--border); border-radius:10px; padding:10px; margin:10px 0 }
+.section h3{ margin:0 0 8px 0; font-size:16px }
+
+.table{ width:100%; border-collapse:collapse; }
+.table th,.table td{ padding:6px 4px; border-bottom:1px solid var(--border); font-size:14px }
+.table th{ text-align:center; color:#334155; background:#f7f9ff; border-top:1px solid var(--border) }
+.table td:first-child{ font-weight:700; color:#1f2937 }
+
+.opts{ display:flex; gap:4px; flex-wrap:wrap }
+.opt{ background:#eef2ff; color:#1e3a8a; border:1px solid #dfe4ff; border-radius:7px; padding:6px 8px; cursor:pointer; font-size:13px }
+.opt.selected{ background:var(--gold); color:#fff; border-color:#caa968 }
+
+.checkrow{ display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--border) }
+.checkrow:last-child{ border-bottom:0 }
+.checkrow label{ font-size:14px; }
+.checkrow input[type="checkbox"]{ transform:scale(1.3); cursor:pointer }
+
+.notes{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
+.notes textarea,.notes input[type="text"]{
+  width:100%; border:1px solid var(--border); border-radius:10px; padding:8px; font-family:inherit; font-size:14px; background:#fff;
+}
+
+.footer{ margin-top:14px; display:flex; gap:8px; flex-wrap:wrap }
+.small{ font-size:12px; color:var(--muted) }
+
+/* طباعة/PDF */
+@media print{
+  .toolbar{ display:none !important }
+  body{ background:#fff }
+  header{ border:none }
+  summary{ list-style:none }
+}
+.dark body, .dark .wrap{ background:#121212; color:#e8eef7 }
+.dark header{ background:linear-gradient(140deg,#213b5a,#3a2b3e); border-color:#232a36 }
+.dark .panel, .dark details.day{ background:#171a22; border-color:#232a36 }
+.dark .table th{ background:#1a1f2b; color:#dbeafe }
+.dark .daybox{ background:#111827; border-color:#2b3142; color:#9aa7b6 }
+.dark .daybox.done{ background:#0f2d22; border-color:#164b36; color:#9fe2bf }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>تقويم السحور والإفطار – صلالة 1447هـ (فبراير–مارس 2026)</h1>
-        <div class="sub">التوقيت المحلي (GMT+4). تُبرز خانة <b>اليوم</b> تلقائيًا.</div>
-        <div class="note">قد يختلف بدء الشهر يومًا واحدًا وفقًا لرؤية الهلال وإعلان الجهات الرسمية.</div>
-      </div>
-      <div class="bar">
-        <span class="pill">حساب: حنفي | مصدر الأوقات: HamariWeb</span>
-        <button id="downloadCsv">تنزيل CSV</button>
-        <button id="printPdf">طباعة/حفظ PDF</button>
-        <button id="exportPdf">تصدير PDF</button>
-      </div>
-    </header>
-
-    <div class="table">
-      <table id="cal">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>اليوم/التاريخ الميلادي</th>
-            <th>التاريخ الهجري (تقريبي)</th>
-            <th>السحور (نهاية السحور/فجر)</th>
-            <th>الإفطار (المغرب)</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+<div class="wrap" id="wrap">
+  <header>
+    <h1>دفتر عبادات رمضان 1447هـ (2026)</h1>
+    <div class="sub">يبدأ هذا الدفتر من <b>الخميس 19-02-2026</b> ويولّد 30 يومًا تلقائيًا. تتبدّل صلاة الظهر إلى <b>الجمعة</b> كل يوم جمعة، وتُضاف <b>سورة الكهف</b> لذلك اليوم. وتظهر يوميًا: <b>سورة الملك</b> وخواتيم <b>سورة البقرة (285–286)</b>.</div>
+    <div class="toolbar">
+      <button id="btnPdf">تصدير PDF</button>
+      <button id="btnPrint">طباعة</button>
+      <button class="secondary" id="btnTheme">تبديل الوضع الليلي</button>
+      <button class="secondary" id="btnReset">إعادة تعيين</button>
     </div>
+  </header>
 
-    <!-- أدعية السحور والإفطار (الموجودة سابقًا) -->
-    <h2 class="section-title">أدعية السحور والإفطار</h2>
-    <section class="duas" aria-label="أدعية السحور والإفطار">
-      <article class="dua-card">
-        <h3 class="dua-title">دعاء السحور (نية الصوم)</h3>
-        <p class="dua-text" id="suhoor">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p>
-        <p class="dua-tn">يُستحب عقد النيّة بالقلب قبل الفجر، ويجوز التلفّظ بها بهذا النص عند كثير من أهل العلم.</p>
-        <div class="dua-actions">
-          <button class="ghost" data-copy="#suhoor">نسخ الدعاء</button>
-        </div>
-      </article>
-
-      <article class="dua-card">
-        <h3 class="dua-title">دعاء الإفطار (عند الفطر)</h3>
-        <p class="dua-text" id="iftar1">اللّهُمَّ لَكَ صُمْتُ، وَبِكَ آمَنْتُ، وَعَلَيْكَ تَوَكَّلتُ، وَعَلَى رِزْقِكَ أَفْطَرْتُ</p>
-        <p class="dua-tn">صيغة مشهورة متداولة، وبعض أهل العلم يُضعِّف إسنادها، ويجوز الدعاء بها من غير اعتقاد لزومها.</p>
-        <p class="dua-text" id="iftar2">ذَهَبَ الظَّمَأُ، وَابْتَلَّتِ العُرُوقُ، وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ</p>
-        <div class="dua-actions">
-          <button class="ghost" data-copy="#iftar1">نسخ الدعاء (١)</button>
-          <button class="ghost" data-copy="#iftar2">نسخ الدعاء (٢)</button>
-        </div>
-      </article>
-    </section>
-
-    <!-- أذكار بعد الإفطار (بعد الانتهاء من الأكل) -->
-    <h2 class="section-title">أذكار بعد الإفطار</h2>
-    <section class="duas" aria-label="أذكار بعد الإفطار">
-      <article class="dua-card">
-        <h3 class="dua-title">ذكر الشكر بعد الطعام</h3>
-        <p class="dua-text" id="afterEat1">الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ</p>
-        <p class="dua-tn">مروي عن النبي ﷺ بعد الفراغ من الطعام.</p>
-        <div class="dua-actions">
-          <button class="ghost" data-copy="#afterEat1">نسخ الذكر</button>
-        </div>
-      </article>
-
-      <article class="dua-card">
-        <h3 class="dua-title">حمدٌ جامع بعد الطعام</h3>
-        <p class="dua-text" id="afterEat2">الْحَمْدُ لِلَّهِ حَمْدًا كَثِيرًا طَيِّبًا مُبَارَكًا فِيهِ، غَيْرَ مَكْفِيٍّ وَلَا مُوَدَّعٍ وَلَا مُسْتَغْنًى عَنْهُ، رَبَّنَا</p>
-        <p class="dua-tn">كان النبي ﷺ يقوله إذا رُفعت مائدته.</p>
-        <div class="dua-actions">
-          <button class="ghost" data-copy="#afterEat2">نسخ الذكر</button>
-        </div>
-      </article>
-    </section>
-
-    <!-- دعاء ليلة القدر -->
-    <h2 class="section-title">دعاء ليلة القدر</h2>
-    <section class="duas" aria-label="دعاء ليلة القدر">
-      <article class="dua-card">
-        <h3 class="dua-title">اللَّهُمَّ إِنَّكَ عَفُوٌّ...</h3>
-        <p class="dua-text" id="qadr">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>
-        <p class="dua-tn">أَوْصَى به النبي ﷺ عائشة رضي الله عنها إذا وافقت ليلة القدر.</p>
-        <div class="dua-actions">
-          <button class="ghost" data-copy="#qadr">نسخ الدعاء</button>
-        </div>
-      </article>
-    </section>
-
-    <!-- دعاء ختم القرآن -->
-    <h2 class="section-title">دعاء ختم القرآن</h2>
-    <section class="duas" aria-label="دعاء ختم القرآن">
-      <article class="dua-card">
-        <h3 class="dua-title">دعاء جامع عند إتمام الختم</h3>
-        <p class="dua-text" id="khatm">
-          اللَّهُمَّ ارْحَمْنِي بِالْقُرْآنِ، وَاجْعَلْهُ لِي إِمَامًا وَنُورًا وَهُدًى وَرَحْمَةً،
-          اللَّهُمَّ ذَكِّرْنِي مِنْهُ مَا نُسِّيتُ، وَعَلِّمْنِي مِنْهُ مَا جَهِلْتُ،
-          وَارْزُقْنِي تِلَاوَتَهُ آنَاءَ اللَّيْلِ وَأَطْرَافَ النَّهَارِ،
-          وَاجْعَلْهُ لِي حُجَّةً يَا رَبَّ الْعَالَمِينَ.
-        </p>
-        <p class="dua-tn">لا يوجد نص مُلزِم مخصوص في الختم؛ وهذا دعاءٌ مأثورٌ جامع، ويجوز الدعاء بما فتح الله.</p>
-        <div class="dua-actions">
-          <button class="ghost" data-copy="#khatm">نسخ الدعاء</button>
-        </div>
-      </article>
-    </section>
-
-    <div class="legend">
-      ⚠️ فضلاً استند إلى إعلان وزارة الأوقاف في عُمان في تحديد بداية الشهر أو طبّق دقيقة حذرية (−1 للسحور، +1 للإفطار) إن لزم.
-    </div>
-
-    <footer class="small">
-      <div>
-        مصدر الجداول: <a href="https://hamariweb.com/islam/salalah_ramadan-timing136315.aspx" target="_blank" rel="noopener">HamariWeb – Salalah 2026</a>. 
-        للمقارنة: <a href="https://www.islamicfinder.org/ramadan-calendar/286621/salalah-ramadan-calendar/" target="_blank" rel="noopener">IslamicFinder</a>، 
-        <a href="https://gotopray.com/en/ramadan/oman/salalah/" target="_blank" rel="noopener">GotoPray</a>.
-      </div>
-    </footer>
+  <div class="panel">
+    <h2>متابعة الورد القرآني – ٣٠ يوم</h2>
+    <div class="grid30" id="qgrid"></div>
+    <div class="note">اضغط على كل مربع لإشارة ✓ لليوم المقابل.</div>
   </div>
 
-  <!-- مكتبات التوليد للـ PDF (مطلوبة لزر "تصدير PDF") -->
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <div id="days"></div>
 
-  <script>
-    /* بيانات صلالة (حساب حنفي) لرمضان 1447هـ/2026 – بدء 19 فبراير
-       المرجع: HamariWeb */
-    const data = [
-      {d:1,  g:'2026-02-19', h:'1 رمضان 1447',  sehri:'05:32', iftar:'18:28'},
-      {d:2,  g:'2026-02-20', h:'2 رمضان 1447',  sehri:'05:32', iftar:'18:29'},
-      {d:3,  g:'2026-02-21', h:'3 رمضان 1447',  sehri:'05:31', iftar:'18:29'},
-      {d:4,  g:'2026-02-22', h:'4 رمضان 1447',  sehri:'05:31', iftar:'18:29'},
-      {d:5,  g:'2026-02-23', h:'5 رمضان 1447',  sehri:'05:30', iftar:'18:30'},
-      {d:6,  g:'2026-02-24', h:'6 رمضان 1447',  sehri:'05:30', iftar:'18:30'},
-      {d:7,  g:'2026-02-25', h:'7 رمضان 1447',  sehri:'05:29', iftar:'18:30'},
-      {d:8,  g:'2026-02-26', h:'8 رمضان 1447',  sehri:'05:29', iftar:'18:30'},
-      {d:9,  g:'2026-02-27', h:'9 رمضان 1447',  sehri:'05:28', iftar:'18:31'},
-      {d:10, g:'2026-02-28', h:'10 رمضان 1447', sehri:'05:27', iftar:'18:31'},
-      {d:11, g:'2026-03-01', h:'11 رمضان 1447', sehri:'05:27', iftar:'18:31'},
-      {d:12, g:'2026-03-02', h:'12 رمضان 1447', sehri:'05:26', iftar:'18:32'},
-      {d:13, g:'2026-03-03', h:'13 رمضان 1447', sehri:'05:25', iftar:'18:32'},
-      {d:14, g:'2026-03-04', h:'14 رمضان 1447', sehri:'05:25', iftar:'18:32'},
-      {d:15, g:'2026-03-05', h:'15 رمضان 1447', sehri:'05:24', iftar:'18:32'},
-      {d:16, g:'2026-03-06', h:'16 رمضان 1447', sehri:'05:24', iftar:'18:33'},
-      {d:17, g:'2026-03-07', h:'17 رمضان 1447', sehri:'05:23', iftar:'18:33'},
-      {d:18, g:'2026-03-08', h:'18 رمضان 1447', sehri:'05:22', iftar:'18:33'},
-      {d:19, g:'2026-03-09', h:'19 رمضان 1447', sehri:'05:21', iftar:'18:33'},
-      {d:20, g:'2026-03-10', h:'20 رمضان 1447', sehri:'05:21', iftar:'18:34'},
-      {d:21, g:'2026-03-11', h:'21 رمضان 1447', sehri:'05:20', iftar:'18:34'},
-      {d:22, g:'2026-03-12', h:'22 رمضان 1447', sehri:'05:19', iftar:'18:34'},
-      {d:23, g:'2026-03-13', h:'23 رمضان 1447', sehri:'05:18', iftar:'18:34'},
-      {d:24, g:'2026-03-14', h:'24 رمضان 1447', sehri:'05:18', iftar:'18:34'},
-      {d:25, g:'2026-03-15', h:'25 رمضان 1447', sehri:'05:17', iftar:'18:35'},
-      {d:26, g:'2026-03-16', h:'26 رمضان 1447', sehri:'05:16', iftar:'18:35'},
-      {d:27, g:'2026-03-17', h:'27 رمضان 1447', sehri:'05:15', iftar:'18:35'},
-      {d:28, g:'2026-03-18', h:'28 رمضان 1447', sehri:'05:15', iftar:'18:35'},
-      {d:29, g:'2026-03-19', h:'29 رمضان 1447', sehri:'05:14', iftar:'18:35'},
-      {d:30, g:'2026-03-20', h:'30 رمضان 1447', sehri:'05:13', iftar:'18:36'}
-    ];
+  <div class="panel">
+    <h2>مراجع مختصرة</h2>
+    <ul class="small">
+      <li>الرواتب المؤكدة (٢ قبل الفجر://www.youtube.com/watch?v=nn1z1jnz8x8)[2](https://www.youtube.com/watch?v=KfxROrGNKhg)</li>
+      <li>سنن الجمعة بعد الصلاة: ورد أربع ركعات، وثبت أن النبي ﷺ صلّى ركعتين في بيته. [3](https://thepeninsulaqatar.com/article/15/02/2026/ramadan-2026-countries-officially-confirm-first-day-of-fasting)[4](https://www.muscatdaily.com/2026/02/11/ramadan-to-begin-in-oman-on-thursday-february-19/)</li>
+      <li>سورة الملك ليلاً: شفاعة/منجية وحثٌّ على المداومة. [5](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)[6](https://dev.to/mrdprasad/how-to-host-a-static-html-css-and-javascript-website-on-github-pages-a-step-by-step-guide-3o64)</li>
+      <li>خواتيم البقرة ليلًا: «كفتاه». (متفق عليه) [7](https://gulfnews.com/world/gulf/oman/first-day-of-ramadan-2026-announced-in-oman-1.500439770)[8](https://timesofindia.indiatimes.com/world/middle-east/oman-officially-confirms-ramadan-2026-to-begin-on-february-19/articleshow/128240721.cms)</li>
+      <li>سورة الكهف يوم الجمعة: «نورٌ بين الجمعتين». [9](https://aladhan.com/ramadan-prayer-times/2026/Muscat/Oman)[10](https://dokanway.com/news/the-beginning-of-ramadan-in-oman-2026/)</li>
+    </ul>
+  </div>
+</div>
 
-    const tbody = document.querySelector("#cal tbody");
+<script>
+// ======== إعدادات عامة ========
+const START = new Date('2026-02-19T00:00:00+04:00'); // خميس 19-02-2026
+const DAYS = 30;
+const STORAGE_KEY = 'ramadan1447_planner_v1';
 
-    function fmtDate(iso){
-      const d = new Date(iso+"T00:00:00+04:00"); // توقيت صلالة (GMT+4)
-      const days = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-      const day = days[d.getDay()];
-      const dd = String(d.getDate()).padStart(2,"0");
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const yyyy = d.getFullYear();
-      return `${day} ${dd}-${mm}-${yyyy}`;
-    }
+const state = loadState() || { qgrid:Array(DAYS).fill(false), days:{} };
 
-    function build(){
-      const today = new Date();
-      const now = new Date(today.toLocaleString('en-CA', { timeZone: 'Asia/Muscat' }));
-      const todayKey = now.toISOString().slice(0,10);
+// ======== بناء شبكة الورد الشهري ========
+const qgrid = document.getElementById('qgrid');
+for(let i=0;i<DAYS;i++){
+  const box = document.createElement('div');
+  box.className = 'daybox' + (state.qgrid[i] ? ' done':'');
+  box.textContent = String(i+1).padStart(2,'0');
+  box.title = 'ورد يوم ' + (i+1);
+  box.onclick = ()=>{ state.qgrid[i] = !state.qgrid[i]; box.classList.toggle('done'); saveState(); };
+  qgrid.appendChild(box);
+}
 
-      data.forEach(row=>{
-        const tr = document.createElement("tr");
-        if(row.g === todayKey){ tr.classList.add("today"); }
-        tr.innerHTML = `
-          <td>${row.d}</td>
-          <td>${fmtDate(row.g)}</td>
-          <td>${row.h}</td>
-          <td><b>${row.sehri}</b></td>
-          <td><b>${row.iftar}</b></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
+// ======== توليد الأيام ========
+const daysEl = document.getElementById('days');
+for(let i=0;i<DAYS;i++){
+  const d = new Date(START); d.setDate(START.getDate()+i);
+  const weekdayAr = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][d.getDay()];
+  const isFriday = d.getDay()===5;
+  const g = `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+  const dayKey = `day${String(i+1).padStart(2,'0')}`;
+  state.days[dayKey] = state.days[dayKey] || {};
 
-    function downloadCSV(){
-      const header = ["اليوم","التاريخ_الميلادي","التاريخ_الهجري","السحور","الإفطار"];
-      const rows = data.map(r=>[r.d, r.g, r.h, r.sehri, r.iftar]);
-      const csv = [header, ...rows].map(arr => arr.map(x => `"${x}"`).join(",")).join("\n");
-      const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = "Salalah_Ramadan_1447_2026.csv";
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
+  // بطاقة اليوم
+  const det = document.createElement('details'); det.className='day';
+  const sum = document.createElement('summary');
+  sum.innerHTML = `اليوم ${String(i+1).padStart(2,'0')} – <small>${weekdayAr} ${g}</small> ${isFriday?'<span class="badge">الجمعة</span>':''}`;
+  det.appendChild(sum);
 
-    document.getElementById("downloadCsv").addEventListener("click", downloadCSV);
+  const body = document.createElement('div'); body.className='daybody';
 
-    // أزرار نسخ الأدعية
-    document.querySelectorAll('[data-copy]').forEach(btn=>{
-      btn.addEventListener('click', async ()=>{
-        const sel = btn.getAttribute('data-copy');
-        const el = document.querySelector(sel);
-        try{
-          await navigator.clipboard.writeText(el.textContent.trim());
-          const original = btn.textContent;
-          btn.textContent = 'تم النسخ ✔';
-          setTimeout(()=> btn.textContent = original, 1400);
-        }catch(e){ alert('لم يتم النسخ تلقائيًا، يمكنك تحديد النص ونسخه يدويًا.'); }
-      });
+  // (1) الصلوات
+  const sec1 = section('🕋 الفرائض', buildFardTable(dayKey, isFriday));
+  body.appendChild(sec1);
+
+  // (2) السنن الرواتب
+  const sec2 = section('🌱 السنن الرواتب', buildRawatib(dayKey, isFriday));
+  body.appendChild(sec2);
+
+  // (3) الأذكار والورد
+  const sec3 = section('📿 الأذكار والورد', buildAdhkar(dayKey, isFriday));
+  body.appendChild(sec3);
+
+  // (4) ورد اليوم + ملاحظات
+  const sec4 = document.createElement('div'); sec4.className='section';
+  sec4.innerHTML = `<h3>📖 ورد اليوم + ملاحظات</h3>
+  <div class="notes">
+    <input type="text" placeholder="أجزاء/صفحات/دقائق ..." id="${dayKey}_wird">
+    <textarea rows="2" placeholder="ملاحظات..." id="${dayKey}_note"></textarea>
+  </div>
+  <div class="footer">
+    <button class="secondary" onclick="resetDay('${dayKey}')">إعادة تعيين هذا اليوم</button>
+    <span class="small">يُحفظ تلقائيًا على جهازك.</span>
+  </div>`;
+  body.appendChild(sec4);
+
+  det.appendChild(body);
+  daysEl.appendChild(det);
+
+  // تعبئة القيم المخزّنة
+  const dstate = state.days[dayKey];
+  // ورد/ملاحظات
+  setTimeout(()=>{
+    const w = document.getElementById(`${dayKey}_wird`);
+    const n = document.getElementById(`${dayKey}_note`);
+    if(dstate.wird) w.value = dstate.wird;
+    if(dstate.note) n.value = dstate.note;
+    w.oninput = ()=>{ dstate.wird = w.value; saveState(); };
+    n.oninput = ()=>{ dstate.note = n.value; saveState(); };
+  },0);
+}
+
+// ======== إنشاء الأقسام ========
+function section(title, contentEl){
+  const sec = document.createElement('div'); sec.className='section';
+  const h = document.createElement('h3'); h.textContent = title;
+  sec.appendChild(h);
+  sec.appendChild(contentEl);
+  return sec;
+}
+
+// ======== الفرائض: مسجد/جماعة/فرد/قضاء ========
+function buildFardTable(dayKey, isFriday){
+  const tbl = document.createElement('table'); tbl.className='table';
+  tbl.innerHTML = `<thead><tr><th>الصلاة</th><th colspan="4">طريقة الأداء</th></tr></thead>`;
+  const tb = document.createElement('tbody');
+  const prayers = [
+    {id:'fajr', n:'الفجر'},
+    {id:'dhuhr', n:isFriday?'الجمعة':'الظهر'},
+    {id:'asr', n:'العصر'},
+    {id:'maghrib', n:'المغرب'},
+    {id:'isha', n:'العشاء'},
+  ];
+  const opts = [
+    {k:'m',label:'مسجد'},{k:'g',label:'جماعة'},{k:'f',label:'فرد'},{k:'q',label:'قضاء'}
+  ];
+  const dstate = state.days[dayKey]; dstate.fard = dstate.fard || {};
+  prayers.forEach(p=>{
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td'); td1.textContent = p.n; tr.appendChild(td1);
+    const td2 = document.createElement('td'); td2.colSpan=4;
+    const box = document.createElement('div'); box.className='opts';
+    opts.forEach(o=>{
+      const b = document.createElement('button');
+      b.className='opt' + (dstate.fard[p.id]===o.k?' selected':'');
+      b.textContent = o.label;
+      b.onclick=()=>{
+        dstate.fard[p.id] = (dstate.fard[p.id]===o.k)? null : o.k;
+        // حدّث الإظهار
+        [...box.children].forEach(ch=>ch.classList.remove('selected'));
+        if(dstate.fard[p.id]) b.classList.add('selected');
+        saveState();
+      };
+      box.appendChild(b);
     });
+    td2.appendChild(box); tr.appendChild(td2); tb.appendChild(tr);
+  });
+  tbl.appendChild(tb);
+  return tbl;
+}
 
-    // طباعة/حفظ PDF
-    document.getElementById('printPdf').addEventListener('click', () => {
-      window.print();
-    });
+// ======== السنن الرواتب ========
+function buildRawatib(dayKey, isFriday){
+  const wrap = document.createElement('div');
+  const dstate = state.days[dayKey]; dstate.raw = dstate.raw || {};
+  const rows = isFriday ?
+   [
+     {id:'fajr_q', label:'الفجر: قبلية ٢', count:2},
+     {id:'jumuah_a', label:'الجمعة: بعدية ٢ أو ٤', count:4},
+     {id:'maghrib_a', label:'المغرب: بعدية ٢', count:2},
+     {id:'isha_a', label:'العشاء: بعدية ٢', count:2},
+     {id:'asr_q_opt', label:'(اختياري) قبلية العصر ٤ – غير مؤكدة', count:4}
+   ] :
+   [
+     {id:'fajr_q', label:'الفجر: قبلية ٢', count:2},
+     {id:'dhuhr_q', label:'الظهر: قبلية ٤', count:4},
+     {id:'dhuhr_a', label:'الظهر: بعدية ٢', count:2},
+     {id:'maghrib_a', label:'المغرب: بعدية ٢', count:2},
+     {id:'isha_a', label:'العشاء: بعدية ٢', count:2},
+     {id:'asr_q_opt', label:'(اختياري) قبلية العصر ٤ – غير مؤكدة', count:4}
+   ];
+  rows.forEach(r=>{
+    dstate.raw[r.id] = dstate.raw[r.id] || 0;
+    const line = document.createElement('div'); line.className='checkrow';
+    const lab = document.createElement('label'); lab.textContent = r.label;
+    const box = document.createElement('div'); box.className='opts';
+    // مربعات حسب عدد الركعات
+    for(let i=1;i<=r.count;i++){
+      const chk = document.createElement('input'); chk.type='checkbox'; chk.style.marginInlineStart='8px';
+      chk.checked = dstate.raw[r.id] >= i;
+      chk.onchange = ()=>{
+        // احسب عدد الـ checked في هذا السطر
+        const checks = [...line.querySelectorAll('input[type=checkbox]')];
+        dstate.raw[r.id] = checks.filter(c=>c.checked).length;
+        saveState();
+      };
+      box.appendChild(chk);
+    }
+    line.appendChild(lab); line.appendChild(box);
+    wrap.appendChild(line);
+  });
+  return wrap;
+}
 
-    // تصدير PDF (jsPDF.html)
-    document.getElementById('exportPdf').addEventListener('click', async () => {
-      const content = document.querySelector('.wrap'); // نصدّر الصفحة كاملة بما فيها الأدعية
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'mm', 'a4');
+// ======== الأذكار والورد ========
+function buildAdhkar(dayKey, isFriday){
+  const wrap = document.createElement('div');
+  const dstate = state.days[dayKey]; dstate.dh = dstate.dh || {};
+  const items = [
+    {id:'azkar_s', label:'أذكار الصباح'},
+    {id:'azkar_e', label:'أذكار المساء'},
+    {id:'azkar_n', label:'أذكار النوم'},
+    {id:'mulk',    label:'سورة الملك (ليلاً)'},
+    {id:'baq_end', label:'خواتيم سورة البقرة (285–286)'},
+  ];
+  if(isFriday) items.push({id:'kahf', label:'سورة الكهف (الجمعة)'});
 
-      await pdf.html(content, {
-        margin: [10,10,10,10],
-        autoPaging: 'slice',
-        html2canvas: { scale: 2, useCORS: true, windowWidth: content.scrollWidth },
-        callback: (doc) => doc.save('Salalah_Ramadan_1447_2026.pdf')
-      });
-    });
+  items.forEach(it=>{
+    const row = document.createElement('div'); row.className='checkrow';
+    const lab = document.createElement('label'); lab.innerHTML = it.label;
+    const chk = document.createElement('input'); chk.type='checkbox';
+    chk.checked = !!dstate.dh[it.id];
+    chk.onchange=()=>{ dstate.dh[it.id] = chk.checked; saveState(); };
+    row.appendChild(lab); row.appendChild(chk);
+    wrap.appendChild(row);
+  });
+  return wrap;
+}
 
-    build();
-  </script>
+// ======== أزرار شريط الأدوات ========
+document.getElementById('btnPrint').onclick = ()=> window.print();
+document.getElementById('btnTheme').onclick = ()=>{
+  document.documentElement.classList.toggle('dark');
+};
+document.getElementById('btnReset').onclick = ()=>{
+  if(confirm('سيتم مسح تقدمك بالكامل لهذا الدفتر. متابعة؟')){
+    localStorage.removeItem(STORAGE_KEY); location.reload();
+  }
+};
+document.getElementById('btnPdf').onclick = async ()=>{
+  const el = document.getElementById('wrap');
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p','mm','a4');
+  await pdf.html(el, {
+    margin:[10,10,10,10],
+    autoPaging:'slice',
+    html2canvas:{ scale: 2, useCORS:true, windowWidth: el.scrollWidth },
+    callback:(doc)=> doc.save('Ramadan_1447_2026_Planner.pdf')
+  });
+};
+
+// ======== حفظ/تحميل الحالة ========
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)); }catch(e){ return null; }
+}
+
+// افتح اليوم الأول افتراضيًا
+setTimeout(()=>{
+  const first = document.querySelector('details.day');
+  if(first) first.open = true;
+},50);
+</script>
 </body>
 </html>
