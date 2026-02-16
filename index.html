@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>دفتر رمضان 1447هـ (2026) – أوفلاين | بلانر Landscape بإمساكية مقشن</title>
 
-<!-- الخطوط (اختياري لتحسين العرض؛ إن لم تتصل لن يؤثر على الحساب) -->
-<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<!-- ✅ تحميل الخطوط بشكل صحيح -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap" rel="stylesheet">
 
-<!-- jsPDF + html2canvas (تعمل محليًا في المتصفح؛ لا تحتاج خادماً) -->
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<!-- ✅ تحميل المكتبات بشكل صحيح -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 
 <style>
 :root{
@@ -39,7 +39,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 .btn.ghost{background:#fff5d9}
 .note{color:#6b6b6b; font-size:.9rem}
 
-/* صفحات البلانر (A4 landscape تقريبًا عند 96dpi) */
+/* صفحات البلانر (A4 landscape تقريبًا) */
 #planner{ display:none }
 .page{
   width: 1123px; height: 794px;
@@ -125,8 +125,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 
 /* مؤشّر التقدّم */
 #progress{
-  position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; place-items:center; z-index:9999;
-  color:#1a1a1a;
+  position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; place-items:center; z-index:9999; color:#1a1a1a;
 }
 #progress .box{
   background:#fffdf6; border:2px solid var(--gold); border-radius:12px; padding:14px 16px; min-width:260px; box-shadow:var(--shadow);
@@ -134,7 +133,6 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 }
 #progress .bar{height:8px; background:#f0e4c0; border-radius:999px; overflow:hidden; margin-top:8px}
 #progress .bar > div{height:100%; width:0%; background:linear-gradient(90deg,#e7cb83,#c5a059); transition:width .2s ease}
-
 </style>
 </head>
 <body>
@@ -165,15 +163,14 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 
 <script>
 /* ================= إعدادات عامة ================= */
-const START = new Date('2026-02-19T00:00:00'); // بداية رمضان
+const START = new Date('2026-02-19T00:00:00');
 const DAYS  = 30;
 const A4W = 297, A4H = 210;
-/* إحداثيات ولاية مقشن – ظفار */
+/* ولاية مقشن – ظفار */
 const MUQSHIN = { lat: 19.56364, lon: 54.8916 };
-/* هامش السحور المقترح = الفجر − 10 دقائق */
 const SUHOOR_OFFSET_MIN = 10;
 
-/* ================ أدوات بناء عناصر ================ */
+/* ====== أدوات ====== */
 function el(tag, attrs={}, ...children){
   const E = document.createElement(tag);
   Object.entries(attrs).forEach(([k,v])=>{
@@ -184,25 +181,15 @@ function el(tag, attrs={}, ...children){
 }
 function headerBand(title){ return el('div',{class:'header-band'}, el('h3',{class:'h-title'}, title)); }
 function checkbox(){ return el('span',{class:'checkbox'}); }
-function sectionLuxe(title, content){
-  const box = el('div',{class:'card luxe'});
-  box.appendChild(el('h3',{class:'section-title'}, title));
-  box.appendChild(content);
-  return box;
-}
+function sectionLuxe(title, content){ const b=el('div',{class:'card luxe'}); b.appendChild(el('h3',{class:'section-title'}, title)); b.appendChild(content); return b; }
 
-/* ================ “اليوم الحالي” بتوقيت مسقط ================= */
+/* اليوم الحالي – مسقط */
 function nowInMuscat(){ return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Muscat' })); }
 function dateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-function getCurrentDayIndex(){
-  const today = dateOnly(nowInMuscat());
-  const start = dateOnly(START);
-  const diff = Math.floor((today - start) / 86400000);
-  return (diff>=0 && diff<DAYS) ? diff+1 : null;
-}
+function getCurrentDayIndex(){ const t=dateOnly(nowInMuscat()), s=dateOnly(START); const diff=Math.floor((t-s)/86400000); return (diff>=0 && diff<DAYS)? diff+1 : null; }
 const TODAY_IDX = getCurrentDayIndex();
 
-/* ================ تنسيق 12 ساعة بأرقام عربية ================= */
+/* 12h بأرقام عربية */
 const AR_DIG = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
 function toArabicDigits(s){ return s.replace(/\d/g, d => AR_DIG[d]); }
 function format12hArabic(hhmm){
@@ -214,298 +201,11 @@ function format12hArabic(hhmm){
 }
 function hmMinus(hhmm, minutes=10){
   const [h,m] = hhmm.split(':').map(Number);
-  const t = h*60 + m - minutes;
-  const hh = ((Math.floor((t+1440)%1440 / 60))+24)%24, mm = ((t%60)+60)%60;
+  const t = h*60 + m - minutes; const hh = ((Math.floor((t+1440)%1440 / 60))+24)%24, mm = ((t%60)+60)%60;
   return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
 }
 
-/* =======================================================================
-   خوارزمية مواقيت الصلاة (PrayTimes.js – مبسّطة ومدمجة محليًا | Method: Umm al‑Qura)
-   المصدر الأصلي PrayTimes (رخصة حرة) — تم تبسيطها للحد الأدنى المطلوب.
-   ======================================================================= */
-const PrayTimes = (function(){
-  // ثوابت فلكية
-  const D2R = Math.PI/180, R2D = 180/Math.PI;
-  function sin(d){ return Math.sin(D2R*d); }
-  function cos(d){ return Math.cos(D2R*d); }
-  function tan(d){ return Math.tan(D2R*d); }
-  function asin(x){ return R2D*Math.asin(x); }
-  function acos(x){ return R2D*Math.acos(x); }
-  function arctan2(y,x){ return R2D*Math.atan2(y,x); }
-
-  function julian(year, month, day){
-    if (month <= 2){ year -= 1; month += 12; }
-    const A = Math.floor(year/100);
-    const B = 2 - A + Math.floor(A/4);
-    return Math.floor(365.25*(year+4716)) + Math.floor(30.6001*(month+1)) + day + B - 1524.5;
-  }
-  function sunPosition(jd){
-    const D = jd - 2451545.0;
-    const g = fixAngle(357.529 + 0.98560028*D);
-    const q = fixAngle(280.459 + 0.98564736*D);
-    const L = fixAngle(q + 1.915*sin(g) + 0.020*sin(2*g));
-    const e = 23.439 - 0.00000036*D;
-    const RA = arctan2(cos(e)*sin(L), cos(L))/15;
-    const decl = asin(sin(e)*sin(L));
-    const EqT = q/15 - fixHour(RA);
-    return { decl, EqT };
-  }
-  function fixAngle(a){ a = a - 360 * Math.floor(a/360); return a<0?a+360:a; }
-  function fixHour(a){ a = a - 24 * Math.floor(a/24); return a<0?a+24:a; }
-  function timeDiff(time1, time2){ return fixHour(time2-time1); }
-
-  function computeTimes(date, coords, tz, method){
-    // method: 'UmmAlQura' ~ فجر 18°, عشاء ثابت 90 دقيقة بعد المغرب (تقريبًا) مع تعديلات
-    const jdate = julian(date.getFullYear(), date.getMonth()+1, date.getDate()) - coords.lon/360;
-    const pos = sunPosition(jdate);
-    const decl = pos.decl, eqt = pos.EqT;
-
-    function hourAngle(angle){
-      const lat = coords.lat;
-      const term = ( -sin(angle) - sin(lat)*sin(decl) ) / ( cos(lat)*cos(decl) );
-      if (term < -1 || term > 1) return null; // لا حل
-      return acos(term)/15;
-    }
-    // تحويل الدرجات للـ sin/cos مع lat/decl بالدرجات
-    function sin(x){ return Math.sin(x*D2R); }
-    function cos(x){ return Math.cos(x*D2R); }
-    function acos(x){ return Math.acos(x)*R2D; }
-
-    const noon = fixHour(12 - eqt + tz - coords.lon/15);
-    // شروق/غروب: زاوية الانكسار ~ 0.833°
-    const haSun = hourAngle(0.833);
-    const sunrise = noon - haSun;
-    const sunset  = noon + haSun;
-
-    // العصر (ظلّ كلّه – الشافعي/المالكي): زاوية تختلف؛ نحسب بالمعامل 1
-    function asrTime(shadowFactor){
-      const lat = coords.lat, d = decl;
-      const angle = -asin( sin(lat)*sin(d) + cos(lat)*cos(d)*cos(Math.atan(1+shadowFactor)) ); // تبسيط
-      // نستخدم تقريبًا: ساعة العصر من نصف النهار بزاوية ارتفاع الشمس
-      // لضبط سريع: احسب زاوية ساعة الشمس عند ارتفاع محدد:
-      const term = ( -sin(angle) - sin(lat)*sin(d) ) / ( cos(lat)*cos(d) );
-      const ha = Math.acos(Math.min(1,Math.max(-1,term))) * R2D / 15;
-      return noon + ha;
-    }
-    const asr = asrTime(1);
-
-    // فجر/عشاء لـ Umm al-Qura: فجر 18°، العشاء غالبًا 90 دقيقة بعد المغرب خارج رمضان
-    const fajrAng = 18;
-    const haFajr = hourAngle(fajrAng);
-    const fajr = (haFajr? noon - haFajr : sunrise - 1.5); //Fallback
-
-    // العشاء: 90 دقيقة بعد المغرب (تقليديًا). سنستخدم 90 دقيقة (1.5 ساعة).
-    const isha = sunset + 1.5;
-
-    return {
-      Fajr: fajr, Sunrise: sunrise, Dhuhr: noon, Asr: asr, Maghrib: sunset, Isha: isha
-    };
-  }
-
-  function floatToTime24(time){
-    if(time==null || isNaN(time)) return '--:--';
-    time = fixHour(time+0.5/60); // تقريب للدقيقة
-    const h = Math.floor(time), m = Math.floor((time-h)*60);
-    return `${('0'+h).slice(-2)}:${('0'+m).slice(-2)}`;
-  }
-
-  function fixHour(a){ a = a - 24 * Math.floor(a/24); return a<0?a+24:a; }
-
-  return {
-    getTimes: function(date, coords, tz){
-      // لا DST
-      const t = computeTimes(date, coords, tz, 'UmmAlQura');
-      // نعيد بصيغة HH:MM
-      const out = {};
-      Object.keys(t).forEach(k => out[k] = floatToTime24(t[k]));
-      return out;
-    }
-  };
-})();
-
-/* ================ صفحة اليوم ================ */
-function buildDailyPage(dayIndex, dateObj){
-  const page = el('div',{class:'page', 'data-date': dateObj.toISOString().slice(0,10)});
-  const weekdayAr = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][dateObj.getDay()];
-  const isFriday  = (weekdayAr==='الجمعة');
-  const dateStr = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
-
-  const header = headerBand(`اليوم ${String(dayIndex).padStart(2,'0')} – ${weekdayAr} – ${dateStr}`);
-  if(TODAY_IDX && TODAY_IDX === dayIndex){ header.querySelector('.h-title').appendChild(el('span',{class:'today-badge'}, 'اليوم الحالي')); }
-  page.appendChild(header);
-
-  /* بطاقات العبادات (فروض/سنن/أذكار) */
-  const cards3 = el('div',{class:'grid-3'});
-
-  // (أ) الفروض
-  const fTbl = el('table',{class:'table'});
-  fTbl.innerHTML = `
-    <thead><tr><th>الصلاة</th><th>م</th><th>ج</th><th>ف</th><th>ق</th></tr></thead>
-    <tbody>
-      ${fRow('الفجر')}
-      ${fRow(isFriday? 'الجمعة' : 'الظهر')}
-      ${fRow('العصر')}
-      ${fRow('المغرب')}
-      ${fRow('العشاء')}
-    </tbody>`;
-  function fRow(name){
-    return `<tr>
-      <td style="text-align:right">${name}</td>
-      <td style="text-align:center"><span class="checkbox"></span></td>
-      <td style="text-align:center"><span class="checkbox"></span></td>
-      <td style="text-align:center"><span class="checkbox"></span></td>
-      <td style="text-align:center"><span class="checkbox"></span></td>
-    </tr>`;
-  }
-  cards3.appendChild(sectionLuxe('🕋 الفروض (م=مسجد | ج=جماعة | ف=فرد | ق=قضاء)', fTbl));
-
-  // (ب) السنن الرواتب
-  const sBox = el('div',{}); const sList=[];
-  sList.push({label:'الفجر', sub:'قبلية', count:2});
-  if(isFriday){ sList.push({label:'الجمعة', sub:'بعدية', count:4, note:'٢ أو ٤'}); }
-  else{ sList.push({label:'الظهر', sub:'قبلية', count:4}); sList.push({label:'الظهر', sub:'بعدية', count:2}); }
-  sList.push({label:'المغرب', sub:'بعدية', count:2}); sList.push({label:'العشاء', sub:'بعدية', count:2}); sList.push({label:'العصر (اختياري)', sub:'قبلية', count:4});
-  sList.forEach(r=>{
-    const line = el('div',{class:'sunnah-row'},
-      el('span',{class:'sunnah-label'}, `${r.label}: ${r.sub} ${r.note?`(${r.note})`:''}`),
-      el('span',{class:'rb'}, ...Array.from({length:r.count},()=>checkbox()))
-    );
-    sBox.appendChild(line);
-  });
-  cards3.appendChild(sectionLuxe('🌱 السنن الرواتب (عدد الركعات – قبلية/بعدية)', sBox));
-
-  // (ج) الأذكار
-  const zBox = el('div',{}); const zList=['☀️ أذكار الصباح','🌙 أذكار المساء','😴 أذكار النوم','📖 سورة الملك (ليلاً)','📖 خواتيم سورة البقرة (285–286)'];
-  if(isFriday) zList.push('🕌 سورة الكهف (الجمعة)');
-  zList.forEach(t=>{ zBox.appendChild(el('div',{class:'zikr-row'}, el('span',{}, t), checkbox())); });
-  cards3.appendChild(sectionLuxe('📿 بطاقة الأذكار', zBox));
-  page.appendChild(cards3);
-
-  /* شريط الورد (30 مربعًا) */
-  const qstrip = el('div',{class:'qstrip'});
-  for(let i=1;i<=30;i++){ const cell = el('div',{class:'qcell'}, i); if(TODAY_IDX && TODAY_IDX===i) cell.classList.add('current'); qstrip.appendChild(cell); }
-  page.appendChild(sectionLuxe('📖 شريط الورد القرآني (الشهر كاملًا – ضع ✓ في GoodNotes)', qstrip));
-
-  /* أدعية ونقاط اليوم */
-  const dua = el('div',{}, el('div',{class:'input-line'}, '📌 دعاء الإفطار: «ذَهَبَ الظَّمَأُ، وَابْتَلَّتِ العُرُوقُ، وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللهُ».'),
-    el('div',{class:'small',style:'margin-top:4px'}, '📌 السحور: لا دعاء مخصوص ثابت؛ «بِسْمِ الله» كباقي الطعام، والسحور بركة.'),
-    el('div',{class:'input-line',style:'margin-top:6px'}, 'نقاط اليوم: ____________________________  •  ملاحظات: ______________________________________________')
-  );
-  page.appendChild(sectionLuxe('🕯️ أدعية ونقاط اليوم', dua));
-
-  /* الإمساكية اليومية (يُحسب أوفلاين) */
-  const { imsEl, dataSlots } = buildImsakMini(dayIndex, isFriday);
-  page.appendChild(sectionLuxe('🕰️ الإمساكية اليومية (مقشن – ظفار) – صيغة ١٢ ساعة', imsEl));
-
-  return { page, imsSlots: dataSlots };
-}
-function buildImsakMini(dayIndex, isFriday){
-  const ims = el('div',{class:'imsak-mini'});
-  const keys = ['الإمساك','السحور*','الفجر','الشروق', (isFriday?'الجمعة':'الظهر'), 'العصر','المغرب','العشاء'];
-  const dataSlots = {};
-  keys.forEach(k=>{
-    ims.appendChild(el('div',{class:'k'}, k));
-    const span = el('div',{class:'v', id:`v-${dayIndex}-${k}`}, '—');
-    dataSlots[k]=span; ims.appendChild(span);
-  });
-  ims.appendChild(el('div',{})); // عمود مرن
-  return { imsEl: ims, dataSlots };
-}
-
-/* ================ بناء كل الصفحات + حساب الإمساكية أوفلاين ================ */
-const pagesSlots = [];
-
-async function buildAllPages(previewOnly=false){
-  const host = document.getElementById('planner');
-  if(host.childElementCount>0) return;
-  host.style.display = previewOnly ? 'block' : 'none';
-
-  // بناء الصفحات
-  for(let i=0;i<DAYS;i++){
-    const d = new Date(START); d.setDate(START.getDate()+i);
-    const { page, imsSlots } = buildDailyPage(i+1, d);
-    pagesSlots.push({ idx:i+1, dateObj:d, imsSlots });
-    host.appendChild(page);
-  }
-  // تعبئة الإمساكية أوفلاين
-  fillAllImsakiahOffline();
-}
-
-function toLocalISODate(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function fillAllImsakiahOffline(){
-  // المنطقة الزمنية لِمسقط UTC+4 على مدار العام (لا DST)
-  const tz = 4;
-  pagesSlots.forEach(p=>{
-    const isFri = p.dateObj.getDay()===5;
-    // حساب المواقيت ليوم p
-    const t = PrayTimes.getTimes(p.dateObj, MUQSHIN, tz);
-    const suhoor = hmMinus(t.Fajr, SUHOOR_OFFSET_MIN);
-    const imsak  = hmMinus(t.Fajr, 10);
-    const map24 = {
-      'الإمساك': imsak,
-      'السحور*': suhoor,
-      'الفجر': t.Fajr,
-      'الشروق': t.Sunrise,
-      [isFri?'الجمعة':'الظهر']: t.Dhuhr,
-      'العصر': t.Asr,
-      'المغرب': t.Maghrib,
-      'العشاء': t.Isha
-    };
-    Object.entries(map24).forEach(([k,v])=>{
-      const span = p.imsSlots[k];
-      if(span) span.textContent = format12hArabic(v);
-    });
-  });
-}
-
-/* ============ مؤشّر التقدّم + توليد PDF على دفعات ============ */
-const prog = { el:document.getElementById('progress'), text:document.getElementById('ptext'), bar:document.getElementById('pbar') };
-function showProgress(msg){ prog.el.style.display='grid'; prog.text.textContent=msg; prog.bar.style.width='0%'; }
-function updateProgress(step,total){ prog.bar.style.width = `${Math.round((step/total)*100)}%`; }
-function hideProgress(){ prog.el.style.display='none'; }
-const pause = (ms)=> new Promise(r=>setTimeout(r,ms));
-function isIOS(){ return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1); }
-
-async function exportPDF(){
-  showProgress('جارٍ تجهيز الصفحات…');
-  await document.fonts.ready;
-  await buildAllPages(false);
-
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
-  const pages = [...document.querySelectorAll('#planner .page')];
-
-  const scale = isIOS()? 1.5 : 2;
-  const batchSize = 5;
-  let done = 0;
-
-  for(let i=0;i<pages.length;i+=batchSize){
-    const batch = pages.slice(i, i+batchSize);
-    for(let j=0;j<batch.length;j++){
-      const node = batch[j];
-      await document.fonts.ready;
-      const canvas = await html2canvas(node, {scale, useCORS:true, backgroundColor:'#ffffff', imageTimeout:0, removeContainer:true});
-      const imgData = canvas.toDataURL('image/png');
-      if(i+j>0) pdf.addPage('a4','landscape');
-      pdf.addImage(imgData, 'PNG', 0, 0, A4W, A4H);
-      done++; updateProgress(done, pages.length);
-      await pause(60);
-    }
-    await pause(150);
-  }
-
-  prog.text.textContent = 'جارٍ حفظ الملف…';
-  await pause(50);
-  pdf.save('Ramadan_1447_2026_Landscape_Planner_Muqshin_OFFLINE_12h.pdf');
-  hideProgress();
-}
-
-/* أزرار */
-document.getElementById('btnPreview').onclick = ()=> buildAllPages(true).then(()=>{
-  const host = document.getElementById('planner'); host.style.display='block';
-  window.scrollTo({top: host.offsetTop, behavior: 'smooth'});
-});
-document.getElementById('btnMake').onclick = ()=> exportPDF();
-</script>
-</body>
-</html>
+/* ====== حساب المواقيت أوفلاين (Umm al‑Qura مبسّط) ====== */
+const PrayTimes=(function(){const D2R=Math.PI/180,R2D=180/Math.PI;function J(y,m,d){if(m<=2){y-=1;m+=12}const A=Math.floor(y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5}
+function fixH(a){a=a-24*Math.floor(a/24);return a<0?a+24:a}
+function s(x){return Math.sin(x*D2R)}function c(x){return Math.cos(x*D2R)}function asn(x){return R2D*Math.asin(x)}function acs(x){return R2D*Math.acos(x)}function at2(y,x){return R2D*Math.atan2(y,x)}
