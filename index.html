@@ -3,109 +3,29 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>البانر الرمضاني الفاخر</title>
 <style>
-:root {
---royal-gold: #9d7d32;
---deep-gold: #735b22;
---friday-green: #1b5e20;
---bg-paper: #fffdf5;
---border-style: 2px solid #d4af37;
-}
-body {
-background-color: #f0f0f0;
-padding: 30px;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-.container {
-display: flex;
-flex-direction: column;
-gap: 40px;
-max-width: 950px;
-margin: auto;
-}
-.sticker-card {
-background: var(--bg-paper);
-border: var(--border-style);
-border-radius: 15px;
-padding: 20px;
-box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-position: relative;
-overflow: hidden;
-}
-.friday-card {
-border: 2px solid var(--friday-green);
-background-color: #fafffa;
-}
-.sticker-header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-border-bottom: 2px double var(--royal-gold);
-margin-bottom: 15px;
-padding-bottom: 10px;
-}
-.day-label {
-font-size: 24px;
-color: var(--deep-gold);
-font-weight: bold;
-text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
-}
-.friday-card .day-label { color: var(--friday-green); }
-.day-input {
-width: 200px;
-border-bottom: 1.5px dashed var(--royal-gold);
-height: 30px;
-}
-.content-grid {
-display: grid;
-grid-template-columns: 1.8fr 1fr 1.2fr;
-gap: 25px;
-}
-.section h3 {
-font-size: 16px;
-color: var(--deep-gold);
-margin-bottom: 12px;
-border-right: 5px solid var(--royal-gold);
-padding-right: 10px;
-margin-top: 5px;
-}
-.friday-card .section h3 { border-right-color: var(--friday-green); color: var(--friday-green); }
-.item {
-display: flex;
-align-items: center;
-font-size: 14px;
-margin-bottom: 8px;
-color: #333;
-}
-.checks-group {
-display: flex;
-gap: 6px;
-margin-right: auto;
-font-size: 12px;
-color: #555;
-}
-input[type="checkbox"] {
-width: 17px;
-height: 17px;
-cursor: pointer;
-accent-color: var(--royal-gold);
-}
-.friday-card input[type="checkbox"] { accent-color: var(--friday-green); }
-.sig-line {
-text-align: left;
-margin-top: 15px;
-font-size: 18px;
-color: var(--royal-gold);
-border-top: 1px solid #e0d7c6;
-padding-top: 10px;
-font-style: italic;
-font-family: 'Brush Script MT', cursive;
-}
-.highlight { color: var(--friday-green); font-weight: bold; }
-.tarawih { font-weight: bold; color: #8e44ad; } /* لون مميز صلاة التراويح */
+body { background-color: #f4f4f4; padding: 20px; font-family: sans-serif; }
+.container { max-width: 850px; margin: auto; display: flex; flex-direction: column; gap: 30px; }
+.card { background: #fffdf5; border: 2px solid #9d7d32; border-radius: 15px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.friday { border-color: #1b5e20; background-color: #fafffa; }
+.header { display: flex; justify-content: space-between; border-bottom: 1px solid #d4af37; margin-bottom: 15px; padding-bottom: 10px; }
+.title { font-size: 22px; color: #735b22; font-weight: bold; }
+.friday .title { color: #1b5e20; }
+.day-input { width: 180px; border-bottom: 1px dashed #999; }
+.grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 20px; }
+h3 { font-size: 15px; color: #9d7d32; border-right: 4px solid #9d7d32; padding-right: 8px; }
+.friday h3 { color: #1b5e20; border-right-color: #1b5e20; }
+.item { display: flex; align-items: center; font-size: 13px; margin-bottom: 8px; }
+.chks { margin-right: auto; display: flex; gap: 4px; font-size: 11px; }
+input { width: 16px; height: 16px; cursor: pointer; }
+.sig { text-align: left; margin-top: 15px; font-style: italic; color: #9d7d32; border-top: 1px solid #eee; padding-top: 10px; }
+.green { color: #1b5e20; font-weight: bold; }
+.purple { color: #8e44ad; font-weight: bold; }
 </style>
 </head>
 <body>
-
 <div class="container">
+
+</div>
+</body>
+</html>
