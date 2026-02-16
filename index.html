@@ -1,209 +1,41 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>منظم العبادات الفاخر - نظام البانرات المنفصلة</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap" rel="stylesheet"/>
-
-  <style>
-    :root{
-      --W: 2732px;
-      --H: 320px;
-      --SAFE: 20px;
-
-      /* الألوان الفاخرة */
-      --bg-emerald:#f7f6f2; --ink-emerald:#103a2b; --line-emerald:#cbb37e; --gold-emerald:#c5a059; --chip-emerald:#efe7d6;
-      --bg-navy:#f6f8fc; --ink-navy:#0f2448; --line-navy:#ccbe98; --gold-navy:#caa354; --chip-navy:#efe7d8;
-      --bg-ruby:#fff8f7; --ink-ruby:#4a0f1f; --line-ruby:#d7bf92; --gold-ruby:#c89b4f; --chip-ruby:#f6ecde;
-      --bg-marble:#fcfbf9; --ink-marble:#2f2f2f; --line-marble:#d4c7a6; --gold-marble:#c9a65a; --chip-marble:#f3ecde;
-
-      --bg: var(--bg-emerald); --ink: var(--ink-emerald); --line: var(--line-emerald); --gold: var(--gold-emerald); --chip: var(--chip-emerald);
-      --muted:#666; --gap: 12px;
-    }
-
-    body{ margin:0; background:#444; font-family:'Amiri',serif; color: var(--ink); }
-
-    /* الأدوات العلويّة */
-    .control-panel {
-      position: fixed; top: 0; left: 0; right: 0; background: rgba(0,0,0,0.8);
-      padding: 15px; display: flex; justify-content: center; gap: 15px; z-index: 10000;
-    }
-    
-    .btn{
-      background:#fff; border:2px solid var(--gold); border-radius:12px;
-      padding:10px 20px; font-weight:700; cursor:pointer; font-family:'Reem Kufi', sans-serif;
-      transition: 0.3s;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .btn.active { background: var(--gold); color: #fff; }
-
-    .wrap{ display:flex; align-items:center; justify-content:center; min-height:100vh; padding-top: 80px; }
-
-    /* البانر الرئيسي */
-    .sticker{
-      width:var(--W); height:var(--H); background: var(--bg);
-      color:var(--ink); border-radius:24px; border:8px double var(--gold);
-      box-shadow:0 15px 45px rgba(0,0,0,0.4); overflow:hidden; position:relative;
-      box-sizing:border-box; padding: var(--SAFE); transform-origin: top center;
-    }
-
-    /* الزخرفة الخلفية */
-    .pattern{
-      position:absolute; inset: 0; pointer-events:none; opacity:.15;
-      background-image: radial-gradient(circle at 2px 2px, var(--gold) 1px, transparent 0);
-      background-size: 40px 40px;
-    }
-
-    .inner{ position:relative; z-index:2; display:flex; flex-direction:column; height:100%; justify-content: space-between; }
-
-    /* هيدر ثابت للتاريخ والعنوان */
-    .header-fixed {
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 2px solid var(--gold); padding-bottom: 15px; margin-bottom: 15px;
-    }
-
-    .title-area { font-family: 'Reem Kufi', sans-serif; font-size: 28px; font-weight: 700; }
-    
-    .info-bar { display: flex; gap: 20px; }
-    .info-item { background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 8px 15px; display: flex; align-items: center; gap: 10px; }
-    .info-item label { font-weight: bold; color: var(--gold); }
-    .info-item input { border: none; font-size: 18px; width: 350px; outline: none; font-family: 'Amiri'; }
-
-    /* محتوى الأقسام */
-    .tab-content { display: none; width: 100%; animation: fadeIn 0.5s ease; }
-    .tab-content.active { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: center; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* تصميم الكروت (المربعات) */
-    .card {
-      background: #fff; border: 1.5px solid var(--line); border-radius: 15px;
-      padding: 12px 20px; display: flex; align-items: center; gap: 12px;
-      min-width: 220px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-    .card-title { font-family: 'Reem Kufi'; font-size: 20px; flex-grow: 1; }
-    .card-check { width: 22px; height: 22px; accent-color: var(--gold); cursor: pointer; }
-    
-    /* أيقونات الخيارات للفروض */
-    .prayer-options { display: flex; gap: 8px; font-size: 14px; color: var(--muted); }
-    .prayer-options span { border: 1px solid #eee; padding: 2px 6px; border-radius: 5px; background: #fafafa; }
-
-    @media (max-width: 1500px){ .sticker{ transform: scale(0.5); } }
-  </style>
+<meta charset="UTF-8">
+<title>Planner Stickers</title>
+<style>
+:root { --gold: #b8860b; --friday-green: #2e7d32; --soft-bg: #fffdf9; }
+body { background-color: #f4f4f4; padding: 20px; font-family: 'Segoe UI', Tahoma, sans-serif; }
+.container { display: flex; flex-direction: column; gap: 20px; max-width: 900px; margin: auto; }
+.sticker-card { background: var(--soft-bg); border: 2px solid var(--gold); border-radius: 12px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.friday-card { border-color: var(--friday-green); background-color: #f9fff9; }
+.sticker-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; margin-bottom: 10px; padding-bottom: 5px; }
+.day-label { font-size: 18px; color: var(--gold); font-weight: bold; }
+.friday-card .day-label { color: var(--friday-green); }
+.day-input { width: 150px; border-bottom: 1px dashed #999; height: 20px; }
+.content-grid { display: grid; grid-template-columns: 1.8fr 1fr 1.2fr; gap: 15px; }
+.section-box h3 { font-size: 14px; color: #444; margin-bottom: 8px; border-right: 4px solid var(--gold); padding-right: 8px; margin-top: 5px; }
+.friday-card .section-box h3 { border-right-color: var(--friday-green); }
+.item { display: flex; align-items: center; font-size: 13px; margin-bottom: 6px; white-space: nowrap; }
+.checks-group { display: flex; gap: 5px; margin-right: auto; font-size: 11px; color: #666; }
+input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; }
+.sig-line { text-align: left; margin-top: 10px; font-size: 14px; color: var(--gold); border-top: 1px solid #eee; padding-top: 5px; font-style: italic; }
+.friday-card .sig-line { color: var(--friday-green); }
+.highlight { color: var(--friday-green); font-weight: bold; }
+</style>
 </head>
 <body>
+<div class="container">
+<script>
+const days = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
+days.forEach((day) => {
+const isFriday = (day === "الجمعة");
+const prayerLabel = isFriday ? "<span class='highlight'>الجمعة</span>" : "الظهر";
+const cardClass = isFriday ? "sticker-card friday-card" : "sticker-card";
+const extraSurah = isFriday ? '<div class="item"><input type="checkbox"> <span class="highlight">سورة الكهف</span></div>' : '';
 
-  <div class="control-panel">
-    <button class="btn active" onclick="showTab('fard', this)">🕋 الفروض الواجبة</button>
-    <button class="btn" onclick="showTab('sunnah', this)">🌱 السنن الرواتب</button>
-    <button class="btn" onclick="showTab('adhkar', this)">📿 الأذكار والورد</button>
-    <div style="width: 2px; background: #666; margin: 0 10px;"></div>
-    <button class="btn" onclick="cycleTheme()">🎨 تغيير الثيم</button>
-    <button class="btn" style="background:var(--gold); color:white;" onclick="savePNG()">💾 حفظ البانر الحالي</button>
-  </div>
-
-  <div class="wrap">
-    <div id="sticker" class="sticker">
-      <div class="pattern"></div>
-      
-      <div class="inner">
-        <div class="header-fixed">
-          <div class="title-area" id="tab-title">بوابة الفروض الواجبة</div>
-          <div class="info-bar">
-            <div class="info-item">
-              <label>📅 التاريخ:</label>
-              <input type="text" placeholder="ـ / ـ / 1447هـ">
-            </div>
-            <div class="info-item">
-              <label>📝 ملاحظة:</label>
-              <input type="text" placeholder="اكتب وردك الخاص هنا...">
-            </div>
-          </div>
-        </div>
-
-        <div id="fard" class="tab-content active">
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">صلاة الفجر</span><div class="prayer-options"><span>جماعة</span><span>سنة</span></div></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">صلاة الظهر</span><div class="prayer-options"><span>جماعة</span><span>رواتب</span></div></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">صلاة العصر</span><div class="prayer-options"><span>جماعة</span><span>ذكر</span></div></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">صلاة المغرب</span><div class="prayer-options"><span>جماعة</span><span>رواتب</span></div></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">صلاة العشاء</span><div class="prayer-options"><span>جماعة</span><span>رواتب</span></div></div>
-          <div class="card" style="border-color: var(--gold);"><input type="checkbox" class="card-check"><span class="card-title">بر الوالدين</span></div>
-        </div>
-
-        <div id="sunnah" class="tab-content">
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">سنة الفجر</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">صلاة الضحى</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">سنن الظهر</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">سنة المغرب</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">سنة العشاء</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">الوتر</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">قيام الليل</span></div>
-        </div>
-
-        <div id="adhkar" class="tab-content">
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">أذكار الصباح</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">أذكار المساء</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">أذكار النوم</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">الورد القرآني</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">الاستغفار (100)</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">الصلاة على النبي ﷺ</span></div>
-          <div class="card"><input type="checkbox" class="card-check"><span class="card-title">سورة الملك</span></div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script>
-    // نظام التبديل بين البانرات
-    function showTab(tabId, btn) {
-      // إخفاء الكل
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.control-panel .btn').forEach(b => b.classList.remove('active'));
-      
-      // إظهار المختار
-      document.getElementById(tabId).classList.add('active');
-      btn.classList.add('active');
-      
-      // تغيير العنوان الداخلي
-      const titles = { 'fard': 'بوابة الفروض الواجبة', 'sunnah': 'منصة السنن والرواتب', 'adhkar': 'رياض الأذكار والورد' };
-      document.getElementById('tab-title').innerText = titles[tabId];
-    }
-
-    // تبديل الألوان
-    let themeIndex = 0;
-    const themes = ['emerald','navy','ruby','marble'];
-    function applyTheme(name){
-      const r = document.documentElement;
-      r.style.setProperty('--bg', getComputedStyle(r).getPropertyValue(`--bg-${name}`));
-      r.style.setProperty('--ink', getComputedStyle(r).getPropertyValue(`--ink-${name}`));
-      r.style.setProperty('--line', getComputedStyle(r).getPropertyValue(`--line-${name}`));
-      r.style.setProperty('--gold', getComputedStyle(r).getPropertyValue(`--gold-${name}`));
-    }
-    function cycleTheme(){
-      themeIndex = (themeIndex + 1) % themes.length;
-      applyTheme(themes[themeIndex]);
-    }
-
-    // حفظ الصورة
-    async function savePNG(){
-      const node = document.getElementById('sticker');
-      const originalTransform = node.style.transform;
-      node.style.transform = 'none'; // تعطيل التكبير/التصغير أثناء الحفظ للجودة
-      
-      const canvas = await html2canvas(node, { backgroundColor: null, scale: 2 });
-      node.style.transform = originalTransform;
-      
-      const link = document.createElement('a');
-      link.download = `عباداتي_${document.getElementById('tab-title').innerText}.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-    }
-  </script>
+</script>
+</div>
 </body>
 </html>
