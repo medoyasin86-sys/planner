@@ -5,16 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>دفتر رمضان 1447هـ (2026) – بلانر Landscape بإمساكية مقشن</title>
 
-<!-- الخطوط -->
-https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap
+<!-- تحسين تحميل الخطوط -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap" rel="stylesheet">
 
 <!-- jsPDF + html2canvas -->
-https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js</script>
-https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js</script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
 :root{
-  /* لوحة الألوان */
   --primary:#1a4d2e; --gold:#c5a059; --gold-light:#e6cc92; --bg:#f9f6f0;
   --card:#ffffff; --text:#1a4d2e; --accent:#d35400; --muted:#6f7b7a; --border:#e6e2d9;
   --shadow: 0 10px 24px rgba(26,77,46,.10), 0 2px 8px rgba(26,77,46,.08);
@@ -41,8 +42,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 /* صفحات البلانر (A4 landscape تقريبًا عند 96dpi) */
 #planner{ display:none }
 .page{
-  width: 1123px;  /* ~297mm */
-  height: 794px;  /* ~210mm */
+  width: 1123px; height: 794px;
   background: var(--card);
   border: 1.5px solid var(--border);
   border-radius: 14px;
@@ -57,8 +57,6 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
   box-shadow: var(--inner), var(--shadow);
 }
 .h-title{ margin:0; font-size:18px; font-family:'Reem Kufi'; color:var(--gold-light); letter-spacing:.2px }
-
-/* شارة اليوم الحالي */
 .today-badge{
   display:inline-block; margin-inline-start:8px;
   background:linear-gradient(180deg,#ffe9b9,#e7cb83); color:#1a1a1a;
@@ -82,15 +80,13 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
   color:#fff; padding:6px 10px; border-radius:9px; font-family:'Reem Kufi'; font-size:14px;
   box-shadow: var(--inner);
 }
-.section-title::before{
-  content:"◆"; margin-inline:6px; color:var(--gold-light)
-}
+.section-title::before{ content:"◆"; margin-inline:6px; color:var(--gold-light) }
 
 /* تخطيطات مضغوطة */
 .grid-3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px }
 .grid-2{ display:grid; grid-template-columns:repeat(2, 1fr); gap:8px }
 
-/* شريط الإمساكية المصغّر (أسفل الصفحة) */
+/* الإمساكية المصغّرة (أسفل الصفحة) */
 .imsak-mini{
   display:grid; grid-template-columns:repeat(8, auto) 1fr; gap:6px; align-items:center;
   background:linear-gradient(180deg,#ffffff,#fff8e6);
@@ -113,28 +109,33 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
 /* مربعات التأشير */
 .checkbox{ display:inline-block; width:15px; height:15px; border:1.7px solid var(--gold); border-radius:4px; margin-inline-start:6px; box-shadow:var(--inner) }
 
-/* السنن */
+/* السنن / الأذكار */
 .sunnah-row{ display:flex; gap:8px; align-items:center; justify-content:space-between; padding:4px 0; border-bottom:1px dashed var(--border) }
 .sunnah-label{ font-size:13.2px }
 .rb{ display:flex; gap:5px; align-items:center }
-
-/* الأذكار */
 .zikr-row{ display:flex; align-items:center; justify-content:space-between; padding:4px 0; border-bottom:1px dashed var(--border); font-size:13.2px }
 
 /* شريط الورد القرآني (30 مربعًا) */
 .qstrip{ display:grid; grid-template-columns:repeat(30, 1fr); gap:3px; margin-top:4px }
 .qcell{ border:1.3px dashed var(--gold); height:16px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:#8c7a46; font-weight:700; font-size:10.5px; background:#fff; position:relative }
-.qcell.current{
-  background: linear-gradient(180deg,#1a4d2e,#0f2f1b); color:#fff; border-color:var(--gold);
-}
+.qcell.current{ background: linear-gradient(180deg,#1a4d2e,#0f2f1b); color:#fff; border-color:var(--gold); }
 .qcell.current::after{
   content:'اليوم'; position:absolute; bottom:-18px; background:linear-gradient(180deg,#ffe9b9,#e7cb83);
   color:#1a1a1a; border:1px solid var(--gold); border-radius:6px; padding:1px 6px; font-size:9.5px; font-weight:800;
 }
 
-/* صناديق نص */
-.input-line{border:1px solid var(--border); border-radius:8px; padding:6px; color:#555; font-size:13px; background:#fff}
-.small{font-size:11.5px; color:#777}
+/* مؤشّر التقدّم */
+#progress{
+  position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; place-items:center; z-index:9999;
+  color:#1a1a1a;
+}
+#progress .box{
+  background:#fffdf6; border:2px solid var(--gold); border-radius:12px; padding:14px 16px; min-width:260px; box-shadow:var(--shadow);
+  text-align:center; font-weight:700;
+}
+#progress .bar{height:8px; background:#f0e4c0; border-radius:999px; overflow:hidden; margin-top:8px}
+#progress .bar > div{height:100%; width:0%; background:linear-gradient(90deg,#e7cb83,#c5a059); transition:width .2s ease}
+
 </style>
 </head>
 <body>
@@ -142,8 +143,8 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
   <div class="header">
     <h1>دفتر رمضان 1447هـ (2026) – بلانر Landscape بإمساكية «مقشن / ظفار»</h1>
     <div class="sub">
-      يبدأ من <b>الخميس 19-02-2026</b> لمدة <b>30 يومًا</b>. أسفل كل صفحة: إمساكية اليوم (إمساك/سحور*، فجر، شروق، ظهر/جمعة، عصر، مغرب/إفطار، عشاء) بصيغة <b>١٢ ساعة</b>.  
-      *السحور المقترح يُعرَض = <b>الفجر − 10 دقائق</b>. مواقيت «مقشن» تُحسب آليًا وفق الإحداثيات المحلية.
+      يبدأ من <b>الخميس 19-02-2026</b> لمدة <b>30 يومًا</b>. أسفل كل صفحة: إمساكية اليوم بصيغة <b>١٢ ساعة</b> (إمساك/سحور*، فجر، شروق، ظهر/جمعة، عصر، مغرب/إفطار، عشاء).  
+      *السحور المقترح = <b>الفجر − 10 دقائق</b>. مواقيت «مقشن» تُحسب آليًا وفق الإحداثيات.
     </div>
     <div class="tools">
       <button class="btn" id="btnMake">توليد وتحميل PDF</button>
@@ -155,17 +156,21 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 'Amiri', seri
   <div id="planner" aria-hidden="true"></div>
 </div>
 
+<!-- مؤشّر التقدّم -->
+<div id="progress">
+  <div class="box">
+    <div id="ptext">جارٍ تجهيز الصفحات…</div>
+    <div class="bar"><div id="pbar"></div></div>
+  </div>
+</div>
+
 <script>
-/* ================= إعدادات ================= */
-const START = new Date('2026-02-19T00:00:00'); // بداية رمضان
-const DAYS  = 30;                               // 30 يوم
-const A4W = 297, A4H = 210;                     // mm للـPDF
-/* إحداثيات ولاية مقشن (مصادر خرائط مفتوحة) */
+const START = new Date('2026-02-19T00:00:00');
+const DAYS  = 30;
+const A4W = 297, A4H = 210;
 const MUQSHIN = { lat: 19.56364, lon: 54.8916 };
-/* السحور المقترح: الفجر − 10 دقائق */
 const SUHOOR_OFFSET_MIN = 10;
 
-/* ================ أدوات بناء عناصر ================ */
 function el(tag, attrs={}, ...children){
   const E = document.createElement(tag);
   Object.entries(attrs).forEach(([k,v])=>{
@@ -176,29 +181,13 @@ function el(tag, attrs={}, ...children){
 }
 function headerBand(title){ return el('div',{class:'header-band'}, el('h3',{class:'h-title'}, title)); }
 function checkbox(){ return el('span',{class:'checkbox'}); }
-function sectionLuxe(title, content){
-  const box = el('div',{class:'card luxe'});
-  box.appendChild(el('h3',{class:'section-title'}, title));
-  box.appendChild(content);
-  return box;
-}
+function sectionLuxe(title, content){ const b=el('div',{class:'card luxe'}); b.appendChild(el('h3',{class:'section-title'}, title)); b.appendChild(content); return b; }
 
-/* ================ حساب "اليوم الحالي" بتوقيت مسقط ================= */
-function nowInMuscat(){
-  // نضمن الحساب بحسب Asia/Muscat حتى لو كان المتصفح في منطقة أخرى
-  return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Muscat' }));
-}
+function nowInMuscat(){ return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Muscat' })); }
 function dateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-function getCurrentDayIndex(){
-  const today = dateOnly(nowInMuscat());
-  const start = dateOnly(START);
-  const diff = Math.floor((today - start) / 86400000); // فرق أيام
-  if(diff >= 0 && diff < DAYS) return diff + 1; // 1..30
-  return null;
-}
+function getCurrentDayIndex(){ const t=dateOnly(nowInMuscat()), s=dateOnly(START); const diff=Math.floor((t-s)/86400000); return (diff>=0 && diff<DAYS)? diff+1 : null; }
 const TODAY_IDX = getCurrentDayIndex();
 
-/* ================ تحويل الوقت إلى ١٢ ساعة (أرقام عربية + ص/م) ================== */
 const AR_DIG = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
 function toArabicDigits(s){ return s.replace(/\d/g, d => AR_DIG[d]); }
 function format12hArabic(hhmm){
@@ -206,36 +195,25 @@ function format12hArabic(hhmm){
   let [h,m] = hhmm.split(':').map(Number);
   const suf = (h===0 || h<12) ? 'ص' : 'م';
   h = (h%12)||12;
-  const out = `${h}:${String(m).padStart(2,'0')} ${suf}`;
-  return toArabicDigits(out);
+  return toArabicDigits(`${h}:${String(m).padStart(2,'0')} ${suf}`);
 }
 function hmMinus(hhmm, minutes=10){
   const [h,m] = hhmm.split(':').map(Number);
-  const t = h*60 + m - minutes;
-  const hh = ((Math.floor((t+1440)%1440 / 60))+24)%24, mm = ((t%60)+60)%60;
+  const t = h*60 + m - minutes; const hh = ((Math.floor((t+1440)%1440 / 60))+24)%24, mm = ((t%60)+60)%60;
   return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
 }
 
-/* ================ صفحة يومية ================== */
 function buildDailyPage(dayIndex, dateObj){
   const page = el('div',{class:'page', 'data-date': dateObj.toISOString().slice(0,10)});
-
   const weekdayAr = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][dateObj.getDay()];
   const isFriday  = (weekdayAr==='الجمعة');
   const dateStr = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
 
   const header = headerBand(`اليوم ${String(dayIndex).padStart(2,'0')} – ${weekdayAr} – ${dateStr}`);
-  // شارة اليوم الحالي بجوار العنوان
-  if(TODAY_IDX && TODAY_IDX === dayIndex){
-    const badge = el('span',{class:'today-badge'}, 'اليوم الحالي');
-    header.querySelector('.h-title').appendChild(badge);
-  }
+  if(TODAY_IDX && TODAY_IDX === dayIndex){ header.querySelector('.h-title').appendChild(el('span',{class:'today-badge'}, 'اليوم الحالي')); }
   page.appendChild(header);
 
-  /* 1) البطاقات تحت اليوم مباشرة */
   const cards3 = el('div',{class:'grid-3'});
-
-  // (أ) الفروض
   const fTbl = el('table',{class:'table'});
   fTbl.innerHTML = `
     <thead><tr><th>الصلاة</th><th>م</th><th>ج</th><th>ف</th><th>ق</th></tr></thead>
@@ -246,76 +224,46 @@ function buildDailyPage(dayIndex, dateObj){
       ${fRow('المغرب')}
       ${fRow('العشاء')}
     </tbody>`;
-  function fRow(name){
-    return `<tr>
-      <td style="text-align:right">${name}</td>
+  function fRow(name){ return `<tr><td style="text-align:right">${name}</td>
       <td style="text-align:center"><span class="checkbox"></span></td>
       <td style="text-align:center"><span class="checkbox"></span></td>
       <td style="text-align:center"><span class="checkbox"></span></td>
-      <td style="text-align:center"><span class="checkbox"></span></td>
-    </tr>`;
-  }
+      <td style="text-align:center"><span class="checkbox"></span></td></tr>`; }
   cards3.appendChild(sectionLuxe('🕋 الفروض (م=مسجد | ج=جماعة | ف=فرد | ق=قضاء)', fTbl));
 
-  // (ب) السنن الرواتب
-  const sBox = el('div',{});
-  const sList = [];
+  const sBox = el('div',{}); const sList=[];
   sList.push({label:'الفجر', sub:'قبلية', count:2});
   if(isFriday){ sList.push({label:'الجمعة', sub:'بعدية', count:4, note:'٢ أو ٤'}); }
-  else { sList.push({label:'الظهر', sub:'قبلية', count:4}); sList.push({label:'الظهر', sub:'بعدية', count:2}); }
-  sList.push({label:'المغرب', sub:'بعدية', count:2});
-  sList.push({label:'العشاء', sub:'بعدية', count:2});
-  sList.push({label:'العصر (اختياري)', sub:'قبلية', count:4});
-  sList.forEach(r=>{
-    const line = el('div',{class:'sunnah-row'},
-      el('span',{class:'sunnah-label'}, `${r.label}: ${r.sub} ${r.note? `(${r.note})` : ''}`),
-      el('span',{class:'rb'}, ...Array.from({length:r.count},()=>checkbox()))
-    );
-    sBox.appendChild(line);
-  });
+  else{ sList.push({label:'الظهر', sub:'قبلية', count:4}); sList.push({label:'الظهر', sub:'بعدية', count:2}); }
+  sList.push({label:'المغرب', sub:'بعدية', count:2}); sList.push({label:'العشاء', sub:'بعدية', count:2}); sList.push({label:'العصر (اختياري)', sub:'قبلية', count:4});
+  sList.forEach(r=>{ const line = el('div',{class:'sunnah-row'},
+    el('span',{class:'sunnah-label'}, `${r.label}: ${r.sub} ${r.note?`(${r.note})`:''}`),
+    el('span',{class:'rb'}, ...Array.from({length:r.count},()=>checkbox()))
+  ); sBox.appendChild(line); });
   cards3.appendChild(sectionLuxe('🌱 السنن الرواتب (عدد الركعات – قبلية/بعدية)', sBox));
 
-  // (ج) بطاقة الأذكار
-  const zBox = el('div',{});
-  const zList = [
-    '☀️ أذكار الصباح', '🌙 أذكار المساء', '😴 أذكار النوم',
-    '📖 سورة الملك (ليلاً)', '📖 خواتيم سورة البقرة (285–286)'
-  ];
+  const zBox = el('div',{}); const zList=['☀️ أذكار الصباح','🌙 أذكار المساء','😴 أذكار النوم','📖 سورة الملك (ليلاً)','📖 خواتيم سورة البقرة (285–286)'];
   if(isFriday) zList.push('🕌 سورة الكهف (الجمعة)');
-  zList.forEach(t=>{
-    const row = el('div',{class:'zikr-row'}, el('span',{}, t), checkbox());
-    zBox.appendChild(row);
-  });
+  zList.forEach(t=>{ zBox.appendChild(el('div',{class:'zikr-row'}, el('span',{}, t), checkbox())); });
   cards3.appendChild(sectionLuxe('📿 بطاقة الأذكار', zBox));
-
   page.appendChild(cards3);
 
-  /* 2) شريط الورد (30 مربعًا) */
   const qstrip = el('div',{class:'qstrip'});
-  for(let i=1;i<=30;i++){
-    const cell = el('div',{class:'qcell'}, i);
-    // وسم اليوم الحالي داخل الشريط
-    if(TODAY_IDX && TODAY_IDX === i){ cell.classList.add('current'); }
-    qstrip.appendChild(cell);
-  }
+  for(let i=1;i<=30;i++){ const cell = el('div',{class:'qcell'}, i); if(TODAY_IDX && TODAY_IDX===i) cell.classList.add('current'); qstrip.appendChild(cell); }
   page.appendChild(sectionLuxe('📖 شريط الورد القرآني (الشهر كاملًا – ضع ✓ في GoodNotes)', qstrip));
 
-  /* 3) أدعية ونقاط اليوم */
-  const dua = el('div',{},
-    el('div',{class:'input-line'}, '📌 دعاء الإفطار: «ذَهَبَ الظَّمَأُ، وَابْتَلَّتِ العُرُوقُ، وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللهُ».'),
+  const dua = el('div',{}, el('div',{class:'input-line'}, '📌 دعاء الإفطار: «ذَهَبَ الظَّمَأُ، وَابْتَلَّتِ العُرُوقُ، وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللهُ».'),
     el('div',{class:'small',style:'margin-top:4px'}, '📌 السحور: لا دعاء مخصوص ثابت؛ «بِسْمِ الله» كباقي الطعام، والسحور بركة.'),
     el('div',{class:'input-line',style:'margin-top:6px'}, 'نقاط اليوم: ____________________________  •  ملاحظات: ______________________________________________')
   );
   page.appendChild(sectionLuxe('🕯️ أدعية ونقاط اليوم', dua));
 
-  /* 4) الإمساكية اليومية (أسفل الصفحة) */
   const { imsEl, dataSlots } = buildImsakMini(dayIndex, isFriday);
   page.appendChild(sectionLuxe('🕰️ الإمساكية اليومية (مقشن – ظفار) – صيغة ١٢ ساعة', imsEl));
 
   return { page, imsSlots: dataSlots };
 }
 
-/* الإمساكية المصغّرة */
 function buildImsakMini(dayIndex, isFriday){
   const ims = el('div',{class:'imsak-mini'});
   const keys = ['الإمساك','السحور*','الفجر','الشروق', (isFriday?'الجمعة':'الظهر'), 'العصر','المغرب','العشاء'];
@@ -329,9 +277,7 @@ function buildImsakMini(dayIndex, isFriday){
   return { imsEl: ims, dataSlots };
 }
 
-/* ================ بناء + تعبئة المواقيت ================== */
 const pagesSlots = [];
-
 async function buildAllPages(previewOnly=false){
   const host = document.getElementById('planner');
   if(host.childElementCount>0) return;
@@ -346,17 +292,13 @@ async function buildAllPages(previewOnly=false){
   await fillAllImsakiah();
 }
 
+/* جلب المواقيت وتطبيق 12 ساعة */
 function pad2(n){ return String(n).padStart(2,'0'); }
 function toLocalISODate(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
-
 async function getTimingsByCoords(dateISO){
-  // Aladhan API (method=4 → Umm al-Qura) – منطقة الخليج
   const url = `https://api.aladhan.com/v1/timings/${dateISO}?latitude=${MUQSHIN.lat}&longitude=${MUQSHIN.lon}&method=4&timezonestring=Asia/Muscat`;
-  const r = await fetch(url);
-  const j = await r.json();
-  return j.data?.timings || null;
+  const r = await fetch(url); const j = await r.json(); return j.data?.timings || null;
 }
-
 async function fillAllImsakiah(){
   for(const p of pagesSlots){
     const dateISO = toLocalISODate(p.dateObj);
@@ -364,52 +306,58 @@ async function fillAllImsakiah(){
     try{
       const t = await getTimingsByCoords(dateISO);
       if(!t) continue;
-
-      const fajr    = t.Fajr;
-      const imsak   = t.Imsak || hmMinus(fajr, 10);
-      const suhoor  = hmMinus(fajr, SUHOOR_OFFSET_MIN);
-      const sunrise = t.Sunrise;
-      const dhuhr   = t.Dhuhr;
-      const asr     = t.Asr;
-      const maghrib = t.Maghrib;
-      const isha    = t.Isha;
-
-      const map24 = {
-        'الإمساك': imsak,
-        'السحور*': suhoor,
-        'الفجر': fajr,
-        'الشروق': sunrise,
-        [isFri?'الجمعة':'الظهر']: dhuhr,
-        'العصر': asr,
-        'المغرب': maghrib,
-        'العشاء': isha
-      };
-      Object.entries(map24).forEach(([k,val])=>{
-        const span = p.imsSlots[k];
-        if(span) span.textContent = format12hArabic(val);
-      });
-    }catch(e){
-      console.warn('timings error', e);
-    }
+      const fajr=t.Fajr, imsak=t.Imsak || hmMinus(fajr,10), suhoor=hmMinus(fajr,SUHOOR_OFFSET_MIN);
+      const map24 = { 'الإمساك':imsak,'السحور*':suhoor,'الفجر':fajr,'الشروق':t.Sunrise,[isFri?'الجمعة':'الظهر']:t.Dhuhr,'العصر':t.Asr,'المغرب':t.Maghrib,'العشاء':t.Isha };
+      Object.entries(map24).forEach(([k,v])=>{ const span=p.imsSlots[k]; if(span) span.textContent = format12hArabic(v); });
+    }catch(e){ console.warn('timings error', e); }
   }
 }
 
-/* ============ تصدير PDF ============ */
+/* مؤشّر التقدّم */
+const prog = { el:document.getElementById('progress'), text:document.getElementById('ptext'), bar:document.getElementById('pbar') };
+function showProgress(msg){ prog.el.style.display='grid'; prog.text.textContent=msg; prog.bar.style.width='0%'; }
+function updateProgress(step,total){ prog.bar.style.width = `${Math.round((step/total)*100)}%`; }
+function hideProgress(){ prog.el.style.display='none'; }
+
+/* مهلة قصيرة لإراحة المتصفّح */
+const pause = (ms)=> new Promise(r=>setTimeout(r,ms));
+
+/* الكشف البسيط عن سفاري/آي أو إس لتقليل الدقّة */
+function isIOS(){ return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1); }
+
+/* توليد PDF على دفعات مع مؤشر تقدّم */
 async function exportPDF(){
+  showProgress('جارٍ تجهيز الصفحات…');
+  await document.fonts.ready; // تأكد من الخطوط
   await buildAllPages(false);
+
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
   const pages = [...document.querySelectorAll('#planner .page')];
 
-  for(let i=0;i<pages.length;i++){
-    const node = pages[i];
-    await document.fonts?.ready;
-    const canvas = await html2canvas(node, {scale:2, useCORS:true});
-    const imgData = canvas.toDataURL('image/png');
-    if(i>0) pdf.addPage('a4','landscape');
-    pdf.addImage(imgData, 'PNG', 0, 0, A4W, A4H);
+  const scale = isIOS()? 1.5 : 2;         // تقليل الحمل على iOS
+  const batchSize = 5;                     // دفعات من 5 صفحات
+  let done = 0;
+
+  for(let i=0;i<pages.length;i+=batchSize){
+    const batch = pages.slice(i, i+batchSize);
+    for(let j=0;j<batch.length;j++){
+      const node = batch[j];
+      await document.fonts.ready;
+      const canvas = await html2canvas(node, {scale, useCORS:true, backgroundColor:'#ffffff', imageTimeout:0, removeContainer:true});
+      const imgData = canvas.toDataURL('image/png');
+      if(i+j>0) pdf.addPage('a4','landscape');
+      pdf.addImage(imgData, 'PNG', 0, 0, A4W, A4H);
+      done++; updateProgress(done, pages.length);
+      await pause(60); // مهلة قصيرة
+    }
+    await pause(150);  // مهلة إضافية بين الدفعات
   }
+
+  prog.text.textContent = 'جارٍ حفظ الملف…';
+  await pause(50);
   pdf.save('Ramadan_1447_2026_Landscape_Planner_Muqshin_12h.pdf');
+  hideProgress();
 }
 
 /* أزرار */
