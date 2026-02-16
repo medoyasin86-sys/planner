@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>تقويم السحور والإفطار – صلالة 1447هـ (2026)</title>
+  <!-- خط اختياري؛ يمكن حذفه إذا أردتَ تقليل الطلبات الخارجية -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #fcfcfe;
+      --card:#ffffff;
+      --ink:#263238;
+      --muted:#607d8b;
+      --accent:#7c8cff;        /* بنفسجي باستيل */
+      --accent-2:#b7e0ff;      /* أزرق سماوي باستيل */
+      --accent-3:#ffe0f0;      /* وردي باستيل */
+      --ring:#e4e8ff;
+      --today:#fff8e1;
+      --border:#e7ecf3;
+    }
+    *{ box-sizing:border-box }
+    body{
+      margin:0; background:linear-gradient(180deg,var(--bg),#f6f8ff 60%,#fefcff);
+      color:var(--ink); font:16px/1.7 "Cairo", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
+      padding:24px;
+    }
+    .wrap{
+      max-width:1100px; margin:0 auto;
+    }
+    header{
+      background:linear-gradient(140deg,var(--accent-2),var(--accent-3));
+      border:1px solid var(--ring); border-radius:16px; padding:20px 18px; margin-bottom:18px;
+      display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between;
+    }
+    header h1{ margin:0; font-size:clamp(18px,3vw,22px); font-weight:700; }
+    header .sub{ color:var(--muted); font-size:14px }
+    .note{ color:var(--muted); font-size:13px; margin-top:6px }
+    .bar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+    .pill{
+      background:var(--card); border:1px solid var(--ring); border-radius:30px; padding:8px 12px; font-size:13px
+    }
+    button, .btn{
+      background:var(--accent); color:#fff; border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:600;
+      box-shadow:0 6px 18px rgba(124,140,255,.25);
+    }
+    button:hover{ filter:brightness(1.05) }
+    .table{
+      background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:auto;
+    }
+    table{ border-collapse:collapse; width:100%; min-width:680px }
+    thead th{
+      position:sticky; top:0; background:#f7f9ff; color:#334155; text-align:center; font-weight:700; font-size:14px; border-bottom:1px solid var(--border);
+      padding:12px 8px;
+    }
+    tbody td{ padding:10px 8px; text-align:center; border-bottom:1px solid var(--border); }
+    tbody tr:nth-child(even){ background:#fafbff }
+    tbody tr.today{ background:var(--today); outline:2px solid #ffe082 }
+    .legend{ font-size:12px; color:var(--muted); margin:10px 2px }
+    footer{ margin:16px 2px; color:var(--muted); font-size:12.5px }
+    a.source{ color:#3949ab; text-decoration:none }
+    .small{ font-size:12px }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0f1217; --card:#171a22; --ink:#e8eef7; --muted:#95a3b6; --accent:#8894ff; --accent-2:#213b5a; --accent-3:#3a2b3e;
+        --ring:#2b3142; --today:#1e2430; --border:#232a36;
+      }
+      header{ border-color:var(--border) }
+      .btn, button{ box-shadow:none }
+      thead th{ background:#1a1f2b; color:#cfe0ff }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>تقويم السحور والإفطار – صلالة 1447هـ (فبراير–مارس 2026)</h1>
+        <div class="sub">التوقيت المحلي (GMT+4). تُبرز الخانة الخاصة بـ <b>اليوم</b> تلقائيًا.</div>
+        <div class="note">قد يختلف بدء الشهر يومًا واحدًا وفقًا لرؤية الهلال وإعلان الجهات الرسمية.</div>
+      </div>
+      <div class="bar">
+        <span class="pill">حساب: حنفي (مصدر الأوقات: HamariWeb)</span>
+        <button id="downloadCsv">تنزيل CSV</button>
+      </div>
+    </header>
+
+    <div class="table">
+      <table id="cal">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>اليوم/التاريخ الميلادي</th>
+            <th>التاريخ الهجري (تقريبي)</th>
+            <th>السحور (نهاية السحور/فجر)</th>
+            <th>الإفطار (المغرب)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="legend">⚠️ فضلاً استند إلى إعلان وزارة الأوقاف والمساجد بسلطنة عُمان في تحديد بداية الشهر أو تعديل دقيقة حذرية (−1 للسحور، +1 للإفطار) إن لزم.</div>
+
+    <footer>
+      <div class="small">
+        مصدر الجداول: <a class="source" href="https://hamariweb.com/islam/salalah_ramadan-timing136315.aspx" target="_blank" rel="noopener">HamariWeb – Salalah Ramadan 2026</a> (جدول الأيام 1–30) [5](https://hamariweb.com/islam/salalah_ramadan-timing136315.aspx)
+        <br>
+        مراجع بديلة للتحقق والمقارنة: 
+        <a class="source" href="https://www.islamicfinder.org/ramadan-calendar/286621/salalah-ramadan-calendar/" target="_blank" rel="noopener">IslamicFinder – Salalah</a>،
+        <a class="source" href="https://gotopray.com/en/ramadan/oman/salalah/" target="_blank" rel="noopener">GotoPray – Salalah</a>،
+        <a class="source" href="https://quranmazid.com/ramadan/oman/ramadan-calendar-salalah" target="_blank" rel="noopener">QuranMazid – Salalah</a>. ع: https://hamariweb.com/islam/salalah_ramadan-timing136315.aspx
+    const data = [
+      {d:1,  g:'2026-02-19', h:'1 رمضان 1447',  sehri:'05:32', iftar:'18:28'},
+      {d:2,  g:'2026-02-20', h:'2 رمضان 1447',  sehri:'05:32', iftar:'18:29'},
+      {d:3,  g:'2026-02-21', h:'3 رمضان 1447',  sehri:'05:31', iftar:'18:29'},
+      {d:4,  g:'2026-02-22', h:'4 رمضان 1447',  sehri:'05:31', iftar:'18:29'},
+      {d:5,  g:'2026-02-23', h:'5 رمضان 1447',  sehri:'05:30', iftar:'18:30'},
+      {d:6,  g:'2026-02-24', h:'6 رمضان 1447',  sehri:'05:30', iftar:'18:30'},
+      {d:7,  g:'2026-02-25', h:'7 رمضان 1447',  sehri:'05:29', iftar:'18:30'},
+      {d:8,  g:'2026-02-26', h:'8 رمضان 1447',  sehri:'05:29', iftar:'18:30'},
+      {d:9,  g:'2026-02-27', h:'9 رمضان 1447',  sehri:'05:28', iftar:'18:31'},
+      {d:10, g:'2026-02-28', h:'10 رمضان 1447', sehri:'05:27', iftar:'18:31'},
+      {d:11, g:'2026-03-01', h:'11 رمضان 1447', sehri:'05:27', iftar:'18:31'},
+      {d:12, g:'2026-03-02', h:'12 رمضان 1447', sehri:'05:26', iftar:'18:32'},
+      {d:13, g:'2026-03-03', h:'13 رمضان 1447', sehri:'05:25', iftar:'18:32'},
+      {d:14, g:'2026-03-04', h:'14 رمضان 1447', sehri:'05:25', iftar:'18:32'},
+      {d:15, g:'2026-03-05', h:'15 رمضان 1447', sehri:'05:24', iftar:'18:32'},
+      {d:16, g:'2026-03-06', h:'16 رمضان 1447', sehri:'05:24', iftar:'18:33'},
+      {d:17, g:'2026-03-07', h:'17 رمضان 1447', sehri:'05:23', iftar:'18:33'},
+      {d:18, g:'2026-03-08', h:'18 رمضان 1447', sehri:'05:22', iftar:'18:33'},
+      {d:19, g:'2026-03-09', h:'19 رمضان 1447', sehri:'05:21', iftar:'18:33'},
+      {d:20, g:'2026-03-10', h:'20 رمضان 1447', sehri:'05:21', iftar:'18:34'},
+      {d:21, g:'2026-03-11', h:'21 رمضان 1447', sehri:'05:20', iftar:'18:34'},
+      {d:22, g:'2026-03-12', h:'22 رمضان 1447', sehri:'05:19', iftar:'18:34'},
+      {d:23, g:'2026-03-13', h:'23 رمضان 1447', sehri:'05:18', iftar:'18:34'},
+      {d:24, g:'2026-03-14', h:'24 رمضان 1447', sehri:'05:18', iftar:'18:34'},
+      {d:25, g:'2026-03-15', h:'25 رمضان 1447', sehri:'05:17', iftar:'18:35'},
+      {d:26, g:'2026-03-16', h:'26 رمضان 1447', sehri:'05:16', iftar:'18:35'},
+      {d:27, g:'2026-03-17', h:'27 رمضان 1447', sehri:'05:15', iftar:'18:35'},
+      {d:28, g:'2026-03-18', h:'28 رمضان 1447', sehri:'05:15', iftar:'18:35'},
+      {d:29, g:'2026-03-19', h:'29 رمضان 1447', sehri:'05:14', iftar:'18:35'},
+      {d:30, g:'2026-03-20', h:'30 رمضان 1447', sehri:'05:13', iftar:'18:36'}
+    ];
+
+    const tbody = document.querySelector("#cal tbody");
+
+    function fmtDate(iso){
+      const d = new Date(iso+"T00:00:00+04:00"); // توقيت صلالة (GMT+4)
+      const days = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+      const day = days[d.getDay()];
+      const dd = String(d.getDate()).padStart(2,"0");
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const yyyy = d.getFullYear();
+      return `${day} ${dd}-${mm}-${yyyy}`;
+    }
+
+    function build(){
+      const today = new Date();
+      // حوّل اليوم إلى منطقة توقيت صلالة:
+      const now = new Date(today.toLocaleString('en-CA', { timeZone: 'Asia/Muscat' }));
+      const todayKey = now.toISOString().slice(0,10);
+
+      data.forEach(row=>{
+        const tr = document.createElement("tr");
+        if(row.g === todayKey){ tr.classList.add("today"); }
+        tr.innerHTML = `
+          <td>${row.d}</td>
+          <td>${fmtDate(row.g)}</td>
+          <td>${row.h}</td>
+          <td><b>${row.sehri}</b></td>
+          <td><b>${row.iftar}</b></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function downloadCSV(){
+      const header = ["اليوم","التاريخ_الميلادي","التاريخ_الهجري","السحور","الإفطار"];
+      const rows = data.map(r=>[r.d, r.g, r.h, r.sehri, r.iftar]);
+      const csv = [header, ...rows].map(arr => arr.map(x => `"${x}"`).join(",")).join("\n");
+      const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "Salalah_Ramadan_1447_2026.csv";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("downloadCsv").addEventListener("click", downloadCSV);
+    build();
+  </script>
+</body>
+</html>
