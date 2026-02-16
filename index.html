@@ -4,32 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>تقويم السحور والإفطار – صلالة 1447هـ (2026)</title>
-  <!-- خط اختياري؛ يمكن حذفه إذا أردتَ تقليل الطلبات الخارجية -->
+
+  <!-- خطوط عربية -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg: #fcfcfe;
-      --card:#ffffff;
-      --ink:#263238;
-      --muted:#607d8b;
-      --accent:#7c8cff;        /* بنفسجي باستيل */
-      --accent-2:#b7e0ff;      /* أزرق سماوي باستيل */
-      --accent-3:#ffe0f0;      /* وردي باستيل */
-      --ring:#e4e8ff;
-      --today:#fff8e1;
-      --border:#e7ecf3;
+      --bg:#fcfcfe; --card:#ffffff; --ink:#263238; --muted:#607d8b;
+      --accent:#7c8cff; --accent-2:#b7e0ff; --accent-3:#ffe0f0;
+      --ring:#e4e8ff; --today:#fff8e1; --border:#e7ecf3;
+      --shadow:0 6px 18px rgba(124,140,255,.18);
     }
     *{ box-sizing:border-box }
+    html,body{ height:100% }
     body{
       margin:0; background:linear-gradient(180deg,var(--bg),#f6f8ff 60%,#fefcff);
       color:var(--ink); font:16px/1.7 "Cairo", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
       padding:24px;
     }
-    .wrap{
-      max-width:1100px; margin:0 auto;
-    }
+    .wrap{ max-width:1100px; margin:0 auto; }
     header{
       background:linear-gradient(140deg,var(--accent-2),var(--accent-3));
       border:1px solid var(--ring); border-radius:16px; padding:20px 18px; margin-bottom:18px;
@@ -39,12 +34,10 @@
     header .sub{ color:var(--muted); font-size:14px }
     .note{ color:var(--muted); font-size:13px; margin-top:6px }
     .bar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
-    .pill{
-      background:var(--card); border:1px solid var(--ring); border-radius:30px; padding:8px 12px; font-size:13px
-    }
-    button, .btn{
+    .pill{ background:var(--card); border:1px solid var(--ring); border-radius:30px; padding:8px 12px; font-size:13px }
+    button{
       background:var(--accent); color:#fff; border:0; border-radius:10px; padding:10px 14px; cursor:pointer; font-weight:600;
-      box-shadow:0 6px 18px rgba(124,140,255,.25);
+      box-shadow:var(--shadow);
     }
     button:hover{ filter:brightness(1.05) }
     .table{
@@ -58,18 +51,48 @@
     tbody td{ padding:10px 8px; text-align:center; border-bottom:1px solid var(--border); }
     tbody tr:nth-child(even){ background:#fafbff }
     tbody tr.today{ background:var(--today); outline:2px solid #ffe082 }
+
+    /* بطاقات الأدعية */
+    .section-title{ margin:18px 4px 10px; font-weight:700; font-size:18px }
+    .duas{
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+      gap:14px; margin-top:10px;
+    }
+    .dua-card{
+      background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:var(--shadow);
+    }
+    .dua-title{ font-weight:700; margin:0 0 6px 0; }
+    .dua-text{ font-size:17px; line-height:1.9; margin:8px 0; }
+    .dua-tn{ color:var(--muted); font-size:13px; }
+    .dua-actions{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    .ghost{ background:#eef2ff; color:#283593; border:1px solid #dfe4ff; box-shadow:none; }
+
     .legend{ font-size:12px; color:var(--muted); margin:10px 2px }
     footer{ margin:16px 2px; color:var(--muted); font-size:12.5px }
-    a.source{ color:#3949ab; text-decoration:none }
+    a{ color:#3949ab; text-decoration:none }
     .small{ font-size:12px }
+
+    /* الطباعة إلى PDF */
+    @media print{
+      header .bar .pill,
+      #downloadCsv,#exportPdf,#printPdf{ display:none !important; }
+      body{ padding:0; background:#fff; }
+      .table{ border:none; box-shadow:none; }
+      thead th{ position:static; }
+      .dua-card{ break-inside:avoid; }
+    }
+    .table.exporting table{ min-width:unset; width:100%; }
+
+    /* الوضع الداكن */
     @media (prefers-color-scheme: dark){
       :root{
         --bg:#0f1217; --card:#171a22; --ink:#e8eef7; --muted:#95a3b6; --accent:#8894ff; --accent-2:#213b5a; --accent-3:#3a2b3e;
         --ring:#2b3142; --today:#1e2430; --border:#232a36;
       }
       header{ border-color:var(--border) }
-      .btn, button{ box-shadow:none }
+      button{ box-shadow:none }
       thead th{ background:#1a1f2b; color:#cfe0ff }
+      .ghost{ background:#233156; color:#e5e9ff; border-color:#2c3c66; }
     }
   </style>
 </head>
@@ -78,12 +101,14 @@
     <header>
       <div>
         <h1>تقويم السحور والإفطار – صلالة 1447هـ (فبراير–مارس 2026)</h1>
-        <div class="sub">التوقيت المحلي (GMT+4). تُبرز الخانة الخاصة بـ <b>اليوم</b> تلقائيًا.</div>
+        <div class="sub">التوقيت المحلي (GMT+4). تُبرز خانة <b>اليوم</b> تلقائيًا.</div>
         <div class="note">قد يختلف بدء الشهر يومًا واحدًا وفقًا لرؤية الهلال وإعلان الجهات الرسمية.</div>
       </div>
       <div class="bar">
-        <span class="pill">حساب: حنفي (مصدر الأوقات: HamariWeb)</span>
+        <span class="pill">حساب: حنفي | مصدر الأوقات: HamariWeb</span>
         <button id="downloadCsv">تنزيل CSV</button>
+        <button id="printPdf">طباعة/حفظ PDF</button>
+        <button id="exportPdf">تصدير PDF</button>
       </div>
     </header>
 
@@ -102,16 +127,103 @@
       </table>
     </div>
 
-    <div class="legend">⚠️ فضلاً استند إلى إعلان وزارة الأوقاف والمساجد بسلطنة عُمان في تحديد بداية الشهر أو تعديل دقيقة حذرية (−1 للسحور، +1 للإفطار) إن لزم.</div>
+    <!-- أدعية السحور والإفطار (الموجودة سابقًا) -->
+    <h2 class="section-title">أدعية السحور والإفطار</h2>
+    <section class="duas" aria-label="أدعية السحور والإفطار">
+      <article class="dua-card">
+        <h3 class="dua-title">دعاء السحور (نية الصوم)</h3>
+        <p class="dua-text" id="suhoor">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p>
+        <p class="dua-tn">يُستحب عقد النيّة بالقلب قبل الفجر، ويجوز التلفّظ بها بهذا النص عند كثير من أهل العلم.</p>
+        <div class="dua-actions">
+          <button class="ghost" data-copy="#suhoor">نسخ الدعاء</button>
+        </div>
+      </article>
 
-    <footer>
-      <div class="small">
-        مصدر الجداول: <a class="source" href="https://hamariweb.com/islam/salalah_ramadan-timing136315.aspx" target="_blank" rel="noopener">HamariWeb – Salalah Ramadan 2026</a> (جدول الأيام 1–30) [5](https://hamariweb.com/islam/salalah_ramadan-timing136315.aspx)
-        <br>
-        مراجع بديلة للتحقق والمقارنة: 
-        <a class="source" href="https://www.islamicfinder.org/ramadan-calendar/286621/salalah-ramadan-calendar/" target="_blank" rel="noopener">IslamicFinder – Salalah</a>،
-        <a class="source" href="https://gotopray.com/en/ramadan/oman/salalah/" target="_blank" rel="noopener">GotoPray – Salalah</a>،
-        <a class="source" href="https://quranmazid.com/ramadan/oman/ramadan-calendar-salalah" target="_blank" rel="noopener">QuranMazid – Salalah</a>. ع: https://hamariweb.com/islam/salalah_ramadan-timing136315.aspx
+      <article class="dua-card">
+        <h3 class="dua-title">دعاء الإفطار (عند الفطر)</h3>
+        <p class="dua-text" id="iftar1">اللّهُمَّ لَكَ صُمْتُ، وَبِكَ آمَنْتُ، وَعَلَيْكَ تَوَكَّلتُ، وَعَلَى رِزْقِكَ أَفْطَرْتُ</p>
+        <p class="dua-tn">صيغة مشهورة متداولة، وبعض أهل العلم يُضعِّف إسنادها، ويجوز الدعاء بها من غير اعتقاد لزومها.</p>
+        <p class="dua-text" id="iftar2">ذَهَبَ الظَّمَأُ، وَابْتَلَّتِ العُرُوقُ، وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ</p>
+        <div class="dua-actions">
+          <button class="ghost" data-copy="#iftar1">نسخ الدعاء (١)</button>
+          <button class="ghost" data-copy="#iftar2">نسخ الدعاء (٢)</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- أذكار بعد الإفطار (بعد الانتهاء من الأكل) -->
+    <h2 class="section-title">أذكار بعد الإفطار</h2>
+    <section class="duas" aria-label="أذكار بعد الإفطار">
+      <article class="dua-card">
+        <h3 class="dua-title">ذكر الشكر بعد الطعام</h3>
+        <p class="dua-text" id="afterEat1">الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ</p>
+        <p class="dua-tn">مروي عن النبي ﷺ بعد الفراغ من الطعام.</p>
+        <div class="dua-actions">
+          <button class="ghost" data-copy="#afterEat1">نسخ الذكر</button>
+        </div>
+      </article>
+
+      <article class="dua-card">
+        <h3 class="dua-title">حمدٌ جامع بعد الطعام</h3>
+        <p class="dua-text" id="afterEat2">الْحَمْدُ لِلَّهِ حَمْدًا كَثِيرًا طَيِّبًا مُبَارَكًا فِيهِ، غَيْرَ مَكْفِيٍّ وَلَا مُوَدَّعٍ وَلَا مُسْتَغْنًى عَنْهُ، رَبَّنَا</p>
+        <p class="dua-tn">كان النبي ﷺ يقوله إذا رُفعت مائدته.</p>
+        <div class="dua-actions">
+          <button class="ghost" data-copy="#afterEat2">نسخ الذكر</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- دعاء ليلة القدر -->
+    <h2 class="section-title">دعاء ليلة القدر</h2>
+    <section class="duas" aria-label="دعاء ليلة القدر">
+      <article class="dua-card">
+        <h3 class="dua-title">اللَّهُمَّ إِنَّكَ عَفُوٌّ...</h3>
+        <p class="dua-text" id="qadr">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>
+        <p class="dua-tn">أَوْصَى به النبي ﷺ عائشة رضي الله عنها إذا وافقت ليلة القدر.</p>
+        <div class="dua-actions">
+          <button class="ghost" data-copy="#qadr">نسخ الدعاء</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- دعاء ختم القرآن -->
+    <h2 class="section-title">دعاء ختم القرآن</h2>
+    <section class="duas" aria-label="دعاء ختم القرآن">
+      <article class="dua-card">
+        <h3 class="dua-title">دعاء جامع عند إتمام الختم</h3>
+        <p class="dua-text" id="khatm">
+          اللَّهُمَّ ارْحَمْنِي بِالْقُرْآنِ، وَاجْعَلْهُ لِي إِمَامًا وَنُورًا وَهُدًى وَرَحْمَةً،
+          اللَّهُمَّ ذَكِّرْنِي مِنْهُ مَا نُسِّيتُ، وَعَلِّمْنِي مِنْهُ مَا جَهِلْتُ،
+          وَارْزُقْنِي تِلَاوَتَهُ آنَاءَ اللَّيْلِ وَأَطْرَافَ النَّهَارِ،
+          وَاجْعَلْهُ لِي حُجَّةً يَا رَبَّ الْعَالَمِينَ.
+        </p>
+        <p class="dua-tn">لا يوجد نص مُلزِم مخصوص في الختم؛ وهذا دعاءٌ مأثورٌ جامع، ويجوز الدعاء بما فتح الله.</p>
+        <div class="dua-actions">
+          <button class="ghost" data-copy="#khatm">نسخ الدعاء</button>
+        </div>
+      </article>
+    </section>
+
+    <div class="legend">
+      ⚠️ فضلاً استند إلى إعلان وزارة الأوقاف في عُمان في تحديد بداية الشهر أو طبّق دقيقة حذرية (−1 للسحور، +1 للإفطار) إن لزم.
+    </div>
+
+    <footer class="small">
+      <div>
+        مصدر الجداول: <a href="https://hamariweb.com/islam/salalah_ramadan-timing136315.aspx" target="_blank" rel="noopener">HamariWeb – Salalah 2026</a>. 
+        للمقارنة: <a href="https://www.islamicfinder.org/ramadan-calendar/286621/salalah-ramadan-calendar/" target="_blank" rel="noopener">IslamicFinder</a>، 
+        <a href="https://gotopray.com/en/ramadan/oman/salalah/" target="_blank" rel="noopener">GotoPray</a>.
+      </div>
+    </footer>
+  </div>
+
+  <!-- مكتبات التوليد للـ PDF (مطلوبة لزر "تصدير PDF") -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <script>
+    /* بيانات صلالة (حساب حنفي) لرمضان 1447هـ/2026 – بدء 19 فبراير
+       المرجع: HamariWeb */
     const data = [
       {d:1,  g:'2026-02-19', h:'1 رمضان 1447',  sehri:'05:32', iftar:'18:28'},
       {d:2,  g:'2026-02-20', h:'2 رمضان 1447',  sehri:'05:32', iftar:'18:29'},
@@ -159,7 +271,6 @@
 
     function build(){
       const today = new Date();
-      // حوّل اليوم إلى منطقة توقيت صلالة:
       const now = new Date(today.toLocaleString('en-CA', { timeZone: 'Asia/Muscat' }));
       const todayKey = now.toISOString().slice(0,10);
 
@@ -190,6 +301,40 @@
     }
 
     document.getElementById("downloadCsv").addEventListener("click", downloadCSV);
+
+    // أزرار نسخ الأدعية
+    document.querySelectorAll('[data-copy]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const sel = btn.getAttribute('data-copy');
+        const el = document.querySelector(sel);
+        try{
+          await navigator.clipboard.writeText(el.textContent.trim());
+          const original = btn.textContent;
+          btn.textContent = 'تم النسخ ✔';
+          setTimeout(()=> btn.textContent = original, 1400);
+        }catch(e){ alert('لم يتم النسخ تلقائيًا، يمكنك تحديد النص ونسخه يدويًا.'); }
+      });
+    });
+
+    // طباعة/حفظ PDF
+    document.getElementById('printPdf').addEventListener('click', () => {
+      window.print();
+    });
+
+    // تصدير PDF (jsPDF.html)
+    document.getElementById('exportPdf').addEventListener('click', async () => {
+      const content = document.querySelector('.wrap'); // نصدّر الصفحة كاملة بما فيها الأدعية
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      await pdf.html(content, {
+        margin: [10,10,10,10],
+        autoPaging: 'slice',
+        html2canvas: { scale: 2, useCORS: true, windowWidth: content.scrollWidth },
+        callback: (doc) => doc.save('Salalah_Ramadan_1447_2026.pdf')
+      });
+    });
+
     build();
   </script>
 </body>
