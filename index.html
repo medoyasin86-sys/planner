@@ -15,8 +15,8 @@ body { background-color: #f4f4f4; padding: 20px; font-family: 'Segoe UI', Tahoma
 .friday-card .day-label { color: var(--friday-green); }
 .day-input { width: 150px; border-bottom: 1px dashed #999; height: 20px; }
 .content-grid { display: grid; grid-template-columns: 1.8fr 1fr 1.2fr; gap: 15px; }
-.section-box h3 { font-size: 14px; color: #444; margin-bottom: 8px; border-right: 4px solid var(--gold); padding-right: 8px; margin-top: 5px; }
-.friday-card .section-box h3 { border-right-color: var(--friday-green); }
+.section h3 { font-size: 14px; color: #444; margin-bottom: 8px; border-right: 4px solid var(--gold); padding-right: 8px; margin-top: 5px; }
+.friday-card .section h3 { border-right-color: var(--friday-green); }
 .item { display: flex; align-items: center; font-size: 13px; margin-bottom: 6px; white-space: nowrap; }
 .checks-group { display: flex; gap: 5px; margin-right: auto; font-size: 11px; color: #666; }
 input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; }
@@ -26,16 +26,42 @@ input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; }
 </style>
 </head>
 <body>
-<div class="container">
-<script>
-const days = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
-days.forEach((day) => {
-const isFriday = (day === "الجمعة");
-const prayerLabel = isFriday ? "<span class='highlight'>الجمعة</span>" : "الظهر";
-const cardClass = isFriday ? "sticker-card friday-card" : "sticker-card";
-const extraSurah = isFriday ? '<div class="item"><input type="checkbox"> <span class="highlight">سورة الكهف</span></div>' : '';
 
-</script>
+<div class="container">
+<div class="sticker-card">
+<div class="sticker-header">
+<div class="day-label">🌙 ورد يوم السبت</div>
+<div class="day-input"></div>
+</div>
+<div class="content-grid">
+<div class="section">
+<h3>الصلوات</h3>
+<div class="item">الفجر <div class="checks-group"><input type="checkbox">مس <input type="checkbox">جم <input type="checkbox">فر <input type="checkbox">ق</div></div>
+<div class="item">الظهر <div class="checks-group"><input type="checkbox">مس <input type="checkbox">جم <input type="checkbox">فر <input type="checkbox">ق</div></div>
+<div class="item">العصر <div class="checks-group"><input type="checkbox">مس <input type="checkbox">جم <input type="checkbox">فر <input type="checkbox">ق</div></div>
+<div class="item">المغرب <div class="checks-group"><input type="checkbox">مس <input type="checkbox">جم <input type="checkbox">فر <input type="checkbox">ق</div></div>
+<div class="item">العشاء <div class="checks-group"><input type="checkbox">مس <input type="checkbox">جم <input type="checkbox">فر <input type="checkbox">ق</div></div>
+</div>
+<div class="section">
+<h3>السنن</h3>
+<div class="item"><input type="checkbox"> الفجر (2ق)</div>
+<div class="item"><input type="checkbox"> الظهر (4ق)</div>
+<div class="item"><input type="checkbox"> الظهر (2ب)</div>
+<div class="item"><input type="checkbox"> المغرب (2ب)</div>
+<div class="item"><input type="checkbox"> العشاء (2ب)</div>
+</div>
+<div class="section">
+<h3>الأوراد</h3>
+<div class="item"><input type="checkbox"> الورد القرآني</div>
+<div class="item"><input type="checkbox"> سورة الملك</div>
+<div class="item"><input type="checkbox"> أذكار الصباح</div>
+<div class="item"><input type="checkbox"> أذكار المساء</div>
+<div class="item"><input type="checkbox"> أذكار النوم</div>
+</div>
+</div>
+<div class="sig-line">Signature: ✍︎ _________________</div>
+</div>
+
 </div>
 </body>
 </html>
