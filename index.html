@@ -1,15 +1,562 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>بلانر العبادات الرمضاني الكامل</title>
-<style>
-:root { --gold: #9d7d32; --green: #1b5e20; --bg: #fffdf5; }
-body { background-color: #f0f0f0; margin: 0; padding: 20px; font-family: sans-serif; }
-.page-container { max-width: 950px; margin: auto; display: flex; flex-direction: column; gap: 30px; }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>هيدر وملصقات عبادات رمضان</title>
 
+<!-- خط عربي مقروء (إن وُجد اتصال) مع بدائل محلية -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#fcfbf8;          /* خلفية باستيل فاتحة */
+    --paper:#ffffff;       /* ورق الملصق */
+    --ink:#2f3437;         /* لون الكتابة */
+    --muted:#70757a;       /* نص ثانوي */
+    --grid:#d8d5cf;        /* حدود الشبكات */
+    --accent:#caa56a;      /* لمسة ذهبية مطفّية */
+    --accent-soft:#efe6d5; /* ظل ذهبي فاتح */
+    --success:#3d9970;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Cairo", "Noto Naskh Arabic", "Tahoma", system-ui, sans-serif;
+    line-height:1.5;
+  }
+
+  /* حاويات عامة */
+  .container{
+    max-width:1400px;
+    margin:24px auto 48px;
+    padding:0 16px;
+  }
+
+  h1,h2,h3{
+    margin:0 0 12px;
+    font-weight:700;
+  }
+
+  .sub{
+    color:var(--muted);
+    font-weight:600;
+    font-size:0.95rem;
+  }
+
+  /* === الهيدر العرضي الطويل === */
+  .banner{
+    background:linear-gradient(180deg, var(--paper), var(--accent-soft));
+    border:2px solid var(--accent);
+    border-radius:18px;
+    padding:20px 24px;
+    box-shadow:0 6px 18px rgba(0,0,0,.05);
+    display:grid;
+    grid-template-columns: 1.1fr 1fr 1.2fr;
+    gap:18px;
+    align-items:start;
+  }
+
+  .banner .title{
+    grid-column:1/-1;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:6px;
+  }
+  .ribbon{
+    background:var(--accent);
+    color:#fff;
+    padding:8px 14px;
+    border-radius:12px;
+    font-weight:700;
+    letter-spacing:.3px;
+    box-shadow:0 2px 0 rgba(0,0,0,.08) inset;
+  }
+  .note{
+    color:var(--muted);
+    font-size:.92rem;
+  }
+
+  /* أقسام الهيدر */
+  .card{
+    background:var(--paper);
+    border:1.5px solid var(--grid);
+    border-radius:14px;
+    padding:14px;
+  }
+  .card h3{
+    font-size:1.05rem;
+    border-bottom:1px dashed var(--grid);
+    padding-bottom:8px;
+    margin-bottom:10px;
+  }
+
+  /* الصلوات */
+  .prayers{
+    display:grid;
+    grid-template-columns: 88px 1fr;
+    row-gap:8px;
+    column-gap:10px;
+    align-items:center;
+  }
+  .p-name{font-weight:700}
+  .options{
+    display:flex; flex-wrap:wrap; gap:10px 14px;
+    font-size:.95rem;
+  }
+  .chk{display:inline-flex; align-items:center; gap:6px}
+  .chk input{width:16px; height:16px}
+
+  /* السنن الرواتب */
+  .sunan table{
+    width:100%; border-collapse:collapse; font-size:.95rem;
+  }
+  .sunan th, .sunan td{
+    border-bottom:1px dashed var(--grid);
+    padding:6px 4px; text-align:right;
+  }
+  .sunan th{color:var(--muted); font-weight:700}
+  .dots{
+    display:inline-grid; grid-auto-flow:column; gap:6px; vertical-align:middle;
+  }
+  .dot{
+    display:inline-block; width:16px; height:16px; border:1.5px solid var(--ink);
+    border-radius:4px;
+  }
+  .muted{color:var(--muted)}
+  .dash{opacity:.4}
+
+  /* الورد القرآني + الأذكار */
+  .quran-wrap{display:grid; gap:12px}
+  .quran-grid{
+    display:grid;
+    grid-template-columns: repeat(10, minmax(22px,1fr));
+    gap:6px;
+  }
+  .day-box{
+    border:1.5px solid var(--grid);
+    border-radius:6px;
+    text-align:center; font-size:.9rem; padding:4px 0; background:#fff;
+  }
+  .today-input{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:6px;
+  }
+  .line{
+    min-width:120px; border-bottom:2px dotted var(--grid); height:1.1em; display:inline-block;
+  }
+
+  .adhkar{ display:flex; flex-wrap:wrap; gap:12px 16px; margin-top:8px; }
+  .adhkar .chk input{width:16px; height:16px}
+
+  /* === الملصقات اليومية === */
+  .stickers{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap:16px;
+  }
+  .sticker{
+    background:var(--paper);
+    border:2px solid var(--accent);
+    border-radius:18px;
+    padding:14px 14px 16px;
+    box-shadow:0 4px 14px rgba(0,0,0,.05);
+    display:grid; gap:10px;
+    position:relative;
+  }
+  .sticker .head{
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--accent-soft);
+    border:1px solid var(--accent);
+    padding:8px 10px; border-radius:12px; font-weight:700;
+  }
+  .sticker .date-line{
+    color:var(--muted); font-weight:600;
+  }
+  .sticker h4{
+    margin:6px 0 6px; font-size:1rem; border-bottom:1px dashed var(--grid);
+    padding-bottom:6px;
+  }
+  .p-list{ display:grid; grid-template-columns: 86px 1fr; gap:8px 10px; align-items:center; }
+  .mini{ font-size:.93rem; color:var(--muted); }
+  .row{ display:flex; flex-wrap:wrap; gap:10px 12px; }
+
+  .footer-tip{
+    position:absolute; inset-inline-end:10px; inset-block-end:8px;
+    font-size:.78rem; color:var(--muted);
+  }
+
+  /* للطباعة */
+  @media print{
+    body{background:#fff}
+    .container{max-width:none; margin:0; padding:0}
+    .banner{break-inside:avoid}
+    .sticker{break-inside:avoid}
+  }
+</style>
 </head>
 <body>
+  <div class="container">
 
-<div class="page-container">
+    <!-- ===================== الهيدر العرضي الطويل ===================== -->
+    <section class="banner" aria-label="هيدر العبادات لرمضان">
+      <div class="title">
+        <div class="ribbon">عبادات رمضان</div>
+        <div class="note">في يوم الجمعة تتحوّل صلاة <b>الظهر</b> إلى <b>الجمعة</b>، وتُستحب قراءة <b>سورة الكهف</b>.</div>
+      </div>
+
+      <!-- الصلوات -->
+      <div class="card">
+        <h3>الصلوات</h3>
+        <div class="prayers">
+          <div class="p-name">الفجر</div>
+          <div class="options">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+
+          <div class="p-name">الظهر</div>
+          <div class="options">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+
+          <div class="p-name">العصر</div>
+          <div class="options">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+
+          <div class="p-name">المغرب</div>
+          <div class="options">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+
+          <div class="p-name">العشاء</div>
+          <div class="options">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- السنن الرواتب -->
+      <div class="card sunan">
+        <h3>السنن الرواتب <span class="sub">قبلية / بعدية (بالعدد)</span></h3>
+        <table aria-label="السنن الرواتب">
+          <thead>
+            <tr>
+              <th>الصلاة</th>
+              <th>قبلية</th>
+              <th>بعدية</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>الفجر</strong></td>
+              <td><span class="dots" aria-label="قبلية الفجر ٢"><span class="dot"></span><span class="dot"></span></span> <span class="muted">٢</span></td>
+              <td class="dash">—</td>
+            </tr>
+            <tr>
+              <td><strong>الظهر</strong></td>
+              <td><span class="dots" aria-label="قبلية الظهر ٤"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></span> <span class="muted">٤</span></td>
+              <td><span class="dots" aria-label="بعدية الظهر ٢"><span class="dot"></span><span class="dot"></span></span> <span class="muted">٢</span></td>
+            </tr>
+            <tr>
+              <td><strong>العصر</strong></td>
+              <td class="dash">—</td>
+              <td class="dash">—</td>
+            </tr>
+            <tr>
+              <td><strong>المغرب</strong></td>
+              <td class="dash">—</td>
+              <td><span class="dots" aria-label="بعدية المغرب ٢"><span class="dot"></span><span class="dot"></span></span> <span class="muted">٢</span></td>
+            </tr>
+            <tr>
+              <td><strong>العشاء</strong></td>
+              <td class="dash">—</td>
+              <td><span class="dots" aria-label="بعدية العشاء ٢"><span class="dot"></span><span class="dot"></span></span> <span class="muted">٢</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mini">* يمكن تعديل الأعداد حسب العمل الفقهي المتَّبع.</div>
+      </div>
+
+      <!-- الورد القرآني + الأذكار -->
+      <div class="card">
+        <h3>الورد القرآني</h3>
+        <div class="quran-wrap">
+          <div class="quran-grid" aria-label="عداد ٣٠ يومًا">
+            <div class="day-box">١</div><div class="day-box">٢</div><div class="day-box">٣</div><div class="day-box">٤</div><div class="day-box">٥</div>
+            <div class="day-box">٦</div><div class="day-box">٧</div><div class="day-box">٨</div><div class="day-box">٩</div><div class="day-box">١٠</div>
+            <div class="day-box">١١</div><div class="day-box">١٢</div><div class="day-box">١٣</div><div class="day-box">١٤</div><div class="day-box">١٥</div>
+            <div class="day-box">١٦</div><div class="day-box">١٧</div><div class="day-box">١٨</div><div class="day-box">١٩</div><div class="day-box">٢٠</div>
+            <div class="day-box">٢١</div><div class="day-box">٢٢</div><div class="day-box">٢٣</div><div class="day-box">٢٤</div><div class="day-box">٢٥</div>
+            <div class="day-box">٢٦</div><div class="day-box">٢٧</div><div class="day-box">٢٨</div><div class="day-box">٢٩</div><div class="day-box">٣٠</div>
+          </div>
+
+          <div class="today-input">
+            <span>ورد اليوم:</span>
+            <span class="line" aria-label="مساحة للكتابة اليدوية"></span>
+            <span>صفحة / جزء</span>
+            <label class="chk"><input type="checkbox"> تمَّ</label>
+          </div>
+
+          <h3 style="margin-top:8px">الأذكار</h3>
+          <div class="adhkar">
+            <label class="chk"><input type="checkbox"> أذكار الصباح</label>
+            <label class="chk"><input type="checkbox"> أذكار المساء</label>
+            <label class="chk"><input type="checkbox"> أذكار النوم</label>
+            <label class="chk"><input type="checkbox"> سورة الملك (ليلاً)</label>
+            <label class="chk"><input type="checkbox"> خواتيم سورة البقرة</label>
+            <label class="chk"><input type="checkbox"> سورة الكهف (الجمعة فقط)</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== الملصقات اليومية (٧) ===================== -->
+    <section class="stickers" aria-label="ملصقات الأيام">
+      <!-- السبت -->
+      <article class="sticker" aria-label="ملصق يوم السبت">
+        <div class="head">
+          <div>السبت</div>
+          <div class="date-line">التاريخ: <span class="line" style="width:120px"></span></div>
+        </div>
+
+        <h4>الصلاة</h4>
+        <div class="p-list">
+          <div class="p-name">الفجر</div>
+          <div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+
+          <div class="p-name">الظهر</div>
+          <div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+
+          <div class="p-name">العصر</div>
+          <div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+
+          <div class="p-name">المغرب</div>
+          <div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+
+          <div class="p-name">العشاء</div>
+          <div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label>
+          </div>
+        </div>
+
+        <h4>السنن الرواتب</h4>
+        <div class="mini">الفجر: قبلية ٢ — الظهر: قبلية ٤، بعدية ٢ — المغرب: بعدية ٢ — العشاء: بعدية ٢</div>
+
+        <h4>الورد القرآني (اليومي)</h4>
+        <div class="row">
+          <span>ورد اليوم:</span><span class="line" style="width:140px"></span><span>صفحة / جزء</span>
+          <label class="chk"><input type="checkbox"> تمَّ</label>
+        </div>
+
+        <h4>الأذكار</h4>
+        <div class="row">
+          <label class="chk"><input type="checkbox"> الصباح</label>
+          <label class="chk"><input type="checkbox"> المساء</label>
+          <label class="chk"><input type="checkbox"> النوم</label>
+          <label class="chk"><input type="checkbox"> سورة الملك</label>
+          <label class="chk"><input type="checkbox"> خواتيم البقرة</label>
+        </div>
+
+        <div class="footer-tip">اكتب التاريخ يدويًا • ضع علامة داخل المربعات</div>
+      </article>
+
+      <!-- الأحد -->
+      <article class="sticker" aria-label="ملصق يوم الأحد">
+        <div class="head">
+          <div>الأحد</div>
+          <div class="date-line">التاريخ: <span class="line" style="width:120px"></span></div>
+        </div>
+        <h4>الصلاة</h4>
+        <div class="p-list">
+          <div class="p-name">الفجر</div><div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">الظهر</div><div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العصر</div><div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">المغرب</div><div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العشاء</div><div class="row">
+            <label class="chk"><input type="checkbox"> مسجد</label>
+            <label class="chk"><input type="checkbox"> جماعة</label>
+            <label class="chk"><input type="checkbox"> فرد</label>
+            <label class="chk"><input type="checkbox"> قضاء</label></div>
+        </div>
+        <h4>السنن الرواتب</h4>
+        <div class="mini">الفجر: قبلية ٢ — الظهر: قبلية ٤، بعدية ٢ — المغرب: بعدية ٢ — العشاء: بعدية ٢</div>
+        <h4>الورد القرآني (اليومي)</h4>
+        <div class="row"><span>ورد اليوم:</span><span class="line" style="width:140px"></span><span>صفحة / جزء</span><label class="chk"><input type="checkbox"> تمَّ</label></div>
+        <h4>الأذكار</h4>
+        <div class="row"><label class="chk"><input type="checkbox"> الصباح</label><label class="chk"><input type="checkbox"> المساء</label><label class="chk"><input type="checkbox"> النوم</label><label class="chk"><input type="checkbox"> سورة الملك</label><label class="chk"><input type="checkbox"> خواتيم البقرة</label></div>
+        <div class="footer-tip">اكتب التاريخ يدويًا • ضع علامة داخل المربعات</div>
+      </article>
+
+      <!-- الإثنين -->
+      <article class="sticker" aria-label="ملصق يوم الإثنين">
+        <div class="head"><div>الإثنين</div><div class="date-line">التاريخ: <span class="line" style="width:120px"></span></div></div>
+        <h4>الصلاة</h4>
+        <div class="p-list">
+          <div class="p-name">الفجر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">الظهر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العصر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">المغرب</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العشاء</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+        </div>
+        <h4>السنن الرواتب</h4><div class="mini">الفجر: قبلية ٢ — الظهر: قبلية ٤، بعدية ٢ — المغرب: بعدية ٢ — العشاء: بعدية ٢</div>
+        <h4>الورد القرآني (اليومي)</h4><div class="row"><span>ورد اليوم:</span><span class="line" style="width:140px"></span><span>صفحة / جزء</span><label class="chk"><input type="checkbox"> تمَّ</label></div>
+        <h4>الأذكار</h4><div class="row"><label class="chk"><input type="checkbox"> الصباح</label><label class="chk"><input type="checkbox"> المساء</label><label class="chk"><input type="checkbox"> النوم</label><label class="chk"><input type="checkbox"> سورة الملك</label><label class="chk"><input type="checkbox"> خواتيم البقرة</label></div>
+        <div class="footer-tip">اكتب التاريخ يدويًا • ضع علامة داخل المربعات</div>
+      </article>
+
+      <!-- الثلاثاء -->
+      <article class="sticker" aria-label="ملصق يوم الثلاثاء">
+        <div class="head"><div>الثلاثاء</div><div class="date-line">التاريخ: <span class="line" style="width:120px"></span></div></div>
+        <h4>الصلاة</h4>
+        <div class="p-list">
+          <div class="p-name">الفجر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">الظهر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العصر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">المغرب</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العشاء</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+        </div>
+        <h4>السنن الرواتب</h4><div class="mini">الفجر: قبلية ٢ — الظهر: قبلية ٤، بعدية ٢ — المغرب: بعدية ٢ — العشاء: بعدية ٢</div>
+        <h4>الورد القرآني (اليومي)</h4><div class="row"><span>ورد اليوم:</span><span class="line" style="width:140px"></span><span>صفحة / جزء</span><label class="chk"><input type="checkbox"> تمَّ</label></div>
+        <h4>الأذكار</h4><div class="row"><label class="chk"><input type="checkbox"> الصباح</label><label class="chk"><input type="checkbox"> المساء</label><label class="chk"><input type="checkbox"> النوم</label><label class="chk"><input type="checkbox"> سورة الملك</label><label class="chk"><input type="checkbox"> خواتيم البقرة</label></div>
+        <div class="footer-tip">اكتب التاريخ يدويًا • ضع علامة داخل المربعات</div>
+      </article>
+
+      <!-- الأربعاء -->
+      <article class="sticker" aria-label="ملصق يوم الأربعاء">
+        <div class="head"><div>الأربعاء</div><div class="date-line">التاريخ: <span class="line" style="width:120px"></span></div></div>
+        <h4>الصلاة</h4>
+        <div class="p-list">
+          <div class="p-name">الفجر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">الظهر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العصر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">المغرب</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العشاء</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+        </div>
+        <h4>السنن الرواتب</h4><div class="mini">الفجر: قبلية ٢ — الظهر: قبلية ٤، بعدية ٢ — المغرب: بعدية ٢ — العشاء: بعدية ٢</div>
+        <h4>الورد القرآني (اليومي)</h4><div class="row"><span>ورد اليوم:</span><span class="line" style="width:140px"></span><span>صفحة / جزء</span><label class="chk"><input type="checkbox"> تمَّ</label></div>
+        <h4>الأذكار</h4><div class="row"><label class="chk"><input type="checkbox"> الصباح</label><label class="chk"><input type="checkbox"> المساء</label><label class="chk"><input type="checkbox"> النوم</label><label class="chk"><input type="checkbox"> سورة الملك</label><label class="chk"><input type="checkbox"> خواتيم البقرة</label></div>
+        <div class="footer-tip">اكتب التاريخ يدويًا • ضع علامة داخل المربعات</div>
+      </article>
+
+      <!-- الخميس -->
+      <article class="sticker" aria-label="ملصق يوم الخميس">
+        <div class="head"><div>الخميس</div><div class="date-line">التاريخ: <span class="line" style="width:120px"></span></div></div>
+        <h4>الصلاة</h4>
+        <div class="p-list">
+          <div class="p-name">الفجر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">الظهر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العصر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">المغرب</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العشاء</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+        </div>
+        <h4>السنن الرواتب</h4><div class="mini">الفجر: قبلية ٢ — الظهر: قبلية ٤، بعدية ٢ — المغرب: بعدية ٢ — العشاء: بعدية ٢</div>
+        <h4>الورد القرآني (اليومي)</h4><div class="row"><span>ورد اليوم:</span><span class="line" style="width:140px"></span><span>صفحة / جزء</span><label class="chk"><input type="checkbox"> تمَّ</label></div>
+        <h4>الأذكار</h4><div class="row"><label class="chk"><input type="checkbox"> الصباح</label><label class="chk"><input type="checkbox"> المساء</label><label class="chk"><input type="checkbox"> النوم</label><label class="chk"><input type="checkbox"> سورة الملك</label><label class="chk"><input type="checkbox"> خواتيم البقرة</label></div>
+        <div class="footer-tip">اكتب التاريخ يدويًا • ضع علامة داخل المربعات</div>
+      </article>
+
+      <!-- الجمعة (مخصص) -->
+      <article class="sticker" aria-label="ملصق يوم الجمعة">
+        <div class="head"><div>الجمعة</div><div class="date-line">التاريخ: <span class="line" style="width:120px"></span></div></div>
+        <h4>الصلاة</h4>
+        <div class="p-list">
+          <div class="p-name">الفجر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name"><strong>الجمعة</strong></div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العصر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">المغرب</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العشاء</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+        </div>
+        <h4>السنن الرواتب</h4><div class="mini">الفجر: قبلية ٢ — الظهر/الجمعة: قبلية ٤، بعدية ٢ — المغرب: بعدية ٢ — العشاء: بعدية ٢</div>
+        <h4>الورد القرآني (اليومي)</h4><div class="row"><span>ورد اليوم:</span><span class="line" style="width:140px"></span><span>صفحة / جزء</span><label class="chk"><input type="checkbox"> تمَّ</label></div>
+        <h4>الأذكار</h4>
+        <div class="row">
+          <label class="chk"><input type="checkbox"> الصباح</label>
+          <label class="chk"><input type="checkbox"> المساء</label>
+          <label class="chk"><input type="checkbox"> النوم</label>
+          <label class="chk"><input type="checkbox"> سورة الكهف</label>
+          <label class="chk"><input type="checkbox"> سورة الملك</label>
+          <label class="chk"><input type="checkbox"> خواتيم البقرة</label>
+        </div>
+        <div class="footer-tip">الظهر ← الجمعة • أضِف سورة الكهف</div>
+      </article>
+
+      <!-- السبت التالي (للتماشي مع ٧ ملصقات أسبوعية) -->
+      <article class="sticker" aria-label="ملصق يوم السبت (التالي)">
+        <div class="head"><div>السبت</div><div class="date-line">التاريخ: <span class="line" style="width:120px"></span></div></div>
+        <h4>الصلاة</h4>
+        <div class="p-list">
+          <div class="p-name">الفجر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">الظهر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العصر</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">المغرب</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+          <div class="p-name">العشاء</div><div class="row"><label class="chk"><input type="checkbox"> مسجد</label><label class="chk"><input type="checkbox"> جماعة</label><label class="chk"><input type="checkbox"> فرد</label><label class="chk"><input type="checkbox"> قضاء</label></div>
+        </div>
+        <h4>السنن الرواتب</h4><div class="mini">الفجر: قبلية ٢ — الظهر: قبلية ٤، بعدية ٢ — المغرب: بعدية ٢ — العشاء: بعدية ٢</div>
+        <h4>الورد القرآني (اليومي)</h4><div class="row"><span>ورد اليوم:</span><span class="line" style="width:140px"></span><span>صفحة / جزء</span><label class="chk"><input type="checkbox"> تمَّ</label></div>
+        <h4>الأذكار</h4><div class="row"><label class="chk"><input type="checkbox"> الصباح</label><label class="chk"><input type="checkbox"> المساء</label><label class="chk"><input type="checkbox"> النوم</label><label class="chk"><input type="checkbox"> سورة الملك</label><label class="chk"><input type="checkbox"> خواتيم البقرة</label></div>
+        <div class="footer-tip">اكتب التاريخ يدويًا • ضع علامة داخل المربعات</div>
+      </article>
+    </section>
+
+  </div>
+</body>
+</html>
