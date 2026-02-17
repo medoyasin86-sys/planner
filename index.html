@@ -54,7 +54,9 @@
     /* صفحات البلانر — معاينة نصفية */
     #planner{ display:block }
     .page{
-      width:var(--preview-w); height:var(--preview-h);
+      width:var(--preview-w);
+      min-height:var(--preview-h); /* منع القصّ: تتمدّد عند الحاجة */
+      height:auto;
       background:var(--card); border:1.5px solid var(--border); border-radius:14px;
       margin:12px auto; padding:12px; position:relative; box-shadow:var(--shadow);
       display:flex; flex-direction:column; gap:10px;
@@ -78,11 +80,11 @@
     .card{
       border:1.4px solid var(--gold); border-radius:14px; padding:10px;
       background:linear-gradient(180deg,#ffffff 0%, #fffdf6 100%);
-      box-shadow:var(--shadow); position:relative; overflow:hidden;
+      box-shadow:var(--shadow); position:relative; overflow:visible; /* منع القص داخل البطاقة */
     }
     .section-title{
       margin:0 0 8px 0; background:linear-gradient(90deg, #1a4d2e, #235f3a); color:#fff;
-      padding:6px 10px; border-radius:9px; font-family:'Reem Kufi',sans-serif; font-size:14px; box-shadow:var(--inner);
+      padding:6px 10px; border-radius:9px; font-family:'Reem Kufi',sans-serif; font-size:14px; box-shadow: var(--inner);
     }
     .grid-3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px }
 
@@ -100,14 +102,28 @@
     .sunnah-label{ font-size:13.2px }
     .rb{ display:flex; gap:5px; align-items:center }
 
-    /* شريط الورد */
+    /* أشرطة (ورد/تراويح) — 30 خانة واضحة */
     .qstrip{ display:grid; grid-template-columns:repeat(30, 1fr); gap:3px; margin-top:4px }
-    .qcell{ border:1.3px dashed var(--gold); height:16px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:#8c7a46; font-weight:700; font-size:10.5px; background:#fff; position:relative }
-    .qcell.current{ background: linear-gradient(180deg,#1a4d2e,#0f2e1b); color:#fff; border-color:var(--gold); }
+    .qcell{
+      border:1.3px dashed var(--gold);
+      height:16px; border-radius:7px;
+      display:flex; align-items:center; justify-content:center;
+      color:#8c7a46; font-weight:700; font-size:10.5px; background:#fff; position:relative
+    }
+    .qcell.current{ background: linear-gradient(180deg,#1a4d2e,#0f2e1b); color:#fff; border-color:var(--gold) }
     .qcell.current::after{
       content:'اليوم'; position:absolute; bottom:-18px; background:linear-gradient(180deg,#ffe9b9,#e7cb83);
       color:#1a1a1a; border:1px solid var(--gold); border-radius:6px; padding:1px 6px; font-size:9.5px; font-weight:800;
     }
+
+    /* إمساكية مصغّرة */
+    .imsak-mini{
+      display:grid; grid-template-columns:repeat(8, auto); gap:6px; align-items:center;
+      background:linear-gradient(180deg,#ffffff,#fff8e6);
+      border:1.6px solid var(--gold); border-radius:12px; padding:6px 8px; font-size:12.5px; box-shadow:var(--inner), var(--shadow)
+    }
+    .imsak-mini .k{ color:#2a2a2a; background:linear-gradient(180deg,#f7f3e6,#efe5c8); border:1px solid var(--border); border-radius:8px; padding:3px 8px; text-align:center; font-weight:700 }
+    .imsak-mini .v{ color:#1f2937; border-bottom:1px dashed var(--border); padding:0 6px; text-align:center; font-weight:700; white-space:nowrap; min-width:64px }
 
     /* التقاط خارج الشاشة وقت التصدير */
     #planner.offscreen-render{
@@ -198,7 +214,6 @@ const PrayTimes=(function(){
     return {decl, EqT};
   }
   function hourAngleByAltitude(altDeg, latDeg, declDeg){
-    // altDeg: ارتفاع الشمس (بالدرجات) فوق الأفق (سالب تحت الأفق)
     const D2R=Math.PI/180, R2D=180/Math.PI;
     const alt=altDeg*D2R, lat=latDeg*D2R, dec=declDeg*D2R;
     const term = (Math.sin(alt) - Math.sin(lat)*Math.sin(dec)) / (Math.cos(lat)*Math.cos(dec));
@@ -288,7 +303,7 @@ function makePage(idx, dateObj){
       <td style="text-align:center"><span class="checkbox"></span></td></tr>`; }
   grid.appendChild(section('🕋 الفروض (م=مسجد | ج=جماعة | ف=فرد | ق=قضاء)', fTbl));
 
-  /* 🌱 السنن الرواتب */
+  /* 🌱 السنن الرواتب (مع الشفع والوتر) */
   const sBox=el('div',{}), sList=[];
   sList.push({label:'الفجر', sub:'قبلية', count:2});
   if(isFri){ sList.push({label:'الجمعة', sub:'بعدية', count:4, note:'٢ أو ٤'}); }
@@ -296,6 +311,9 @@ function makePage(idx, dateObj){
   sList.push({label:'المغرب', sub:'بعدية', count:2});
   sList.push({label:'العشاء', sub:'بعدية', count:2});
   sList.push({label:'العصر (اختياري)', sub:'قبلية', count:4});
+  /* ➕ الشفع والوتر (٣ مربعات) */
+  sList.push({label:'الشفع والوتر', sub:'ليلًا', count:3});
+
   sList.forEach(r=>{
     const row=el('div',{class:'sunnah-row'},
       el('span',{class:'sunnah-label'}, `${r.label}: ${r.sub}${r.note?` (${r.note})`:''}`),
@@ -313,10 +331,23 @@ function makePage(idx, dateObj){
 
   page.appendChild(grid);
 
-  /* 📖 شريط الورد القرآني */
+  /* 📖 شريط الورد القرآني (30 خانة) */
   const qstrip=el('div',{class:'qstrip'});
-  for(let i=1;i<=30;i++){ const cell=el('div',{class:'qcell'}, toArabicDigits(i)); if(todayIndex()===i) cell.classList.add('current'); qstrip.appendChild(cell); }
-  page.appendChild(section('📖 شريط الورد القرآني (الشهر كاملًا — ضع ✓ في GoodNotes)', qstrip));
+  for(let i=1;i<=30;i++){
+    const cell=el('div',{class:'qcell'}, toArabicDigits(i));
+    if(todayIndex()===i) cell.classList.add('current');
+    qstrip.appendChild(cell);
+  }
+  page.appendChild(section('📖 شريط الورد القرآني (الشهر كاملًا — ضع ✓)', qstrip));
+
+  /* 🕌 شريط صلاة التراويح (30 خانة) — نفس أسلوب الورد */
+  const tStrip=el('div',{class:'qstrip'});
+  for(let i=1;i<=30;i++){
+    const cell=el('div',{class:'qcell'}, toArabicDigits(i));
+    if(todayIndex()===i) cell.classList.add('current');
+    tStrip.appendChild(cell);
+  }
+  page.appendChild(section('🕌 شريط صلاة التراويح (ليالي رمضان — ضع ✓)', tStrip));
 
   /* 🕯️ أدعية ونقاط اليوم */
   const dua=el('div',{},
@@ -366,15 +397,24 @@ async function snapshotAsIPad(node){
   const previewW = parseFloat(getComputedStyle(node).width); // 1080px
   const scale = PAGE_W / previewW; // 2160 / 1080 = 2
   const canvas = await html2canvas(node, { scale, useCORS:true, backgroundColor:'#ffffff' });
-  return canvas.toDataURL('image/png');
+  return { data: canvas.toDataURL('image/png'), w: canvas.width, h: canvas.height };
 }
 
 /* ====== PDF / طباعة ====== */
 function libsReady(){ return !!(window.jspdf && window.jspdf.jsPDF && window.html2canvas); }
 
+/* ملاءمة الصورة داخل صفحة PDF بدون قصّ أو تمديد */
+function addImageFit(pdf, imgData, imgPxW, imgPxH, pagePxW, pagePxH){
+  const imgAspect  = imgPxW / imgPxH;
+  const pageAspect = pagePxW / pagePxH;
+  let w = pagePxW, h = pagePxH;
+  if (imgAspect > pageAspect) h = w / imgAspect; else w = h * imgAspect;
+  const x = (pagePxW - w) / 2, y = (pagePxH - h) / 2;
+  pdf.addImage(imgData, 'PNG', x, y, w, h);
+}
+
 async function exportAllPDF(){
   if(!libsReady()){ alert('المكتبات لم تُحمّل بعد. أعد تحميل الصفحة ثم جرّب.'); return; }
-  // تأكّد من الخطوط
   if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch(e){} }
   await buildAll();
 
@@ -387,9 +427,9 @@ async function exportAllPDF(){
   const pages = [...document.querySelectorAll('#planner .page')];
 
   for(let i=0;i<pages.length;i++){
-    const imgData = await snapshotAsIPad(pages[i]);
+    const snap = await snapshotAsIPad(pages[i]);
     if(i>0) pdf.addPage(PDF_SIZE, PDF_ORI);
-    pdf.addImage(imgData, 'PNG', 0, 0, PAGE_W, PAGE_H);
+    addImageFit(pdf, snap.data, snap.w, snap.h, PAGE_W, PAGE_H);
   }
   pdf.save('Ramadan_1447_2026_iPad102_Landscape_Muqshin_12h.pdf');
 
@@ -411,11 +451,11 @@ async function exportOnePDF(){
   await new Promise(r=>requestAnimationFrame(r));
 
   const node = document.querySelectorAll('#planner .page')[day-1];
-  const imgData = await snapshotAsIPad(node);
+  const snap = await snapshotAsIPad(node);
 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF({orientation:PDF_ORI, unit:PDF_UNIT, format:PDF_SIZE});
-  pdf.addImage(imgData, 'PNG', 0, 0, PAGE_W, PAGE_H);
+  addImageFit(pdf, snap.data, snap.w, snap.h, PAGE_W, PAGE_H);
 
   const iso = node.dataset.date || '';
   pdf.save(`Ramadan1447_iPad102_Landscape_Muqshin_Day${String(day).padStart(2,'0')}${iso? '_' + iso : ''}_12h.pdf`);
