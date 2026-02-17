@@ -23,9 +23,9 @@
       box-sizing: border-box;
     }
 
-    /* البطاقات */
+    /* البطاقات (تم تعديلها لتكون مستطيلة) */
     .item {
-      width: 64px;
+      width: 90px;           /* ← زوّد عرض البطاقة */
       height: 64px;
       border-radius: 8px;
       text-align: center;
@@ -33,29 +33,30 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-weight: 900;        /* Bold قوي وواضح */
-      font-size: 18px;         /* الرقم كبير */
-      line-height: 1.1;
-      color: #3a1a1a;          /* بني غامق ناعم */
+      font-weight: 900;       
+      font-size: 20px;        /* ← الرقم الآن واضح وعلى سطر واحد */
+      color: #3a1a1a;
+      line-height: 1.2;
     }
 
     /* ألوان فاخرة جديدة */
     .ruby {
-      background: #a4003a;   /* Ruby Dark */
+      background: #a4003a;   
       color: #ffffff;
     }
 
     .beige {
-      background: #f5e9da;   /* Sand Beige راقٍ */
+      background: #f5e9da;   
       color: #3b1b1b;
     }
 
     /* وقت الحصة */
     .time {
       margin-top: 4px;
-      font-size: 12px;        /* أكبر من قبل */
-      font-weight: 800;       /* Bold وواضح */
-      opacity: 1;             /* بدون تخفيف */
+      font-size: 13px;
+      font-weight: 800;
+      opacity: 1;
+      line-height: 1.1;
     }
 
   </style>
