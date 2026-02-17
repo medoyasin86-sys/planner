@@ -7,7 +7,7 @@
     body {
       margin: 0;
       padding: 20px;
-      background: #faf8f5; /* بيج ناعم للخلفية */
+      background: #faf8f5;
       font-family: "Cairo", sans-serif;
     }
 
@@ -16,28 +16,44 @@
       width: 1200px;
       padding: 6px;
       background: #ffffff;
-      border: 1px solid #e8e0d8; /* بيج فاتح جدًا */
+      border: 1px solid #e8e0d8;
       border-radius: 8px;
       display: flex;
-      gap: 4px;
-      font-size: 13px;
-      font-weight: 700; /* Bold للأرقام */
+      gap: 6px;
       box-sizing: border-box;
     }
 
-    /* العناصر */
+    /* البطاقات */
     .item {
-      padding: 4px 10px;
-      border-radius: 4px;
+      width: 60px;               /* تضييق العرض */
+      height: 60px;              /* لجعلها مربّعة */
+      background: #f2e7d8;
+      border-radius: 6px;
       text-align: center;
-      white-space: nowrap;
-      line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: 800;          /* Bold قوي وواضح */
+      font-size: 16px;           /* تكبير الخط */
+      line-height: 1.1;
+      color: #5a000f;
     }
 
-    /* ألوان Ruby + Beige */
-    .ruby { background: #b30035; color: #ffffff; } /* أحمر ياقوتي */
-    .beige { background: #f2e7d8; color: #5a000f; } /* بيج محايد */
-    
+    /* ألوان Ruby */
+    .ruby {
+      background: #b30035;
+      color: #ffffff;
+    }
+
+    /* وقت أصغر قليلاً */
+    .time {
+      font-size: 10px;
+      margin-top: 2px;
+      opacity: 0.9;
+      font-weight: 600;
+    }
+
   </style>
 </head>
 
@@ -45,19 +61,25 @@
 
   <div class="header-bar">
 
-    <div class="item ruby">ط<br>7:30–7:40</div>
+    <div class="item ruby">
+      ط
+      <div class="time">7:30–7:40</div>
+    </div>
 
-    <div class="item beige">1<br>7:40–8:15</div>
-    <div class="item beige">2<br>8:15–8:50</div>
-    <div class="item beige">3<br>8:50–9:25</div>
-    <div class="item beige">4<br>9:25–10:00</div>
+    <div class="item">1<div class="time">7:40–8:15</div></div>
+    <div class="item">2<div class="time">8:15–8:50</div></div>
+    <div class="item">3<div class="time">8:50–9:25</div></div>
+    <div class="item">4<div class="time">9:25–10:00</div></div>
 
-    <div class="item ruby">ف<br>10:00–10:10</div>
+    <div class="item ruby">
+      ف
+      <div class="time">10:00–10:10</div>
+    </div>
 
-    <div class="item beige">5<br>10:10–10:45</div>
-    <div class="item beige">6<br>10:45–11:20</div>
-    <div class="item beige">7<br>11:20–11:55</div>
-    <div class="item beige">8<br>11:55–12:30</div>
+    <div class="item">5<div class="time">10:10–10:45</div></div>
+    <div class="item">6<div class="time">10:45–11:20</div></div>
+    <div class="item">7<div class="time">11:20–11:55</div></div>
+    <div class="item">8<div class="time">11:55–12:30</div></div>
 
   </div>
 
