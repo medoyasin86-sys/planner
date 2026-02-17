@@ -1,40 +1,244 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>بانر الحصص</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <section class="banner-wrap">
-      <!-- صف الترويسة -->
-      <div class="row header-row">
-        <div class="cell cell-title lessons-title">الحصة</div>
-        <!-- الخانات المرقمة 1..8 -->
-        <div class="cell cell-num">1</div>
-        <div class="cell cell-num">2</div>
-        <div class="cell cell-num">3</div>
-        <div class="cell cell-num">4</div>
-        <div class="cell cell-num">5</div>
-        <div class="cell cell-num">6</div>
-        <div class="cell cell-num">7</div>
-        <div class="cell cell-num">8</div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>هيدر جدول للحصص — GoodNotes</title>
+  <style>
+    /* ========== ضبط عام ========== */
+    :root{
+      /* تحكّم سريع بالحجم العام للهيدر */
+      --banner-width: 1200px;   /* العرض النهائي المقترح للهيدر */
+      --banner-height: 180px;   /* الارتفاع: اجعله 140–220 حسب رغبتك */
+      --radius: 14px;
+
+      /* ألوان باستيل فاخرة ومنسجمة */
+      --bg: #faf9fb;                 /* خلفية عامة هادئة */
+      --card: #ffffff;
+      --text: #2c2c2c;
+      --muted: #6e6e6e;
+      --divider: #ece7f3;
+
+      /* ألوان الخانات */
+      --col-assembly: #f7e8ff;   /* بنفسجي فاتح */
+      --col-lesson-1: #e6f5ff;   /* أزرق ثلجي */
+      --col-lesson-2: #eafaf1;   /* أخضر نعناعي */
+      --col-lesson-3: #fff4e6;   /* مشمشي فاتح */
+      --col-lesson-4: #fdebed;   /* وردي لطيف */
+      --col-recess:   #fffbe6;   /* أصفر فاتح */
+      --col-lesson-5: #e6f5ff;
+      --col-lesson-6: #eafaf1;
+      --col-lesson-7: #fff4e6;
+      --col-lesson-8: #fdebed;
+
+      /* خطوط */
+      --font-stack: "Dubai", "Cairo", "Noto Naskh Arabic", "Noto Kufi Arabic", "Segoe UI", Tahoma, sans-serif;
+
+      /* أحجام النص */
+      --title-size: 16px;
+      --time-size: 14px;
+      --tag-size: 12px;
+
+      /* ظل/لمعة فاخرة خفيفة */
+      --shadow: 0 10px 24px rgba(37, 20, 78, 0.08);
+      --inner: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    html, body{
+      margin:0; padding:0;
+      background: var(--bg);
+      font-family: var(--font-stack);
+      color: var(--text);
+    }
+
+    /* حاوية الهيدر */
+    .banner-wrap{
+      width: min(98vw, var(--banner-width));
+      height: var(--banner-height);
+      margin: 20px auto;
+      border-radius: calc(var(--radius) + 4px);
+      background: linear-gradient(135deg,#fdfcff 0%, #f8f6ff 100%);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      box-sizing: border-box;
+      border: 1px solid var(--divider);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* شريط عنوان صغير اختياري */
+    .side-title{
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      background: #f2ecff;
+      color: #5a3fb2;
+      border: 1px solid #e6defc;
+      border-radius: 10px;
+      padding: 10px 6px;
+      margin-inline: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .5px;
+      box-shadow: var(--inner);
+      user-select: none;
+    }
+
+    /* صف الخانات */
+    .row{
+      display: grid;
+      grid-template-columns: 1.1fr repeat(4, 1fr) .9fr repeat(4, 1fr);
+      gap: 8px;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* خانة عامة */
+    .cell{
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      position: relative;
+      box-shadow: var(--inner);
+      border: 1px solid var(--divider);
+      overflow: hidden;
+    }
+
+    /* شريط لوني علوي رقيق */
+    .cell::before{
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 8px;
+      background: currentColor;
+      opacity: .22;
+    }
+
+    /* محتوى الخانة */
+    .label{
+      font-weight: 800;
+      font-size: var(--title-size);
+      margin-bottom: 6px;
+      letter-spacing: .2px;
+    }
+    .time{
+      font-size: var(--time-size);
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .tag{
+      position: absolute;
+      inset-inline-end: 8px;
+      inset-block-start: 8px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--divider);
+      border-radius: 999px;
+      font-size: var(--tag-size);
+      padding: 2px 8px;
+      color: #5a3fb2;
+      font-weight: 700;
+      backdrop-filter: blur(2px);
+    }
+
+    /* تلوين مخصص لكل خانة */
+    .assembly{ background: var(--col-assembly); color: #7b3fd4; }
+    .l1{ background: var(--col-lesson-1); color: #2b82c7; }
+    .l2{ background: var(--col-lesson-2); color: #2a8a5d; }
+    .l3{ background: var(--col-lesson-3); color: #d07a1a; }
+    .l4{ background: var(--col-lesson-4); color: #c0526b; }
+    .recess{ background: var(--col-recess); color: #c69200; }
+    .l5{ background: var(--col-lesson-5); color: #2b82c7; }
+    .l6{ background: var(--col-lesson-6); color: #2a8a5d; }
+    .l7{ background: var(--col-lesson-7); color: #d07a1a; }
+    .l8{ background: var(--col-lesson-8); color: #c0526b; }
+
+    /* تحسين الطباعة/التصدير */
+    @media print{
+      body{ background:#fff; }
+      .banner-wrap{
+        width: 180mm; /* عرض مناسب ليملأ رأس صفحة A4 تقريباً */
+        height: 28mm; /* ارتفاع الهيدر */
+        margin: 0 auto;
+        box-shadow: none;
+        border: 0;
+      }
+      .side-title{ display: none; } /* يمكن إخفاؤه عند الطباعة إن رغبت */
+    }
+  </style>
+</head>
+<body>
+  <div class="banner-wrap" aria-label="هيدر جدول اليوم">
+    <div class="side-title" aria-hidden="true">الجدول اليومي</div>
+
+    <div class="row">
+      <!-- الطابور -->
+      <div class="cell assembly" role="group" aria-label="الطابور">
+        <span class="tag">الطابور</span>
+        <div class="label">الطابور</div>
+        <div class="time">7:30 – 7:40 <span aria-hidden="true">•</span> (10 د)</div>
       </div>
 
-      <!-- صف عنوان الصف -->
-      <div class="row grade-row">
-        <div class="cell cell-title grade-title">الصف</div>
-        <!-- خلايا فارغة أسفل الأرقام (يمكنك وضع بياناتك لاحقًا) -->
-        <div class="cell cell-blank"></div>
-        <div class="cell cell-blank"></div>
-        <div class="cell cell-blank"></div>
-        <div class="cell cell-blank"></div>
-        <div class="cell cell-blank"></div>
-        <div class="cell cell-blank"></div>
-        <div class="cell cell-blank"></div>
-        <div class="cell cell-blank"></div>
+      <!-- الحصص قبل الفسحة -->
+      <div class="cell l1" role="group" aria-label="الحصة الأولى">
+        <span class="tag">1</span>
+        <div class="label">الحصة الأولى</div>
+        <div class="time">7:40 – 8:15 (35 د)</div>
       </div>
-    </section>
-  </body>
+      <div class="cell l2" role="group" aria-label="الحصة الثانية">
+        <span class="tag">2</span>
+        <div class="label">الحصة الثانية</div>
+        <div class="time">8:15 – 8:50 (35 د)</div>
+      </div>
+      <div class="cell l3" role="group" aria-label="الحصة الثالثة">
+        <span class="tag">3</span>
+        <div class="label">الحصة الثالثة</div>
+        <div class="time">8:50 – 9:25 (35 د)</div>
+      </div>
+      <div class="cell l4" role="group" aria-label="الحصة الرابعة">
+        <span class="tag">4</span>
+        <div class="label">الحصة الرابعة</div>
+        <div class="time">9:25 – 10:00 (35 د)</div>
+      </div>
+
+      <!-- الفسحة -->
+      <div class="cell recess" role="group" aria-label="الفسحة">
+        <span class="tag">فسحة</span>
+        <div class="label">الفسحة</div>
+        <div class="time">10:00 – 10:10 (10 د)</div>
+      </div>
+
+      <!-- الحصص بعد الفسحة -->
+      <div class="cell l5" role="group" aria-label="الحصة الخامسة">
+        <span class="tag">5</span>
+        <div class="label">الحصة الخامسة</div>
+        <div class="time">10:10 – 10:45 (35 د)</div>
+      </div>
+      <div class="cell l6" role="group" aria-label="الحصة السادسة">
+        <span class="tag">6</span>
+        <div class="label">الحصة السادسة</div>
+        <div class="time">10:45 – 11:20 (35 د)</div>
+      </div>
+      <div class="cell l7" role="group" aria-label="الحصة السابعة">
+        <span class="tag">7</span>
+        <div class="label">الحصة السابعة</div>
+        <div class="time">11:20 – 11:55 (35 د)</div>
+      </div>
+      <div class="cell l8" role="group" aria-label="الحصة الثامنة">
+        <span class="tag">8</span>
+        <div class="label">الحصة الثامنة</div>
+        <div class="time">11:55 – 12:30 (35 د)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- إرشاد بسيط (لن يظهر عند الطباعة) -->
+  <div style="text-align:center; color:#8a84a3; font-family:var(--font-stack); font-size:13px; margin:8px 0 24px;">
+    تلميح: غيّر القيم <b>--banner-width</b> و<b>--banner-height</b> من :root لضبط الحجم حسب هيدر GoodNotes.
+  </div>
+</body>
 </html>
