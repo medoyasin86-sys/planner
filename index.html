@@ -2,152 +2,133 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>هيدر نحيف — حصص رأسية + من/إلى رأسية</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
   :root{
-    /* تحكّم سريع بالنحافة */
-    --banner-width: 980px;   /* غيّرها حسب عرض هيدر صفحتك */
-    --card: 44px;            /* حجم البطاقة (مربعة). جرّب 40px لنسخة أنحف */
-    --gap: 4px;              /* مسافة بين البطاقات */
-    --radius: 7px;
-
-    /* ألوان */
-    --ruby: #8b002b;         /* ياقوتي للحصص */
-    --ruby-ink: #ffffff;     /* نص أبيض فوق الياقوتي */
-    --cream: #faeedb;        /* كريمي للأوقات */
-    --cream-ink: #8b002b;    /* نص ياقوتي فوق الكريمي */
-
-    /* إطار */
-    --frame-bg: #ffffff;
-    --frame-border: #ddcfc6;
-    --page-bg: #f7f3f1;
+    --card: 48px;             /* حجم البطاقات — يمكن تصغيره */
+    --gap: 4px;
+    --ruby: #8b002b;
+    --ruby-ink: #ffffff;
+    --cream: #faeedb;
+    --cream-ink: #8b002b;
   }
 
-  html, body{
-    margin:0; padding:0;
-    background: var(--page-bg);
-    font-family: "Cairo","Noto Kufi Arabic","Segoe UI",Tahoma,sans-serif;
+  body{
+    background:#f7f3f1;
+    padding:20px;
+    font-family:"Cairo",sans-serif;
   }
 
   .wrap{
-    width: min(96vw, var(--banner-width));
-    margin: 14px auto;
-    background: var(--frame-bg);
-    border: 1px solid var(--frame-border);
-    border-radius: 10px;
-    padding: 8px;            /* حافة إطار رفيعة للهيدر */
-    box-sizing: border-box;
+    background:white;
+    padding:10px;
+    border-radius:10px;
+    width:fit-content;
+    margin:auto;
+    border:1px solid #dbcac2;
   }
 
-  /* شبكة أفقية: 10 أعمدة × 3 صفوف (حصص / من / إلى) */
   .grid{
-    display: grid;
-    grid-template-columns: repeat(10, var(--card));
-    grid-template-rows: repeat(3, var(--card));
-    gap: var(--gap);
-    justify-content: start;
+    display:grid;
+    grid-template-columns:repeat(10, var(--card));
+    grid-template-rows:repeat(3, var(--card));
+    gap:var(--gap);
   }
 
-  /* بطاقة عامة مربّعة */
   .card{
-    width: var(--card);
-    height: var(--card);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    overflow: visible;       /* يمنع أي قص للنص */
-    border: 1px solid rgba(0,0,0,0.08);
+    width:var(--card);
+    height:var(--card);
+    border-radius:6px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    box-sizing:border-box;
+    border:1px solid rgba(0,0,0,0.15);
+    overflow:visible;
   }
 
-  /* الصف العلوي: الحصص */
-  .card.mark{
-    background: var(--ruby);
-    color: var(--ruby-ink);
-    border-color: #6a001f;
-  }
-  /* بطاقتا الطابور والفسحة: مصمتتان دون كتابة */
-  .card.solid{
-    background: var(--ruby);
-    border-color: #6a001f;
+  /* صف الحصص */
+  .ruby-card{
+    background:var(--ruby);
+    color:var(--ruby-ink);
+    border-color:#6a001f;
   }
 
-  /* الصفّان السفليان: من/إلى */
-  .card.time{
-    background: var(--cream);
-    color: var(--cream-ink);
-    border-color: #e5d6c7;
+  /* بطاقات الطابور والفسحة */
+  .solid{
+    background:var(--ruby);
   }
 
-  /* المحتوى الرأسي */
+  /* صف الأوقات */
+  .cream-card{
+    background:var(--cream);
+    color:var(--cream-ink);
+    border-color:#e5d6c7;
+  }
+
+  /* نص رأسي بالكامل */
   .v{
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    line-height: 1;
-    font-weight: 900;
+    writing-mode:vertical-rl;
+    text-orientation:upright;
+    font-weight:900;
+    line-height:1;
   }
 
-  .num{        /* رقم الحصة */
-    font-size: 17px;         /* عدّل لـ 16/18 حسب ذوقك */
-  }
-  .time-text{  /* وقت من/إلى */
-    font-size: 12px;         /* عدّل لـ 11/13 حسب الوضوح */
+  .num{
+    font-size:18px;
   }
 
-  /* للطباعة/التصدير PDF إن رغبت */
-  @media print{
-    body{ background:#fff; }
-    .wrap{ width: 180mm; padding: 6mm; border-radius: 6mm; }
+  .time{
+    font-size:13px;
   }
 </style>
 </head>
+
 <body>
 
-<div class="wrap" aria-label="هيدر نحيف — حصص رأسية، ومن/إلى رأسية">
+<div class="wrap">
   <div class="grid">
 
-    <!-- الصف 1: الحصص (ياقوتي). ملاحظتان:
-         - العمود 1: مكان الطابور (مصمت بلا نص)
-         - العمود 6: مكان الفسحة (مصمت بلا نص) -->
-    <div class="card solid" aria-label="بطاقة مصمتة (الطابور)"></div>
-    <div class="card mark" aria-label="الحصة 1"><div class="v num">1</div></div>
-    <div class="card mark" aria-label="الحصة 2"><div class="v num">2</div></div>
-    <div class="card mark" aria-label="الحصة 3"><div class="v num">3</div></div>
-    <div class="card mark" aria-label="الحصة 4"><div class="v num">4</div></div>
-    <div class="card solid" aria-label="بطاقة مصمتة (الفسحة)"></div>
-    <div class="card mark" aria-label="الحصة 5"><div class="v num">5</div></div>
-    <div class="card mark" aria-label="الحصة 6"><div class="v num">6</div></div>
-    <div class="card mark" aria-label="الحصة 7"><div class="v num">7</div></div>
-    <div class="card mark" aria-label="الحصة 8"><div class="v num">8</div></div>
+    <!-- الصف 1: بطاقات الحصص (أفقي + لون ياقوتي) -->
+    <div class="card solid"></div>
+    <div class="card ruby-card"><div class="v num">1</div></div>
+    <div class="card ruby-card"><div class="v num">2</div></div>
+    <div class="card ruby-card"><div class="v num">3</div></div>
+    <div class="card ruby-card"><div class="v num">4</div></div>
+    <div class="card solid"></div>
+    <div class="card ruby-card"><div class="v num">5</div></div>
+    <div class="card ruby-card"><div class="v num">6</div></div>
+    <div class="card ruby-card"><div class="v num">7</div></div>
+    <div class="card ruby-card"><div class="v num">8</div></div>
 
-    <!-- الصف 2: من (رأسي) -->
-    <div class="card time"><div class="v time-text">7:30</div></div>
-    <div class="card time"><div class="v time-text">7:40</div></div>
-    <div class="card time"><div class="v time-text">8:15</div></div>
-    <div class="card time"><div class="v time-text">8:50</div></div>
-    <div class="card time"><div class="v time-text">9:25</div></div>
-    <div class="card time"><div class="v time-text">10:00</div></div>
-    <div class="card time"><div class="v time-text">10:10</div></div>
-    <div class="card time"><div class="v time-text">10:45</div></div>
-    <div class="card time"><div class="v time-text">11:20</div></div>
-    <div class="card time"><div class="v time-text">11:55</div></div>
+    <!-- الصف 2: من -->
+    <div class="card cream-card"><div class="v time">7:30</div></div>
+    <div class="card cream-card"><div class="v time">7:40</div></div>
+    <div class="card cream-card"><div class="v time">8:15</div></div>
+    <div class="card cream-card"><div class="v time">8:50</div></div>
+    <div class="card cream-card"><div class="v time">9:25</div></div>
+    <div class="card cream-card"><div class="v time">10:00</div></div>
+    <div class="card cream-card"><div class="v time">10:10</div></div>
+    <div class="card cream-card"><div class="v time">10:45</div></div>
+    <div class="card cream-card"><div class="v time">11:20</div></div>
+    <div class="card cream-card"><div class="v time">11:55</div></div>
 
-    <!-- الصف 3: إلى (رأسي) -->
-    <div class="card time"><div class="v time-text">7:40</div></div>
-    <div class="card time"><div class="v time-text">8:15</div></div>
-    <div class="card time"><div class="v time-text">8:50</div></div>
-    <div class="card time"><div class="v time-text">9:25</div></div>
-    <div class="card time"><div class="v time-text">10:00</div></div>
-    <div class="card time"><div class="v time-text">10:10</div></div>
-    <div class="card time"><div class="v time-text">10:45</div></div>
-    <div class="card time"><div class="v time-text">11:20</div></div>
-    <div class="card time"><div class="v time-text">11:55</div></div>
-    <div class="card time"><div class="v time-text">12:30</div></div>
+    <!-- الصف 3: إلى -->
+    <div class="card cream-card"><div class="v time">7:40</div></div>
+    <div class="card cream-card"><div class="v time">8:15</div></div>
+    <div class="card cream-card"><div class="v time">8:50</div></div>
+    <div class="card cream-card"><div class="v time">9:25</div></div>
+    <div class="card cream-card"><div class="v time">10:00</div></div>
+    <div class="card cream-card"><div class="v time">10:10</div></div>
+    <div class="card cream-card"><div class="v time">10:45</div></div>
+    <div class="card cream-card"><div class="v time">11:20</div></div>
+    <div class="card cream-card"><div class="v time">11:55</div></div>
+    <div class="card cream-card"><div class="v time">12:30</div></div>
 
   </div>
 </div>
 
 </body>
 </html>
+``
