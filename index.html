@@ -1,92 +1,96 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>جدول — حصص رأسية وأوقات رأسية</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    :root{
-      --card-size: 56px;      /* حجم البطاقة */
-      --gap: 6px;
-      --ruby: #8b002b;        /* الأحمر الياقوتي */
-      --cream: #faeedb;       /* الكريمي للأوقات */
-      --cream-ink: #8b002b;   /* نص ياقوتي */
-      --frame-bg: #ffffff;
-      --border: #d8c8be;
-    }
+<style>
+:root{
+  --card: 56px;
+  --gap: 6px;
 
-    body{
-      margin:0;
-      padding:20px;
-      background:#f7f3f1;
-      font-family:"Cairo","Noto Kufi Arabic",sans-serif;
-    }
+  --ruby: #8b002b;
+  --ruby-ink: #ffffff;
 
-    .wrap{
-      background:var(--frame-bg);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:10px;
-      width:fit-content;
-      margin:auto;
-    }
+  --cream: #faeedb;
+  --cream-ink: #8b002b;
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(10, var(--card-size));
-      grid-template-rows:repeat(2, var(--card-size));
-      gap:var(--gap);
-    }
+  --border: #d8c8be;
+}
 
-    /* بطاقات عليا للحصص */
-    .card{
-      width:var(--card-size);
-      height:var(--card-size);
-      border-radius:8px;
-      background:var(--ruby);
-      border:1px solid #60001f;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      box-sizing:border-box;
-      overflow:visible;
-    }
+body{
+  margin:0;
+  padding:20px;
+  background:#f7f3f1;
+  font-family:"Cairo","Noto Kufi Arabic",sans-serif;
+}
 
-    /* بطاقتا الطابور والفسحة مصمتة */
-    .card.empty{
-      background:var(--ruby);
-    }
+.wrap{
+  background:#ffffff;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  width:fit-content;
+  margin:auto;
+}
 
-    /* الأرقام رأسية حقيقية */
-    .num{
-      writing-mode:vertical-rl;
-      text-orientation:upright;
-      font-size:20px;
-      font-weight:900;
-      color:white;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(10, var(--card));
+  grid-template-rows:repeat(3, var(--card));
+  gap:var(--gap);
+}
 
-    /* البطاقات السفلى للأوقات */
-    .time{
-      width:var(--card-size);
-      height:var(--card-size);
-      border-radius:8px;
-      background:var(--cream);
-      border:1px solid #e0d3c6;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-    }
+.card{
+  width:var(--card);
+  height:var(--card);
+  border-radius:8px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  box-sizing:border-box;
+  border:1px solid #60001f;
+  overflow:visible;
+}
 
-    .time-text{
-      writing-mode:vertical-rl;
-      text-orientation:upright;
-      font-size:13px;
-      font-weight:900;
-      color:var(--cream-ink);
-    }
-  </style>
+/* بطاقات الحصص */
+.card.mark{
+  background:var(--ruby);
+  color:var(--ruby-ink);
+}
+
+/* البطاقات المصمتة (بدل ط/ف) */
+.card.empty{
+  background:var(--ruby);
+  border-color:#60001f;
+}
+
+/* بطاقة من/إلى */
+.card.time{
+  background:var(--cream);
+  border:1px solid #e0d3c6;
+  color:var(--cream-ink);
+}
+
+/* اتجاه رأسي كامل */
+.v{
+  writing-mode:vertical-rl;
+  text-orientation:upright;
+  font-weight:900;
+  line-height:1;
+}
+
+/* رقم الحصة */
+.num{
+  font-size:20px;
+  font-weight:900;
+}
+
+/* الوقت */
+.time-text{
+  font-size:13px;
+}
+</style>
 </head>
 
 <body>
@@ -94,29 +98,41 @@
 <div class="wrap">
   <div class="grid">
 
-    <!-- الصف العلوي: الحصص -->
+    <!-- الصف 1 (حصص/ياقوتي) -->
     <div class="card empty"></div>
-    <div class="card"><div class="num">1</div></div>
-    <div class="card"><div class="num">2</div></div>
-    <div class="card"><div class="num">3</div></div>
-    <div class="card"><div class="num">4</div></div>
+    <div class="card mark"><div class="v num">1</div></div>
+    <div class="card mark"><div class="v num">2</div></div>
+    <div class="card mark"><div class="v num">3</div></div>
+    <div class="card mark"><div class="v num">4</div></div>
     <div class="card empty"></div>
-    <div class="card"><div class="num">5</div></div>
-    <div class="card"><div class="num">6</div></div>
-    <div class="card"><div class="num">7</div></div>
-    <div class="card"><div class="num">8</div></div>
+    <div class="card mark"><div class="v num">5</div></div>
+    <div class="card mark"><div class="v num">6</div></div>
+    <div class="card mark"><div class="v num">7</div></div>
+    <div class="card mark"><div class="v num">8</div></div>
 
-    <!-- الصف السفلي: الأوقات -->
-    <div class="time"><div class="time-text">7:30–7:40</div></div>
-    <div class="time"><div class="time-text">7:40–8:15</div></div>
-    <div <div class="time"><div class="time-text">8:15–8:50</div></div>
-    <div class="time"><div class="time-text">8:50–9:25</div></div>
-    <div class="time"><div class="time-text">9:25–10:00</div></div>
-    <div class="time"><div class="time-text">10:00–10:10</div></div>
-    <div class="time"><div class="time-text">10:10–10:45</div></div>
-    <div class="time"><div class="time-text">10:45–11:20</div></div>
-    <div class="time"><div class="time-text">11:20–11:55</div></div>
-    <div class="time"><div class="time-text">11:55–12:30</div></div>
+    <!-- الصف 2 (من) -->
+    <div class="card time"><div class="v time-text">7:30</div></div>
+    <div class="card time"><div class="v time-text">7:40</div></div>
+    <div class="card time"><div class="v time-text">8:15</div></div>
+    <div class="card time"><div class="v time-text">8:50</div></div>
+    <div class="card time"><div class="v time-text">9:25</div></div>
+    <div class="card time"><div class="v time-text">10:00</div></div>
+    <div class="card time"><div class="v time-text">10:10</div></div>
+    <div class="card time"><div class="v time-text">10:45</div></div>
+    <div class="card time"><div class="v time-text">11:20</div></div>
+    <div class="card time"><div class="v time-text">11:55</div></div>
+
+    <!-- الصف 3 (إلى) -->
+    <div class="card time"><div class="v time-text">7:40</div></div>
+    <div class="card time"><div class="v time-text">8:15</div></div>
+    <div class="card time"><div class="v time-text">8:50</div></div>
+    <div class="card time"><div class="v time-text">9:25</div></div>
+    <div class="card time"><div class="v time-text">10:00</div></div>
+    <div class="card time"><div class="v time-text">10:10</div></div>
+    <div class="card time"><div class="v time-text">10:45</div></div>
+    <div class="card time"><div class="v time-text">11:20</div></div>
+    <div class="card time"><div class="v time-text">11:55</div></div>
+    <div class="card time"><div class="v time-text">12:30</div></div>
 
   </div>
 </div>
