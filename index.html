@@ -162,8 +162,14 @@
 window.addEventListener('load', () => {
 
 /* ================= إعدادات عامة ================= */
-const START = new Date('2026-02-19T00:00:00');
-const DAYS  = 30;
+/* تم إضافة المتمّم لشعبان: 18-02-2026 */
+const SHAABAN_COMPLETION = new Date('2026-02-18T00:00:00');  // المتمّم
+const RAMADAN_START      = new Date('2026-02-19T00:00:00');  // 1 رمضان
+
+/* نبدأ البناء من المتمّم، وننشئ 31 صفحة (1 + 30) */
+const START = SHAABAN_COMPLETION;
+const DAYS  = 31;
+
 /* مُقشن */
 const MUQSHIN = { lat: 19.56364, lon: 54.8916 };
 const TZ = 4; // Asia/Muscat (UTC+4)
@@ -192,10 +198,12 @@ function hmMinus(hhmm, minutes=10){
 }
 function nowInMuscat(){ return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Muscat' })); }
 function dateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-function todayIndex(){
-  const t=dateOnly(nowInMuscat()), s=dateOnly(START);
+
+/* اليوم الحالي داخل رمضان فقط (1..30) */
+function ramadanTodayIndex(){
+  const t=dateOnly(nowInMuscat()), s=dateOnly(RAMADAN_START);
   const diff=Math.floor((t-s)/86400000);
-  return (diff>=0 && diff<DAYS) ? diff+1 : null;
+  return (diff>=0 && diff<30) ? diff+1 : null;
 }
 
 /* ====== الحساب الفلكي مع تصحيح العصر (ظلّ كلّه) ====== */
@@ -273,13 +281,27 @@ function makePage(idx, dateObj){
   const dayNames=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
   const isFri = dateObj.getDay()===5;
   const dateStr=`${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
+  const isRamadan = (dateObj >= RAMADAN_START);
+
   const page=el('div',{class:'page','data-date':dateStr});
 
   // رأس الصفحة
   const band=el('div',{class:'band'});
-  const left = el('div',{}, `اليوم ${toArabicDigits(String(idx).padStart(2,'0'))} — ${dayNames[dateObj.getDay()]} — ${dateStr}`);
+  let titleText;
+  if(!isRamadan){
+    titleText = `المتمِّم لشعبان — ${dayNames[dateObj.getDay()]} — ${dateStr}`;
+  }else{
+    const rIndex = ((dateOnly(dateObj) - dateOnly(RAMADAN_START)) / 86400000 | 0) + 1; // 1..30
+    titleText = `اليوم ${toArabicDigits(String(rIndex).padStart(2,'0'))} — ${dayNames[dateObj.getDay()]} — ${dateStr}`;
+  }
+  const left = el('div',{}, titleText);
   band.appendChild(left);
-  if(todayIndex()===idx) band.appendChild(el('span',{class:'today-badge'},'اليوم الحالي'));
+
+  const rToday = ramadanTodayIndex(); // 1..30
+  if(isRamadan && rToday){
+    const rIndex = ((dateOnly(dateObj) - dateOnly(RAMADAN_START)) / 86400000 | 0) + 1;
+    if(rIndex===rToday) band.appendChild(el('span',{class:'today-badge'},'اليوم الحالي'));
+  }
   page.appendChild(band);
 
   // شبكة 3 أعمدة
@@ -335,7 +357,7 @@ function makePage(idx, dateObj){
   const qstrip=el('div',{class:'qstrip'});
   for(let i=1;i<=30;i++){
     const cell=el('div',{class:'qcell'}, toArabicDigits(i));
-    if(todayIndex()===i) cell.classList.add('current');
+    if(rToday && isRamadan && i===rToday) cell.classList.add('current');
     qstrip.appendChild(cell);
   }
   page.appendChild(section('📖 شريط الورد القرآني (الشهر كاملًا — ضع ✓)', qstrip));
@@ -344,7 +366,7 @@ function makePage(idx, dateObj){
   const tStrip=el('div',{class:'qstrip'});
   for(let i=1;i<=30;i++){
     const cell=el('div',{class:'qcell'}, toArabicDigits(i));
-    if(todayIndex()===i) cell.classList.add('current');
+    if(rToday && isRamadan && i===rToday) cell.classList.add('current');
     tStrip.appendChild(cell);
   }
   page.appendChild(section('🕌 شريط صلاة التراويح (ليالي رمضان — ضع ✓)', tStrip));
@@ -441,8 +463,9 @@ async function exportOnePDF(){
   if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch(e){} }
   await buildAll();
 
-  let def = todayIndex() || 1;
-  let day = prompt('أدخل رقم اليوم المراد تصديره (1–30):', String(def));
+  /* الافتراضي: اليوم الحالي من رمضان إن وُجد، وإلا أول صفحة (المتمّم) */
+  let def = ramadanTodayIndex() || 1;
+  let day = prompt('أدخل رقم الصفحة المراد تصديرها (1 للمتمّم، 2..31 لرمضان):', String(def));
   if(day===null) return;
   day = parseInt(day,10);
   if(isNaN(day) || day<1 || day> DAYS){ alert('رقم غير صحيح'); return; }
@@ -458,7 +481,7 @@ async function exportOnePDF(){
   addImageFit(pdf, snap.data, snap.w, snap.h, PAGE_W, PAGE_H);
 
   const iso = node.dataset.date || '';
-  pdf.save(`Ramadan1447_iPad102_Landscape_Muqshin_Day${String(day).padStart(2,'0')}${iso? '_' + iso : ''}_12h.pdf`);
+  pdf.save(`Ramadan1447_iPad102_Landscape_Muqshin_Page${String(day).padStart(2,'0')}${iso? '_' + iso : ''}.pdf`);
 
   host.classList.remove('offscreen-render');
 }
