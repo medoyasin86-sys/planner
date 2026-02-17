@@ -3,73 +3,80 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>هيدر جدول — ألوان رسمية غير محايدة</title>
+  <title>هيدر جدول — رأسي بالكامل بالألوان الياقوتية والكريمية</title>
+
   <style>
     :root{
-      /* أبعاد الهيدر والبطاقات (نحيف) */
       --banner-width: 1080px;
-      --card-size: 48px;   /* مربعات أنحف */
-      --gap: 4px;
-      --radius: 6px;
+      --card-size: 56px;   /* مربّعات نحيفة وأنيقة */
+      --gap: 6px;
 
-      /* لوحة ألوان رسمية (بدون ألوان محايدة) */
-      --accent: #153e75;       /* Navy رسمي للتمييز (ط/ف) */
-      --accent-ink: #ffffff;   /* نص أبيض على الـ Navy */
-      --lesson-bg: #e6eefc;    /* أزرق فاتح راقٍ للحصص */
-      --lesson-ink: #12223a;   /* حبر داكن مائل للأزرق (غير رمادي) */
-
-      /* إطار الهيدر */
+      /* الألوان */
+      --ruby: #8b002b;               /* ياقوتي داكن جميل */
+      --ruby-ink: #ffffff;           /* نص أبيض داخل الياقوتي */
+      --cream: #faeedb;              /* كريمي للأوقات */
+      --cream-ink: #8b002b;          /* نص ياقوتي */
+      --border: #d5c2b8;             /* حدود خفيفة أنيقة */
       --frame-bg: #ffffff;
-      --frame-border: #ced9f2; /* حد أزرق باهت */
-      --page-bg: #f6f8ff;      /* خلفية صفحة باردة خفيفة */
+      --page-bg: #f9f7f5;
     }
 
-    html, body{
-      margin:0; padding:0;
+    body {
+      margin: 0;
+      padding: 20px;
       background: var(--page-bg);
-      font-family: "Cairo", "Noto Kufi Arabic", "Segoe UI", Tahoma, sans-serif;
+      font-family: "Cairo", "Noto Kufi Arabic", sans-serif;
     }
 
-    /* شريط الهيدر */
     .header-bar{
-      width: min(96vw, var(--banner-width));
+      width: min(95vw, var(--banner-width));
       margin: 16px auto;
-      padding: 8px;
+      padding: 10px;
       background: var(--frame-bg);
-      border: 1px solid var(--frame-border);
+      border: 1px solid var(--border);
       border-radius: 10px;
       display: flex;
       gap: var(--gap);
-      align-items: center;
       box-sizing: border-box;
     }
 
-    /* البطاقة العامة — مربعة ونحيفة، نص رأسي */
+    /* البطاقة الأساسية */
     .item{
       width: var(--card-size);
       height: var(--card-size);
-      border-radius: var(--radius);
-      border: 1px solid rgba(18,34,58,0.12); /* حد خفيف بلون أزرق داكن شفاف */
-      background: var(--lesson-bg);
-      color: var(--lesson-ink);
+      border-radius: 6px;
+      background: var(--ruby);
+      border: 1px solid #5e001d;
+      color: var(--ruby-ink);
       display: flex;
       justify-content: center;
       align-items: center;
-      writing-mode: vertical-rl;  /* نص رأسي */
-      text-orientation: mixed;
+      writing-mode: vertical-rl;   /* الاتجاه العمودي بالكامل */
+      text-orientation: upright;
+      font-weight: 900;
       box-sizing: border-box;
-      font-weight: 900;           /* عريض وواضح */
-      line-height: 1.05;
+      position: relative;
     }
 
-    /* بطاقات التمييز (ط / ف) بلون رسمي داكن */
-    .item.accent{
-      background: var(--accent);
-      color: var(--accent-ink);
-      border-color: #0f2e58;
+    /* الحرف/الرقم */
+    .mark{
+      font-size: 18px;
+      font-weight: 900;
     }
 
-    /* حاوية داخلية عمودية */
+    /* وقت الحصة — عمودي وبألوان مختلفة */
+    .time{
+      margin-top: 6px;
+      padding: 2px 4px;
+      background: var(--cream);
+      color: var(--cream-ink);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 900;
+      writing-mode: vertical-rl;   /* الوقت أيضًا عمودي */
+      text-orientation: upright;
+    }
+
     .stack{
       display: flex;
       flex-direction: column;
@@ -77,109 +84,37 @@
       justify-content: center;
     }
 
-    /* العلامة الأساسية (رقم/حرف) — كبيرة وواضحة */
-    .mark{
-      font-size: 18px;
-      font-weight: 900;
-    }
-
-    /* الوقت — الآن عريض وواضح أيضًا */
-    .time{
-      margin-top: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      /* اجعل الوقت أفقيًا داخل بطاقة نصها رأسي */
-      writing-mode: horizontal-tb;
-      text-orientation: initial;
-    }
-
-    /* لمزيد من النحافة على الشاشات الصغيرة */
-    @media (max-width: 700px){
-      :root{ --card-size: 44px; --gap: 3px; }
-      .mark{ font-size: 16px; }
-      .time{ font-size: 11px; }
-    }
-
-    @media print{
-      body{ background:#fff; }
-      .header-bar{
-        width: 180mm;
-        padding: 5mm;
-        border-radius: 6mm;
-      }
-    }
   </style>
 </head>
+
 <body>
 
-  <div class="header-bar" aria-label="هيدر جدول اليوم — نص رأسي، ألوان رسمية غير محايدة">
-    <!-- طابور -->
-    <div class="item accent" role="group" aria-label="طابور">
+  <div class="header-bar">
+
+    <div class="item">
       <div class="stack">
         <div class="mark">ط</div>
         <div class="time">7:30–7:40</div>
       </div>
     </div>
 
-    <!-- الحصص قبل الفسحة -->
-    <div class="item" role="group" aria-label="الحصة 1">
-      <div class="stack">
-        <div class="mark">1</div>
-        <div class="time">7:40–8:15</div>
-      </div>
-    </div>
-    <div class="item" role="group" aria-label="الحصة 2">
-      <div class="stack">
-        <div class="mark">2</div>
-        <div class="time">8:15–8:50</div>
-      </div>
-    </div>
-    <div class="item" role="group" aria-label="الحصة 3">
-      <div class="stack">
-        <div class="mark">3</div>
-        <div class="time">8:50–9:25</div>
-      </div>
-    </div>
-    <div class="item" role="group" aria-label="الحصة 4">
-      <div class="stack">
-        <div class="mark">4</div>
-        <div class="time">9:25–10:00</div>
-      </div>
-    </div>
+    <div class="item"><div class="stack"><div class="mark">1</div><div class="time">7:40–8:15</div></div></div>
+    <div class="item"><div class="stack"><div class="mark">2</div><div class="time">8:15–8:50</div></div></div>
+    <div class="item"><div class="stack"><div class="mark">3</div><div class="time">8:50–9:25</div></div></div>
+    <div class="item"><div class="stack"><div class="mark">4</div><div class="time">9:25–10:00</div></div></div>
 
-    <!-- فسحة -->
-    <div class="item accent" role="group" aria-label="فسحة">
+    <div class="item">
       <div class="stack">
         <div class="mark">ف</div>
         <div class="time">10:00–10:10</div>
       </div>
     </div>
 
-    <!-- الحصص بعد الفسحة -->
-    <div class="item" role="group" aria-label="الحصة 5">
-      <div class="stack">
-        <div class="mark">5</div>
-        <div class="time">10:10–10:45</div>
-      </div>
-    </div>
-    <div class="item" role="group" aria-label="الحصة 6">
-      <div class="stack">
-        <div class="mark">6</div>
-        <div class="time">10:45–11:20</div>
-      </div>
-    </div>
-    <div class="item" role="group" aria-label="الحصة 7">
-      <div class="stack">
-        <div class="mark">7</div>
-        <div class="time">11:20–11:55</div>
-      </div>
-    </div>
-    <div class="item" role="group" aria-label="الحصة 8">
-      <div class="stack">
-        <div class="mark">8</div>
-        <div class="time">11:55–12:30</div>
-      </div>
-    </div>
+    <div class="item"><div class="stack"><div class="mark">5</div><div class="time">10:10–10:45</div></div></div>
+    <div class="item"><div class="stack"><div class="mark">6</div><div class="time">10:45–11:20</div></div></div>
+    <div class="item"><div class="stack"><div class="mark">7</div><div class="time">11:20–11:55</div></div></div>
+    <div class="item"><div class="stack"><div class="mark">8</div><div class="time">11:55–12:30</div></div></div>
+
   </div>
 
 </body>
