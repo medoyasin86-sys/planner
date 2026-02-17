@@ -3,118 +3,144 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>هيدر جدول — رأسي بالكامل بالألوان الياقوتية والكريمية</title>
-
+  <title>هيدر جدول — صف علوي للحصص رأسياً وصف سفلي للأوقات رأسياً</title>
   <style>
     :root{
-      --banner-width: 1080px;
-      --card-size: 56px;   /* مربّعات نحيفة وأنيقة */
-      --gap: 6px;
+      /* تحكم سريع بالحجم والمسافات */
+      --banner-width: 1080px; /* عرض الهيدر */
+      --card-size: 56px;      /* مقاس البطاقة (مربع) — صغّره لـ 52 أو 48 للنحافة */
+      --gap: 6px;             /* مسافة بين الأعمدة والصفوف */
+      --radius: 8px;
 
-      /* الألوان */
-      --ruby: #8b002b;               /* ياقوتي داكن جميل */
-      --ruby-ink: #ffffff;           /* نص أبيض داخل الياقوتي */
-      --cream: #faeedb;              /* كريمي للأوقات */
-      --cream-ink: #8b002b;          /* نص ياقوتي */
-      --border: #d5c2b8;             /* حدود خفيفة أنيقة */
+      /* الألوان المطلوبة */
+      --ruby: #8b002b;        /* ياقوتي للحصص */
+      --ruby-ink: #ffffff;    /* نص أبيض على الياقوتي */
+      --cream: #faeedb;       /* كريمي للأوقات */
+      --cream-ink: #8b002b;   /* نص ياقوتي على الكريمي */
+
+      /* إطار وورقة */
       --frame-bg: #ffffff;
-      --page-bg: #f9f7f5;
+      --frame-border: #d8c8be;
+      --page-bg: #f7f3f1;
     }
 
-    body {
-      margin: 0;
-      padding: 20px;
+    html, body{
+      margin: 0; padding: 0;
       background: var(--page-bg);
-      font-family: "Cairo", "Noto Kufi Arabic", sans-serif;
+      font-family: "Cairo", "Noto Kufi Arabic", "Segoe UI", Tahoma, sans-serif;
     }
 
-    .header-bar{
-      width: min(95vw, var(--banner-width));
+    /* إطار الهيدر */
+    .header-wrap{
+      width: min(96vw, var(--banner-width));
       margin: 16px auto;
       padding: 10px;
       background: var(--frame-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      display: flex;
-      gap: var(--gap);
+      border: 1px solid var(--frame-border);
+      border-radius: 12px;
       box-sizing: border-box;
     }
 
-    /* البطاقة الأساسية */
-    .item{
+    /* شبكة أفقية بصفّين و10 أعمدة ثابتة */
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(10, var(--card-size));
+      grid-template-rows: var(--card-size) var(--card-size);
+      gap: var(--gap);
+      justify-content: start; /* يضمن بقاء الجدول أفقيًا دون تمدد غريب */
+      align-items: start;
+    }
+
+    /* بطاقة عامة — مربعة، دون تداخل أو قص */
+    .card{
       width: var(--card-size);
       height: var(--card-size);
-      border-radius: 6px;
-      background: var(--ruby);
-      border: 1px solid #5e001d;
-      color: var(--ruby-ink);
+      border-radius: calc(var(--radius) - 2px);
       display: flex;
-      justify-content: center;
       align-items: center;
-      writing-mode: vertical-rl;   /* الاتجاه العمودي بالكامل */
-      text-orientation: upright;
-      font-weight: 900;
+      justify-content: center;
       box-sizing: border-box;
-      position: relative;
+      padding: 6px;          /* يمنع قص الأحرف من الحواف */
+      overflow: visible;     /* يضمن عدم قص أي عنصر داخلي */
+      border: 1px solid rgba(0,0,0,0.08);
     }
 
-    /* الحرف/الرقم */
-    .mark{
-      font-size: 18px;
-      font-weight: 900;
+    /* بطاقات الصف العلوي (الحصص) — ياقوتي مع نص أبيض */
+    .card.mark{
+      background: var(--ruby);
+      color: var(--ruby-ink);
+      border-color: #6a001f;
     }
 
-    /* وقت الحصة — عمودي وبألوان مختلفة */
-    .time{
-      margin-top: 6px;
-      padding: 2px 4px;
+    /* بطاقات الصف السفلي (الأوقات) — كريمي مع نص ياقوتي */
+    .card.time{
       background: var(--cream);
       color: var(--cream-ink);
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 900;
-      writing-mode: vertical-rl;   /* الوقت أيضًا عمودي */
-      text-orientation: upright;
+      border-color: #e8d8c8;
     }
 
-    .stack{
+    /* محتوى رأسي بالكامل داخل البطاقات */
+    .vstack{
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+
+      /* اجعل النص عمودي بوضوح وثبات */
+      writing-mode: vertical-rl;
+      text-orientation: upright; /* الأرقام/الحروف تظهر مستقيمة رأسياً */
+      line-height: 1;
+      letter-spacing: 0;
+      gap: 6px;
     }
 
+    /* الرقم/الحرف — كبير وواضح */
+    .mark-text{
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    /* الوقت — واضح وعريض أيضًا وبنفس الاتجاه الرأسي */
+    .time-text{
+      font-weight: 900;
+      font-size: 13px; /* كبّره إلى 14 إن رغبت */
+    }
+
+    /* للطباعة إن احتجت تصدير PDF */
+    @media print{
+      body{ background: #fff; }
+      .header-wrap{ width: 180mm; padding: 6mm; border-radius: 6mm; }
+    }
   </style>
 </head>
-
 <body>
 
-  <div class="header-bar">
+  <div class="header-wrap" aria-label="هيدر جدول أفقي — صف علوي للحصص وصف سفلي للأوقات">
+    <div class="grid">
+      <!-- ===== الصف العلوي: الحصص (ياقوتي/نص أبيض) ===== -->
+      <div class="card mark"><div class="vstack"><div class="mark-text">ط</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">1</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">2</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">3</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">4</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">ف</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">5</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">6</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">7</div></div></div>
+      <div class="card mark"><div class="vstack"><div class="mark-text">8</div></div></div>
 
-    <div class="item">
-      <div class="stack">
-        <div class="mark">ط</div>
-        <div class="time">7:30–7:40</div>
-      </div>
+      <!-- ===== الصف السفلي: الأوقات (كريمي/نص ياقوتي) ===== -->
+      <div class="card time"><div class="vstack"><div class="time-text">7:30–7:40</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">7:40–8:15</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">8:15–8:50</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">8:50–9:25</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">9:25–10:00</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">10:00–10:10</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">10:10–10:45</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">10:45–11:20</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">11:20–11:55</div></div></div>
+      <div class="card time"><div class="vstack"><div class="time-text">11:55–12:30</div></div></div>
     </div>
-
-    <div class="item"><div class="stack"><div class="mark">1</div><div class="time">7:40–8:15</div></div></div>
-    <div class="item"><div class="stack"><div class="mark">2</div><div class="time">8:15–8:50</div></div></div>
-    <div class="item"><div class="stack"><div class="mark">3</div><div class="time">8:50–9:25</div></div></div>
-    <div class="item"><div class="stack"><div class="mark">4</div><div class="time">9:25–10:00</div></div></div>
-
-    <div class="item">
-      <div class="stack">
-        <div class="mark">ف</div>
-        <div class="time">10:00–10:10</div>
-      </div>
-    </div>
-
-    <div class="item"><div class="stack"><div class="mark">5</div><div class="time">10:10–10:45</div></div></div>
-    <div class="item"><div class="stack"><div class="mark">6</div><div class="time">10:45–11:20</div></div></div>
-    <div class="item"><div class="stack"><div class="mark">7</div><div class="time">11:20–11:55</div></div></div>
-    <div class="item"><div class="stack"><div class="mark">8</div><div class="time">11:55–12:30</div></div></div>
-
   </div>
 
 </body>
