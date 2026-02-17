@@ -6,9 +6,9 @@
   <title>دفتر رمضان 1447هـ (2026) — بلانر iPad 10.2 (Landscape) بإمساكية مُقشن</title>
 
   <!-- ✅ خطوط Google: تحميل صحيح -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap" rel="stylesheet" />
 
   <!-- ✅ مكتبات التوليد (بالترتيب) -->
   <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -16,7 +16,7 @@
 
   <style>
     :root{
-      /* ألوان قريبة من نسختك — غيّر كما تحب */
+      /* ألوان — عدّل كما تحب */
       --primary:#1a4d2e; --gold:#c5a059; --gold-light:#e6cc92; --bg:#f9f6f0;
       --card:#ffffff; --text:#1a4d2e; --muted:#6f7b7a; --border:#e6e2d9;
       --shadow: 0 10px 24px rgba(26,77,46,.10), 0 2px 8px rgba(26,77,46,.08);
@@ -26,9 +26,9 @@
       --ipad-w: 2160px;
       --ipad-h: 1620px;
 
-      /* المعاينة على الصفحة (نصف الحجم لسرعة التصفح) */
-      --preview-w: 1080px;  /* = 2160 / 2 */
-      --preview-h: 810px;   /* = 1620 / 2 */
+      /* المعاينة (نصف الحجم لسرعة التصفح) */
+      --preview-w: 1080px; /* 2160 / 2 */
+      --preview-h: 810px;  /* 1620 / 2 */
     }
 
     *{ box-sizing:border-box }
@@ -103,7 +103,7 @@
     /* شريط الورد */
     .qstrip{ display:grid; grid-template-columns:repeat(30, 1fr); gap:3px; margin-top:4px }
     .qcell{ border:1.3px dashed var(--gold); height:16px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:#8c7a46; font-weight:700; font-size:10.5px; background:#fff; position:relative }
-    .qcell.current{ background: linear-gradient(180deg,#1a4d2e,#0f2f1b); color:#fff; border-color:var(--gold); }
+    .qcell.current{ background: linear-gradient(180deg,#1a4d2e,#0f2e1b); color:#fff; border-color:var(--gold); }
     .qcell.current::after{
       content:'اليوم'; position:absolute; bottom:-18px; background:linear-gradient(180deg,#ffe9b9,#e7cb83);
       color:#1a1a1a; border:1px solid var(--gold); border-radius:6px; padding:1px 6px; font-size:9.5px; font-weight:800;
@@ -142,7 +142,7 @@
   </div>
 
 <script>
-/* نضمن جاهزية المكتبات بتشغيل الكود بعد تحميل الصفحة */
+/* نشغّل الكود بعد تحميل الصفحة ومكتبات الطرف الثالث */
 window.addEventListener('load', () => {
 
 /* ================= إعدادات عامة ================= */
@@ -198,17 +198,20 @@ const PrayTimes=(function(){
     return {decl, EqT};
   }
   function hourAngleByAltitude(altDeg, latDeg, declDeg){
+    // altDeg: ارتفاع الشمس (بالدرجات) فوق الأفق (سالب تحت الأفق)
+    const D2R=Math.PI/180, R2D=180/Math.PI;
     const alt=altDeg*D2R, lat=latDeg*D2R, dec=declDeg*D2R;
     const term = (Math.sin(alt) - Math.sin(lat)*Math.sin(dec)) / (Math.cos(lat)*Math.cos(dec));
     if (term<-1 || term>1) return null;
     return Math.acos(term)*R2D/15; // ساعات
   }
   function asrHourAngle(latDeg, declDeg, factor=1){
-    // ارتفاع الشمس عند العصر (ظلّ كلّه): alt_asr = atan( 1 / (factor + tan(|lat - decl|)) )
+    // ظلّ كلّه: alt_asr = atan( 1 / (factor + tan(|lat - decl|)) )
+    const D2R=Math.PI/180, R2D=180/Math.PI;
     const lat=latDeg*D2R, dec=declDeg*D2R;
     const x = Math.abs(Math.tan(lat - dec));
     const alt_asr_rad = Math.atan(1 / (factor + x));
-    const alt_asr_deg = alt_asr_rad*R2D;
+    const alt_asr_deg = alt_asr_rad*R2D;  // ارتفاع موجب
     return hourAngleByAltitude(alt_asr_deg, latDeg, declDeg);
   }
   const timeToStr=(t)=>{ if(t==null||isNaN(t))return'--:--'; t=fixH(t+0.5/60); const h=Math.floor(t),m=Math.floor((t-h)*60); return `${('0'+h).slice(-2)}:${('0'+m).slice(-2)}`; };
@@ -217,15 +220,14 @@ const PrayTimes=(function(){
     getTimes:(d,coords,tz)=>{
       const j=J(d.getFullYear(),d.getMonth()+1,d.getDate())-coords.lon/360;
       const {decl,EqT}=sunPos(j);               // decl (deg), EqT (hours)
-      const noon=fixH(12-EqT+tz-coords.lon/15); // منتصف النهار
-      const haSun=hourAngleByAltitude(-0.833, coords.lat, decl); // شروق/غروب
+      const noon=fixH(12-EqT+tz-coords.lon/15); // منتصف النهار الحقيقي
+      // شروق/غروب (انكسار جوي: -0.833°)
+      const haSun=hourAngleByAltitude(-0.833, coords.lat, decl);
       const sunrise=noon-haSun, sunset=noon+haSun;
-
-      // عصر ظلّ كلّه (factor=1)
+      // ✅ عصر ظلّ كلّه (factor=1)
       const haAsr = asrHourAngle(coords.lat, decl, 1);
       const asr = noon + haAsr;
-
-      // فجر 18° — عشاء +90 دقيقة
+      // فجر 18° — عشاء +90 دقيقة (تقريب محلي)
       const haFajr=hourAngleByAltitude(-18, coords.lat, decl);
       const fajr = haFajr? (noon - haFajr) : (sunrise - 1.5);
       const isha = sunset + 1.5;
@@ -372,10 +374,13 @@ function libsReady(){ return !!(window.jspdf && window.jspdf.jsPDF && window.htm
 
 async function exportAllPDF(){
   if(!libsReady()){ alert('المكتبات لم تُحمّل بعد. أعد تحميل الصفحة ثم جرّب.'); return; }
+  // تأكّد من الخطوط
+  if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch(e){} }
   await buildAll();
 
   const host=document.getElementById('planner');
   host.classList.add('offscreen-render'); // اجعلها مرئية خارج الشاشة وقت الالتقاط
+  await new Promise(r=>requestAnimationFrame(r));
 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF({orientation:PDF_ORI, unit:PDF_UNIT, format:PDF_SIZE});
@@ -393,6 +398,7 @@ async function exportAllPDF(){
 
 async function exportOnePDF(){
   if(!libsReady()){ alert('المكتبات لم تُحمّل بعد.'); return; }
+  if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch(e){} }
   await buildAll();
 
   let def = todayIndex() || 1;
@@ -402,6 +408,8 @@ async function exportOnePDF(){
   if(isNaN(day) || day<1 || day> DAYS){ alert('رقم غير صحيح'); return; }
 
   const host=document.getElementById('planner'); host.classList.add('offscreen-render');
+  await new Promise(r=>requestAnimationFrame(r));
+
   const node = document.querySelectorAll('#planner .page')[day-1];
   const imgData = await snapshotAsIPad(node);
 
