@@ -7,51 +7,55 @@
     body {
       margin: 0;
       padding: 20px;
-      background: #faf8f5;
+      background: #f7f4f2; /* خلفية ناعمة */
       font-family: "Cairo", sans-serif;
     }
 
     /* الشريط الرئيسي */
     .header-bar {
       width: 1200px;
-      padding: 6px;
+      padding: 8px;
       background: #ffffff;
-      border: 1px solid #e8e0d8;
-      border-radius: 8px;
+      border: 1px solid #e2d8d0;
+      border-radius: 10px;
       display: flex;
-      gap: 6px;
+      gap: 8px;
       box-sizing: border-box;
     }
 
     /* البطاقات */
     .item {
-      width: 60px;               /* تضييق العرض */
-      height: 60px;              /* لجعلها مربّعة */
-      background: #f2e7d8;
-      border-radius: 6px;
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-weight: 800;          /* Bold قوي وواضح */
-      font-size: 16px;           /* تكبير الخط */
+      font-weight: 900;        /* Bold قوي وواضح */
+      font-size: 18px;         /* الرقم كبير */
       line-height: 1.1;
-      color: #5a000f;
+      color: #3a1a1a;          /* بني غامق ناعم */
     }
 
-    /* ألوان Ruby */
+    /* ألوان فاخرة جديدة */
     .ruby {
-      background: #b30035;
+      background: #a4003a;   /* Ruby Dark */
       color: #ffffff;
     }
 
-    /* وقت أصغر قليلاً */
+    .beige {
+      background: #f5e9da;   /* Sand Beige راقٍ */
+      color: #3b1b1b;
+    }
+
+    /* وقت الحصة */
     .time {
-      font-size: 10px;
-      margin-top: 2px;
-      opacity: 0.9;
-      font-weight: 600;
+      margin-top: 4px;
+      font-size: 12px;        /* أكبر من قبل */
+      font-weight: 800;       /* Bold وواضح */
+      opacity: 1;             /* بدون تخفيف */
     }
 
   </style>
@@ -66,20 +70,20 @@
       <div class="time">7:30–7:40</div>
     </div>
 
-    <div class="item">1<div class="time">7:40–8:15</div></div>
-    <div class="item">2<div class="time">8:15–8:50</div></div>
-    <div class="item">3<div class="time">8:50–9:25</div></div>
-    <div class="item">4<div class="time">9:25–10:00</div></div>
+    <div class="item beige">1<div class="time">7:40–8:15</div></div>
+    <div class="item beige">2<div class="time">8:15–8:50</div></div>
+    <div class="item beige">3<div class="time">8:50–9:25</div></div>
+    <div class="item beige">4<div class="time">9:25–10:00</div></div>
 
     <div class="item ruby">
       ف
       <div class="time">10:00–10:10</div>
     </div>
 
-    <div class="item">5<div class="time">10:10–10:45</div></div>
-    <div class="item">6<div class="time">10:45–11:20</div></div>
-    <div class="item">7<div class="time">11:20–11:55</div></div>
-    <div class="item">8<div class="time">11:55–12:30</div></div>
+    <div class="item beige">5<div class="time">10:10–10:45</div></div>
+    <div class="item beige">6<div class="time">10:45–11:20</div></div>
+    <div class="item beige">7<div class="time">11:20–11:55</div></div>
+    <div class="item beige">8<div class="time">11:55–12:30</div></div>
 
   </div>
 
