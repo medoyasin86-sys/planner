@@ -325,7 +325,7 @@ function makePage(idx, dateObj){
       <td style="text-align:center"><span class="checkbox"></span></td></tr>`; }
   grid.appendChild(section('🕋 الفروض (م=مسجد | ج=جماعة | ف=فرد | ق=قضاء)', fTbl));
 
-  /* 🌱 السنن الرواتب (مع الشفع والوتر) */
+  /* 🌱 السنن الرواتب والنوافل (مع الشفع والوتر + الضحى) */
   const sBox=el('div',{}), sList=[];
   sList.push({label:'الفجر', sub:'قبلية', count:2});
   if(isFri){ sList.push({label:'الجمعة', sub:'بعدية', count:4, note:'٢ أو ٤'}); }
@@ -333,6 +333,8 @@ function makePage(idx, dateObj){
   sList.push({label:'المغرب', sub:'بعدية', count:2});
   sList.push({label:'العشاء', sub:'بعدية', count:2});
   sList.push({label:'العصر (اختياري)', sub:'قبلية', count:4});
+  /* ➕ الضحى (٢–٨) — نعرض مربّعين مع ملاحظة النطاق */
+  sList.push({label:'الضحى', sub:'نهارًا', count:2, note:'٢–٨'});
   /* ➕ الشفع والوتر (٣ مربعات) */
   sList.push({label:'الشفع والوتر', sub:'ليلًا', count:3});
 
@@ -343,7 +345,7 @@ function makePage(idx, dateObj){
     );
     sBox.appendChild(row);
   });
-  grid.appendChild(section('🌱 السنن الرواتب (عدد الركعات — قبلية/بعدية)', sBox));
+  grid.appendChild(section('🌱 السنن الرواتب والنوافل (عدد الركعات — قبلية/بعدية)', sBox));
 
   /* 📿 بطاقة الأذكار */
   const zBox=el('div',{}); const zList=['☀️ أذكار الصباح','🌙 أذكار المساء','😴 أذكار النوم','📖 سورة الملك (ليلاً)','📖 خواتيم سورة البقرة (285–286)'];
