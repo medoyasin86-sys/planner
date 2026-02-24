@@ -2,353 +2,336 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>تهنئة يوم المعلّم العُماني ٢٠٢٦ | مدرسة المشاش للتعليم الأساسي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>يوم المعلّم العُماني ٢٠٢٦ | مدرسة المشاش للتعليم الأساسي</title>
+  <meta name="description" content="تهنئة مدرسة المشاش للتعليم الأساسي بمناسبة يوم المعلّم العُماني ٢٠٢٦ - تصميم احتفالي بطابع عُماني أصيل وخطوط عربية.">
+  <meta name="theme-color" content="#d4af37">
 
-  <!-- خطوط عربية محسّنة لسلامة الحروف (اختياري) -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
+  <!-- (اختياري) بدائل خطوط عربية أصيلة في حال لم تُضَف ملفات خط الثلث -->
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Amiri:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- خط الثلث (ضع الملف في assets/ وأزل التعليق) -->
+  <style>
+    /* ضع ملفات الخط لديك (WOFF2/WOFF) بنفس الأسماء أو غيّرها هنا */
+    @font-face{
+      font-family:"ThuluthPro";
+      src:
+        url("assets/KFGQPCThuluth.woff2") format("woff2"),
+        url("assets/KFGQPCThuluth.woff") format("woff");
+      font-display: swap;
+    }
+  </style>
+
   <style>
     :root{
-      --bg-deep:#0f2f3a;
-      --bg-mid:#134a52;
-      --leaf:#1f6d67;
-      --card:#0b1e24cc;
-      --cream:#f4efe6;
-      --ink:#0b2a2f;
-      --gold:#c9a25a;
-      --gold-2:#e7d3a1;
-      --mint:#d7efe6;
-      --accent:#2fb7a7;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      /* ألوان احتفالية بطابع عُماني */
+      --oman-red:#c8102e;
+      --oman-green:#007a3d;
+      --oman-white:#ffffff;
+      --deep-green:#0a3630;
+      --gold:#d4af37;
+      --gold-soft:#ead9a9;
+      --sky:#e9f6ff;
+      --mint:#e9fff4;
+
+      --ink:#102225;
+      --bg:#fffdf7;
+      --shadow:0 18px 38px rgba(0,0,0,.14);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      color:var(--cream);
+      font-family:"Cairo","Amiri",system-ui,-apple-system,"Segoe UI","Arial",sans-serif;
+      color:var(--ink);
       background:
-        radial-gradient(1400px 800px at 80% -20%, rgba(255,255,255,.08), transparent 55%),
-        radial-gradient(1200px 700px at 0% 100%, rgba(255,255,255,.06), transparent 60%),
-        linear-gradient(135deg, var(--bg-deep), var(--bg-mid));
-      font-family:"Noto Kufi Arabic","Reem Kufi",system-ui,-apple-system,"Segoe UI","Arial",sans-serif;
-      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-      font-feature-settings:"liga" 1,"calt" 1;
+        radial-gradient(1800px 800px at 75% -10%, rgba(200,16,46,.06) 0 60%, transparent 62%),
+        radial-gradient(1800px 800px at 20% 110%, rgba(0,122,61,.06) 0 60%, transparent 62%),
+        linear-gradient(180deg, #fff, var(--bg));
     }
 
-    /* إطار ذهبي فاخر */
-    .wrap{
-      min-height:100%;
-      display:grid;
-      place-items:center;
-      padding:28px;
+    .page{
+      max-width:1200px; margin:auto; padding:20px;
     }
-    .card{
-      width:min(1100px, 96vw);
-      background:linear-gradient(180deg, #0f2b31dd, #0d262bdd);
-      border-radius:28px;
-      position:relative;
-      overflow:hidden;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(255,255,255,.08);
+
+    /* إطار مستوحى من النقش العُماني */
+    .frame{
+      position:relative; border-radius:26px; overflow:hidden; box-shadow:var(--shadow);
+      background:linear-gradient(180deg, #ffffff, #fffbf1);
+      border:3px solid var(--gold);
     }
-    .card::before, .card::after{
-      content:"";
-      position:absolute; inset:0;
-      border-radius:28px;
-      padding:2px; /* سمك الزخرفة */
+    .frame::before{
+      content:""; position:absolute; inset:10px;
+      border-radius:18px; pointer-events:none;
       background:
-        linear-gradient(120deg, transparent 0 8%, rgba(255,255,255,.05) 8% 10%, transparent 10% 90%, rgba(255,255,255,.05) 90% 92%, transparent 92% 100%),
-        conic-gradient(from 0deg at 50% 50%, var(--gold), var(--gold-2), var(--gold) 70%, var(--gold-2), var(--gold));
+        conic-gradient(from 0deg, var(--oman-red), var(--gold), var(--oman-green), var(--gold), var(--oman-red));
       -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
+        radial-gradient(closest-side, #0000  calc(100% - 4px), #000 0) content-box,
         linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude;
-      opacity:.55;
-    }
-    .content{
-      position:relative;
-      padding:48px 42px 36px;
-      isolation:isolate;
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      padding:2px;
     }
 
-    /* رأس الصفحة */
-    .header{
-      display:grid; gap:16px;
-      grid-template-columns: 110px 1fr 110px;
-      align-items:center;
-    }
-    .brand-badge, .moe-badge{
-      width:96px; height:96px; border-radius:50%;
-      display:grid; place-items:center;
-      background:radial-gradient(circle at 45% 20%, #fff2, #0000 35%),
-                 radial-gradient(circle at 70% 80%, #0002, #0000 40%),
-                 linear-gradient(145deg, #16353c, #0e2428);
-      border:2px solid var(--gold);
-      box-shadow:0 6px 16px rgba(0,0,0,.35) inset, 0 0 0 6px rgba(201,162,90,.12);
-    }
-    .brand-badge span, .moe-badge span{
-      font-weight:800; letter-spacing:.5px; color:var(--gold-2);
-      font-size:12px; opacity:.9;
-    }
-    .hero{
-      text-align:center;
-    }
-    .title{
-      margin:0;
-      font-weight:800; line-height:1.1;
-      font-size:clamp(30px, 5vw, 54px);
-      color:#f8f6f1;
-    }
-    .subtitle{
-      margin:.4rem 0 0;
-      font-weight:600; color:#dfe9e6; opacity:.9;
-      font-size:clamp(14px, 2.5vw, 18px);
-    }
-
-    /* لوح المخطوطة */
-    .scroll{
-      margin:28px auto 18px;
-      width:min(860px, 92%);
-      border-radius:18px;
-      background:linear-gradient(180deg, #f0e6cf, #e7d6b6);
-      color:#2e200e;
-      padding:18px 22px;
-      border:2px solid #c6a56a;
-      box-shadow:0 8px 20px rgba(0,0,0,.25);
-      position:relative;
-    }
-    .scroll::before,.scroll::after{
-      content:"";
-      position:absolute; top:-12px; bottom:-12px; width:18px;
-      background:linear-gradient(180deg, #c9a25a, #a1793b);
-      border-radius:10px; filter:drop-shadow(0 8px 8px rgba(0,0,0,.15));
-    }
-    .scroll::before{left:-10px} .scroll::after{right:-10px}
-    .calligraphy{
-      margin:0; text-align:center;
-      font-family:"Reem Kufi","Noto Kufi Arabic", sans-serif;
-      font-size:clamp(18px, 3.3vw, 28px);
-      letter-spacing:.5px; color:#2b1d09; font-weight:700;
-    }
-
-    /* شعار المدرسة + عبارة التهنئة */
-    .ribbon{
-      display:flex; justify-content:center; align-items:center; gap:10px;
-      margin:14px auto 22px;
-      width:fit-content; padding:10px 18px;
+    /* رأس احتفالي */
+    header.hero{
+      position:relative; padding:26px 22px 14px; text-align:center;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,0)),
-        linear-gradient(90deg, #0d2a30, #12383f 60%, #0d2a30);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      box-shadow:0 6px 20px rgba(0,0,0,.25);
+        radial-gradient(1200px 400px at 50% -40%, rgba(212,175,55,.15), transparent 65%),
+        linear-gradient(180deg, #fff, #fffdf8);
     }
-    .ribbon strong{color:var(--gold-2)}
-    .ribbon .dot{width:6px; height:6px; background:var(--gold); border-radius:50%}
-
-    /* الرسومات الكرتونية (SVG) */
-    .scene{
-      display:grid; gap:22px;
-      grid-template-columns: 1fr 1fr;
-      align-items:center;
-      margin-top:10px;
-    }
-    @media (max-width:840px){
-      .header{grid-template-columns: 70px 1fr 70px}
-      .brand-badge,.moe-badge{width:70px; height:70px}
-      .scene{grid-template-columns:1fr}
-    }
-    .panel{
-      background:linear-gradient(180deg, #0e2930, #0b2126);
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:20px; padding:18px; position:relative;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
-      overflow:hidden;
-    }
-    .panel h3{
-      margin:0 0 10px; font-size:18px; color:#eae4d7; font-weight:700;
-    }
-    .panel p{
-      margin:6px 0 0; color:#dfe6e3; opacity:.9; line-height:1.8; font-size:15px;
-    }
-
-    /* زخارف نباتية متحركة بلطف */
-    .vines{
-      position:absolute; inset:auto -20px -30px -20px; height:180px; opacity:.25;
-      pointer-events:none; filter:blur(.3px);
-      animation:floaty 8s ease-in-out infinite;
-    }
-    @keyframes floaty{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(-6px)}
-    }
-
-    /* شارات صغيرة */
     .badges{
-      display:flex; gap:10px; flex-wrap:wrap; margin-top:12px
+      display:grid; grid-template-columns:140px 1fr 140px; align-items:center;
+      gap:12px; margin-bottom:6px;
     }
     .badge{
-      padding:6px 10px; border-radius:999px; font-size:12px;
-      background:linear-gradient(180deg, #11323a, #0b2227);
-      border:1px solid rgba(255,255,255,.08); color:#e7efe9
+      width:120px; height:120px; border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 30%, #fff8, #0000 45%),
+        linear-gradient(160deg, #f8f4e8, #f3ecd8);
+      border:3px solid var(--gold);
+      box-shadow:inset 0 0 0 8px rgba(212,175,55,.12);
+      display:grid; place-items:center; overflow:hidden;
+    }
+    .badge img{width:82%; height:82%; object-fit:contain}
+    .school-name{
+      font:700 16px "Cairo",sans-serif; color:#5b5138; letter-spacing:.3px
     }
 
-    /* تذييل */
+    /* عنوان بخط ثلث (أو بدائل) */
+    .title{
+      margin:6px 0 0;
+      font-family:"ThuluthPro","Aref Ruqaa","Amiri",serif;
+      font-weight:700; line-height:1.1;
+      font-size: clamp(32px, 7vw, 72px);
+      color:#162a27;
+    }
+    .title .year{ color:var(--oman-red) }
+    .title .oman{ color:var(--oman-green) }
+
+    .subtitle{
+      margin:6px auto 12px; max-width:740px;
+      color:#6a6a6a; font-size:clamp(14px,2.4vw,18px)
+    }
+
+    /* شريط تهنئة */
+    .ribbon{
+      margin:14px auto 18px; width:fit-content; padding:10px 18px;
+      border-radius:999px; border:1px solid rgba(16,34,37,.08);
+      background:
+        linear-gradient(180deg, #ffffff, #fff7e9);
+      box-shadow:0 8px 20px rgba(0,0,0,.1);
+      font-weight:700; color:#3d3828
+    }
+    .ribbon .gold{color:var(--gold)}
+
+    /* قسم مشهد كرتوني وتعليمي */
+    .grid{
+      display:grid; grid-template-columns:1.1fr .9fr; gap:20px; padding:18px 20px 28px;
+    }
+    @media (max-width:980px){ .badges{grid-template-columns:110px 1fr 110px} .badge{width:100px;height:100px}
+      .grid{grid-template-columns:1fr}
+    }
+
+    .panel{
+      background:
+        linear-gradient(180deg, #ffffff, #fffaf0);
+      border:1px solid rgba(16,34,37,.08);
+      border-radius:18px; padding:14px; position:relative; overflow:hidden;
+      box-shadow: inset 0 0 0 1px rgba(16,34,37,.05);
+    }
+    .panel h3{margin:0 0 6px; color:#2b2b2b; font:700 18px "Cairo",sans-serif}
+    .panel p{margin:6px 0 0; color:#333; line-height:1.9; font-size:15px}
+
+    /* زخارف علم عُمان أعلى المشهد */
+    .flag-band{
+      position:absolute; inset:0 0 auto 0; height:10px; display:flex;
+      box-shadow:0 1px 0 rgba(0,0,0,.05)
+    }
+    .flag-band span{flex:1}
+    .flag-band .red{background:var(--oman-red)}
+    .flag-band .white{background:var(--oman-white)}
+    .flag-band .green{background:var(--oman-green)}
+
+    /* كونفتّي احتفالي بسيط */
+    .confetti{ position:absolute; inset:0; pointer-events:none; overflow:hidden }
+    .piece{
+      position:absolute; width:9px; height:14px; opacity:.9; filter:saturate(1.1);
+      animation:drop 5.6s linear infinite;
+      border-radius:2px;
+    }
+    @keyframes drop{
+      0%{ transform:translateY(-120%) rotate(0deg) }
+      100%{ transform:translateY(120%) rotate(540deg) }
+    }
+
     footer{
-      margin-top:24px; padding-top:16px;
-      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
-      border-top:1px dashed rgba(255,255,255,.15);
-      color:#dfe9e6; opacity:.9
+      padding:10px 16px 18px; display:flex; gap:10px; justify-content:space-between; flex-wrap:wrap;
+      border-top:1px dashed rgba(16,34,37,.15); color:#5a5a5a; font-size:13px
     }
-    footer .left, footer .right{display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-size:14px}
-    .gold{color:var(--gold-2)}
-    .small{font-size:12px; opacity:.9}
 
-    /* أنماط وصولية */
-    @media (prefers-reduced-motion: reduce){
-      .vines{animation:none}
+    /* زر تحميل/طباعة (اختياري) */
+    .actions{display:flex; gap:8px; justify-content:center; margin:0 0 16px}
+    .btn{
+      cursor:pointer; padding:10px 14px; border-radius:12px; border:1px solid rgba(0,0,0,.1);
+      background:linear-gradient(180deg, #fff, #fff7e6); font-weight:700; color:#2a2a2a
     }
+    .btn:hover{ box-shadow:0 8px 18px rgba(0,0,0,.12) }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card" aria-labelledby="title">
-      <div class="content">
-        <!-- رأس أنيق -->
-        <div class="header" role="banner">
-          <div class="brand-badge" aria-hidden="true">
-            <span>المشاش</span>
+  <div class="page">
+    <div class="frame">
+      <header class="hero" role="banner" aria-labelledby="t">
+        <div class="badges">
+          <!-- شعار المدرسة (ضع ملف الشعار هنا) -->
+          <div class="badge" title="شعار مدرسة المشاش للتعليم الأساسي">
+            <img src="assets/school-logo.png" alt="شعار مدرسة المشاش للتعليم الأساسي">
           </div>
 
-          <div class="hero">
-            <h1 class="title" id="title">
-              تهنئة يوم المعلّم العُماني <span class="gold">٢٠٢٦</span>
+          <div>
+            <div class="school-name">مدرسة المشاش للتعليم الأساسي</div>
+            <h1 class="title" id="t" aria-label="يوم المعلّم العُماني ٢٠٢٦">
+              <span class="oman">يوم</span> المعلّم <span class="oman">العُماني</span>
+              <span class="year">٢٠٢٦</span>
             </h1>
-            <p class="subtitle">٢٤ فبراير — تقديرًا لرسالة المعلّم وعطاءاته</p>
-          </div>
-
-          <div class="moe-badge" aria-hidden="true">
-            <span>تعليم</span>
-          </div>
-        </div>
-
-        <!-- مخطوطة: كاد المعلّم أن يكون رسولًا -->
-        <div class="scroll" role="img" aria-label="كاد المعلّم أن يكون رسولًا">
-          <p class="calligraphy">كادَ المعلِّمُ أن يكونَ رسولًا</p>
-        </div>
-
-        <!-- شريط تهنئة المدرسة -->
-        <div class="ribbon" aria-live="polite">
-          <span class="dot" aria-hidden="true"></span>
-          <strong>مدرسة المشاش للتعليم الأساسي</strong>
-          <span>تهنئ جميع المعلّمين بمناسبة يوم المعلّم العُماني</span>
-          <span class="dot" aria-hidden="true"></span>
-        </div>
-
-        <!-- مشهد الرسومات الكرتونية + رسالة -->
-        <div class="scene" role="region" aria-label="رسالة تقدير ورسومات تعليمية كرتونية">
-          <!-- لوحة رسومية كرتونية -->
-          <figure class="panel" aria-label="رسومات كرتونية تعليمية">
-            <!-- SVG كرتوني مدمج -->
-            <svg viewBox="0 0 680 340" width="100%" height="auto" role="img" aria-label="رسومات كرتونية">
-              <defs>
-                <linearGradient id="gSkin" x1="0" x2="1">
-                  <stop offset="0" stop-color="#f3d9b1"/><stop offset="1" stop-color="#e7c79a"/>
-                </linearGradient>
-                <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#e9d6a7"/><stop offset="1" stop-color="#c19b56"/>
-                </linearGradient>
-                <linearGradient id="gLeaf" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#2aa594"/><stop offset="1" stop-color="#195d57"/>
-                </linearGradient>
-                <style>
-                  .line{stroke:#0f2b31; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round}
-                </style>
-              </defs>
-
-              <!-- نباتات جانبية -->
-              <g opacity=".28">
-                <path d="M30,320 C60,280 70,240 90,210 C120,160 160,150 170,110 C145,130 125,150 106,190 C90,220 70,260 30,320"
-                      fill="url(#gLeaf)"/>
-                <path d="M650,330 C620,290 600,260 590,240 C565,190 560,170 520,140 C560,160 575,180 590,210 C610,250 625,285 650,330"
-                      fill="url(#gLeaf)"/>
-              </g>
-
-              <!-- كتاب -->
-              <g transform="translate(110,140)">
-                <rect x="0" y="0" rx="8" ry="8" width="90" height="64" fill="#f7f2e7" class="line"/>
-                <path d="M45,0 v64" class="line"/>
-                <path d="M6,14 q36,24 72,0" fill="none" class="line" opacity=".6"/>
-              </g>
-
-              <!-- لوحة وشخص يشرح -->
-              <g transform="translate(220,110)">
-                <rect x="0" y="0" width="170" height="110" rx="10" ry="10" fill="#e7f3ef" stroke="#134a52" stroke-width="3"/>
-                <path d="M12,28 L150,28" stroke="#2fb7a7" stroke-width="3" />
-                <circle cx="20" cy="72" r="6" fill="#2fb7a7"/>
-                <path d="M36,72 L80,56" class="line" />
-              </g>
-
-              <!-- شخص جالس مع كرة أرضية -->
-              <g transform="translate(430,168)">
-                <circle cx="170" cy="115" r="38" fill="#e8c37e" stroke="#9b7a3f" stroke-width="3"/>
-                <path d="M170,77 a36,36 0 0,0 0,72 a36,36 0 0,0 0,-72 z M170,77 q18,10 30,36 q-12,8 -30,8 q-18,0 -30,-8 q12,-26 30,-36"
-                      fill="#3cae9b" opacity=".85"/>
-                <rect x="0" y="40" width="110" height="16" rx="8" fill="#21565a"/>
-                <rect x="12" y="0" width="70" height="46" rx="12" fill="url(#gSkin)" stroke="#b98d5a" stroke-width="3"/>
-                <rect x="8" y="30" width="86" height="70" rx="14" fill="#1e6261"/>
-                <line x1="78" y1="48" x2="108" y2="36" class="line"/>
-              </g>
-
-              <!-- قبعات تخرج -->
-              <g transform="translate(90,30)">
-                <path d="M0,40 l70,-18 l70,18 l-70,22 z" fill="#0d2a30"/>
-                <rect x="64" y="42" width="12" height="22" fill="#0d2a30"/>
-                <circle cx="70" cy="64" r="4" fill="url(#gGold)"/>
-                <path d="M70,64 q16,18 6,34" stroke="#c19b56" stroke-width="3" fill="none"/>
-                <circle cx="74" cy="99" r="6" fill="#c19b56"/>
-              </g>
-              <g transform="translate(520,10) scale(.9)">
-                <path d="M0,40 l70,-18 l70,18 l-70,22 z" fill="#0d2a30"/>
-                <rect x="64" y="42" width="12" height="22" fill="#0d2a30"/>
-                <circle cx="70" cy="64" r="4" fill="url(#gGold)"/>
-                <path d="M70,64 q16,18 6,34" stroke="#c19b56" stroke-width="3" fill="none"/>
-                <circle cx="74" cy="99" r="6" fill="#c19b56"/>
-              </g>
-            </svg>
-
-            <img class="vines" alt="" aria-hidden="true"
-                 src="data:image/svg+xml;utf8,<?xml version='1.0'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'><defs><linearGradient id='l' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%232fb7a7'/><stop offset='1' stop-color='%23195d57'/></linearGradient></defs><path d='M0,180 C120,160 140,120 190,90 C260,50 330,52 380,20 C360,50 330,80 300,120 C260,170 200,190 0,180' fill='url(%23l)' opacity='0.85'/><path d='M1200,180 C1080,160 1060,120 1010,90 C940,50 860,50 820,18 C840,50 870,80 900,120 C940,170 1000,190 1200,180' fill='url(%23l)' opacity='0.85'/></svg>">
-          </figure>
-
-          <!-- رسالة التقدير -->
-          <section class="panel">
-            <h3>شكرًا لمعلّمينا الأعزّاء</h3>
-            <p>
-              بمناسبة <strong class="gold">يوم المعلّم العُماني ٢٠٢٦</strong>،
-              تتقدّم <strong class="gold">مدرسة المشاش للتعليم الأساسي</strong>
-              بأسمى آيات الشكر والعرفان لكل معلّم ومعلّمة على عطائهم الراسخ
-              وجهودهم في صناعة الأمل وصياغة المستقبل.
+            <p class="subtitle">
+              في الرابع والعشرين من فبراير، نحتفي برسالة المعلّم ونُجدِّد العهد على دعم العلم والمعرفة.
             </p>
-            <div class="badges" aria-label="قيم ورسائل">
-              <span class="badge">المعلم ركيزة نهضة المجتمع</span>
-              <span class="badge">علم • قدوة • رسالة</span>
-              <span class="badge">٢٤ فبراير</span>
-            </div>
-          </section>
+          </div>
+
+          <!-- شعار وزارة التربية والتعليم (قم باستبدال المسار بملف الشعار الرسمي) -->
+          <div class="badge" title="شعار وزارة التربية والتعليم">
+            <img src="assets/moe-oman-logo.png" alt="شعار وزارة التربية والتعليم">
+          </div>
         </div>
 
-        <!-- تذييل -->
-        <footer>
-          <div class="left small">
-            إصدار: <span class="gold">٢٠٢٦</span> • مدرسة المشاش للتعليم الأساسي
-          </div>
-          <div class="right small">
-            تصميم جرافيكي فاخر برسومات كرتونية — يدعم العربية بالكامل
-          </div>
-        </footer>
+        <!-- شريط تهنئة -->
+        <div class="ribbon">
+          <span class="gold">مدرسة المشاش للتعليم الأساسي</span>
+          تهنئ جميع المعلّمين والمعلّمات بمناسبة <strong>يوم المعلّم العُماني ٢٠٢٦</strong>
+        </div>
+      </header>
+
+      <section class="grid" role="region" aria-label="مشهد احتفالي ورسالة تقدير">
+        <!-- رسومات كرتونية تعليمية بطابع عُماني (SVG مدمج) -->
+        <figure class="panel" role="img" aria-label="رسومات تعليمية كرتونية بطابع عُماني">
+          <div class="flag-band" aria-hidden="true"><span class="red"></span><span class="white"></span><span class="green"></span></div>
+
+          <!-- SVG: لوحات/كتب/قبعات تخرج بزخرفة محلية -->
+          <svg viewBox="0 0 820 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
+            <defs>
+              <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#f3e6b9"/><stop offset="1" stop-color="#d4af37"/>
+              </linearGradient>
+              <linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#22a67e"/><stop offset="1" stop-color="#0a5a44"/>
+              </linearGradient>
+              <style>
+                .line{stroke:#143534;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+                .fill{fill:#fefcf7}
+              </style>
+            </defs>
+
+            <!-- أرضية ناعمة -->
+            <rect x="0" y="310" width="820" height="110" fill="#f9f4e7"/>
+
+            <!-- نخلة وزخارف نباتية -->
+            <path d="M80 310 q-16 -42 22 -74 q-36 18 -14 -10 q-10 -30 40 -40 q-26 2 -8 -22 q18 -22 60 -24 q-46 22 -10 26 q44 4 -4 20 q-34 12 -8 18 q24 6 -14 16 q-38 10 8 20 q20 4 -20 18 q-26 10 -38 52Z" fill="url(#gGreen)" opacity=".25"/>
+
+            <!-- سبورة -->
+            <rect x="60" y="90" rx="14" ry="14" width="300" height="180" fill="#e9fff4" stroke="#0b5b49" stroke-width="4"/>
+            <path d="M80 120 L330 120" stroke="#2fb7a7" stroke-width="4"/>
+            <circle cx="96" cy="220" r="7" fill="#2fb7a7"/>
+            <path d="M112 220 L190 190" class="line"/>
+
+            <!-- كتاب مفتوح -->
+            <g transform="translate(400,110)">
+              <rect x="0" y="0" width="130" height="80" rx="10" ry="10" fill="#fffaf2" class="line"/>
+              <path d="M65 0 V80" class="line"/>
+              <path d="M10 20 q50 32 110 0" fill="none" class="line" opacity=".7"/>
+            </g>
+
+            <!-- طالب/معلّم بأسلوب كرتوني مبسّط -->
+            <g transform="translate(540,180)">
+              <rect x="0" y="66" width="120" height="22" rx="10" fill="#1a6b5a" opacity=".9"/>
+              <rect x="10" y="0" width="80" height="70" rx="16" fill="#1c7565"/>
+              <circle cx="50" cy="18" r="16" fill="url(#gGold)" stroke="#9e7e3f" stroke-width="3"/>
+              <line x1="68" y1="46" x2="118" y2="30" class="line"/>
+            </g>
+
+            <!-- قبعات تخرج -->
+            <g transform="translate(420,10)">
+              <path d="M0,40 l80,-20 l80,20 l-80,24 z" fill="#0f2d29"/>
+              <rect x="74" y="44" width="12" height="24" fill="#0f2d29"/>
+              <circle cx="80" cy="68" r="5" fill="url(#gGold)"/>
+              <path d="M80 68 q16 18 6 34" stroke="#d4af37" stroke-width="4" fill="none"/>
+              <circle cx="84" cy="104" r="6" fill="#d4af37"/>
+            </g>
+
+            <!-- كرة أرضية -->
+            <g transform="translate(300,260)">
+              <circle cx="80" cy="80" r="44" fill="#e8c980" stroke="#9b7a3f" stroke-width="3"/>
+              <path d="M80,36 a42,42 0 0,0 0,88 a42,42 0 0,0 0,-88 z M80,36 q22,10 34,38 q-12,10 -34,10 q-22,0 -34,-10 q12,-28 34,-38"
+                    fill="#3db69d" opacity=".85"/>
+            </g>
+
+            <!-- زخرفة هندسية خضراء/ذهبية -->
+            <circle cx="760" cy="80" r="40" fill="url(#gGold)" opacity=".25"/>
+          </svg>
+        </figure>
+
+        <!-- رسالة التقدير -->
+        <article class="panel">
+          <h3>شكرًا لمعلّمينا في يومهم</h3>
+          <p>
+            تتقدّم <strong>مدرسة المشاش للتعليم الأساسي</strong> بأسمى التهاني
+            والتبريكات إلى جميع المعلّمين والمعلّمات بمناسبة
+            <strong style="color:#0a5a44">يوم المعلّم العُماني ٢٠٢٦</strong>.
+            أنتم الركن الركين لنهضة الوطن، وحَمَلة رسالة العلم والقيم.
+          </p>
+          <p>
+            نُجدِّد العهد على دعمكم وتمكينكم، ونشكر عطاؤكم الكريم في صناعة الأمل
+            وبناء أجيالٍ تعرف واجبها نحو المعرفة والوطن.
+          </p>
+        </article>
+      </section>
+
+      <!-- حركة كونفتّي احتفالية (ألوان علم عُمان + ذهب) -->
+      <div class="confetti" aria-hidden="true" id="confetti"></div>
+
+      <div class="actions" aria-hidden="true">
+        <button class="btn" onclick="window.print()">طباعة</button>
       </div>
-    </section>
-  </main>
+
+      <footer>
+        <span>٢٤ فبراير ٢٠٢٦ • يوم المعلّم العُماني</span>
+        <span>تصميم بطابع عُماني، خطوط عربية أصيلة، ورسومات كرتونية تعليمية.</span>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // توليد كونفتّي بسيط بدون مكتبات
+    const colors = ["#c8102e","#007a3d","#ffffff","#d4af37"];
+    const confetti = document.getElementById("confetti");
+    const W = () => confetti.clientWidth, H = () => confetti.clientHeight;
+
+    function spawn(){
+      const n = 60; // عدد القصاصات
+      confetti.innerHTML = "";
+      for(let i=0;i<n;i++){
+        const el = document.createElement("span");
+        el.className = "piece";
+        el.style.left = Math.random()*100 + "%";
+        el.style.top  = (-10 - Math.random()*50) + "px";
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.animationDuration = (4 + Math.random()*4) + "s";
+        el.style.animationDelay = (Math.random()*2) + "s";
+        el.style.transform = `translateY(-120%) rotate(${Math.random()*360}deg)`;
+        confetti.appendChild(el);
+      }
+    }
+    spawn(); addEventListener("resize", spawn);
+  </script>
 </body>
 </html>
