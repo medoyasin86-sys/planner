@@ -1,151 +1,163 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تهنئة يوم المعلم العماني 2026 - مدرسة المشاش</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: radial-gradient(circle, #2c3e50 0%, #000000 100%);
-            font-family: 'Amiri', serif;
-            color: #d4af37;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تهنئة يوم المعلّم العُماني ٢٠٢٦ – مدرسة المشاش للتعليم الأساسي</title>
 
-        .card-container {
-            position: relative;
-            width: 90%;
-            max-width: 600px;
-            background: #fff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            text-align: center;
-            overflow: hidden;
-            border: 5px solid #d4af37;
-            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png'); /* نمط زخرفي خفيف */
-        }
+<!-- خطوط عربية جميلة -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
 
-        .card-container::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border: 2px solid #d4af37;
-            margin: 10px;
-            pointer-events: none;
-        }
+<style>
+    body{
+        margin:0;
+        font-family: "Cairo", sans-serif;
+        background:#f5f5f5;
+    }
 
-        .header-title {
-            font-family: 'Reem Kufi', sans-serif;
-            font-size: 2.5em;
-            color: #bc1823; /* الأحمر العماني */
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
+    .card{
+        width:100%;
+        max-width:550px;
+        margin:30px auto;
+        background:#fff;
+        border-radius:18px;
+        overflow:hidden;
+        box-shadow:0 20px 40px rgba(0,0,0,.18);
+    }
 
-        .school-name {
-            font-size: 1.5em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
+    /* خلفية عُمانية حمراء مع زخارف */
+    .header{
+        background:#b80000;
+        background-image:
+            radial-gradient(circle at top left, rgba(255,255,255,.15), transparent 60%),
+            url('https://i.imgur.com/iwZ1G4J.png');
+        background-size:cover;
+        padding:24px;
+        color:#fff;
+        text-align:right;
+        position:relative;
+    }
 
-        .illustration {
-            width: 150px;
-            height: 150px;
-            margin: 20px auto;
-            background: #f9f9f9;
-            border-radius: 50%;
-            border: 3px double #d4af37;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 80px;
-        }
+    .title{
+        font-family:"Amiri", serif;
+        font-size:38px;
+        font-weight:700;
+        line-height:1.4;
+        margin:0;
+        color:#ffffff;
+    }
 
-        .message {
-            font-size: 1.3em;
-            line-height: 1.8;
-            color: #444;
-            margin: 20px 0;
-            padding: 0 20px;
-        }
+    .subtitle{
+        margin:10px 0 0;
+        font-size:18px;
+        font-weight:600;
+        color:#ffe4e4;
+    }
 
-        .gold-divider {
-            height: 2px;
-            width: 80%;
-            background: linear-gradient(90deg, transparent, #d4af37, transparent);
-            margin: 20px auto;
-        }
+    /* مكان الصورة */
+    .teacher-img{
+        width:190px;
+        height:auto;
+        position:absolute;
+        bottom:-10px;
+        left:20px;
+    }
 
-        .footer-year {
-            font-family: 'Reem Kufi', sans-serif;
-            font-size: 1.8em;
-            color: #bc1823;
-            margin-top: 15px;
-        }
+    /* القسم الأبيض */
+    .body{
+        padding:26px;
+        text-align:center;
+    }
 
-        .btn-print {
-            margin-top: 25px;
-            padding: 10px 30px;
-            background-color: #d4af37;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-family: 'Amiri', serif;
-            font-size: 1.1em;
-            transition: 0.3s;
-        }
+    .greeting{
+        font-size:22px;
+        font-weight:800;
+        color:#b80000;
+        margin-bottom:14px;
+    }
 
-        .btn-print:hover {
-            background-color: #bc1823;
-            transform: scale(1.05);
-        }
+    .msg{
+        font-size:17px;
+        font-weight:600;
+        color:#333;
+        line-height:1.8;
+        margin-bottom:18px;
+    }
 
-        /* زينة الزوايا */
-        .corner {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 4px solid #d4af37;
-        }
-        .top-right { top: 0; right: 0; border-bottom: none; border-left: none; }
-        .bottom-left { bottom: 0; left: 0; border-top: none; border-right: none; }
+    .date{
+        font-size:15px;
+        font-weight:700;
+        color:#555;
+        margin-bottom:12px;
+    }
 
-    </style>
+    /* ترويسة المدرسة */
+    .school{
+        margin-top:12px;
+        font-weight:900;
+        font-size:18px;
+        color:#b80000;
+    }
+
+    /* QR */
+    .qr{
+        width:110px;
+        margin:20px auto 0;
+        display:block;
+    }
+
+    /* footer */
+    .footer{
+        margin-top:14px;
+        padding:12px;
+        font-size:14px;
+        color:#666;
+        border-top:1px solid #eee;
+        text-align:center;
+    }
+</style>
 </head>
+
 <body>
 
-    <div class="card-container">
-        <div class="corner top-right"></div>
-        <div class="corner bottom-left"></div>
+<div class="card">
 
-        <div class="header-title">يوم المعلم العماني</div>
-        <div class="school-name">مدرسة المشاش للتعليم الأساسي</div>
-        
-        <div class="gold-divider"></div>
+    <!-- القسم الأحمر -->
+    <div class="header">
 
-        <div class="illustration">🎓</div>
+        <h1 class="title">يوم المعلّم العُماني ٢٠٢٦</h1>
 
-        <div class="message">
-            إلى بناة العقول وصنّاع الأجيال في صرح <strong>مدرسة المشاش</strong>، <br>
-            نهنئكم بعطائكم المتجدد الذي يضيء دروب عمان بالفكر والمعرفة. <br>
-            كل عام وأنتم نبراس للحق ورمز للفخر.
+        <p class="subtitle">كل عام وعُمان بكم تزدهر، وجهودكم تُعلي أجيال المستقبل.</p>
+
+        <!-- ضع هنا صورة المعلّم -->
+        <img class="teacher-img" src="assets/teacher.png" alt="">
+    </div>
+
+    <!-- القسم الأبيض -->
+    <div class="body">
+
+        <div class="greeting">تهنئة خاصة</div>
+
+        <div class="msg">
+            تتقدّم <strong>مدرسة المشاش للتعليم الأساسي</strong><br>
+            بأصدق التهاني والتبريكات لجميع المعلّمين<br>
+            بمناسبة يوم المعلّم العُماني ٢٠٢٦،<br>
+            تقديرًا لرسالتكم العظيمة وعطائكم المستمر.
         </div>
 
-        <div class="gold-divider"></div>
+        <div class="date">24 فبراير – يوم المعلم العُماني</div>
 
-        <div class="footer-year">٢٠٢٦ م</div>
-        
-        <button class="btn-print" onclick="window.print()">حفظ كصورة / طباعة</button>
+        <!-- QR كود (اختياري) -->
+        <img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=oman-teacher-day" alt="QR">
+
+        <div class="school">مدرسة المشاش للتعليم الأساسي</div>
     </div>
+
+    <div class="footer">
+        تصميم جاهز للاستبدال في GitHub – يدعم العربية بشكل كامل
+    </div>
+
+</div>
 
 </body>
 </html>
