@@ -1,170 +1,305 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>تهنئة يوم المعلّم العُماني ٢٠٢٦</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تهنئة يوم المعلّم العُماني ٢٠٢٦ | مدرسة المشاش للتعليم الأساسي</title>
 
-<!-- خطوط عربية فاخرة -->
+<!-- خطوط عربية أنيقة (اختياري) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 
+<!-- (اختياري) فعّل خطّ ثلث لديك بوضع الملفات داخل assets وتفعيل الكتلة التالية
 <style>
+@font-face{
+  font-family:"ThuluthPro";
+  src:url("assets/KFGQPCThuluth.woff2") format("woff2"),
+      url("assets/KFGQPCThuluth.woff") format("woff");
+  font-display:swap;
+}
+</style>
+-->
+
+<style>
+  :root{
+    --deep:#0b2f2e;      /* أخضر إمبراطوري داكن */
+    --emerald:#0f5a51;   /* أخضر زمردي */
+    --mint:#eaf7f3;      /* أخضر فاتح جداً */
+    --ivory:#fffaf0;     /* عاجي */
+    --gold:#d4af37;      /* ذهبي */
+    --gold-soft:#efdfb2; /* ذهبي ناعم */
+    --ink:#122423;       /* نص داكن */
+    --shadow:0 22px 44px rgba(0,0,0,.22);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
   body{
     margin:0;
-    padding:0;
-    background:#f2f2f2;
-    font-family:'Cairo', sans-serif;
+    background:#f1f3f2;
+    font-family:"Cairo",system-ui,-apple-system,"Segoe UI","Arial",sans-serif;
+    color:var(--ink);
   }
 
-  .card{
-    width:1080px;
-    height:1350px;
-    margin:auto;
-    background:#b80000;
+  /* مساحة منشور مربّعة تناسب السوشيال */
+  .post{
+    width:1080px; height:1080px; margin:auto;
+    background: radial-gradient(1200px 580px at 80% -10%, rgba(212,175,55,.18), transparent 60%),
+                radial-gradient(1100px 520px at 8% 108%, rgba(15,90,81,.18), transparent 58%),
+                linear-gradient(180deg, #0f3f3b, #0b2f2e);
+    border-radius:28px;
+    box-shadow:var(--shadow);
     position:relative;
     overflow:hidden;
-    color:#fff;
-    box-shadow:0 30px 60px rgba(0,0,0,.3);
   }
 
-  /* زخارف إسلامية */
+  /* إطار زخرفي ذهبي فاخر */
+  .post::before{
+    content:""; position:absolute; inset:16px; border-radius:22px; padding:2px;
+    background:
+      conic-gradient(from 0deg at 50% 50%, var(--gold) 0 12%, #0000 12% 24%, var(--gold) 24% 36%, #0000 36% 48%, var(--gold) 48% 60%, #0000 60% 72%, var(--gold) 72% 84%, #0000 84% 96%, var(--gold) 96% 100%);
+    -webkit-mask:
+      radial-gradient(closest-side, #0000 calc(100% - 3px), #000 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:.75; pointer-events:none;
+  }
+
+  /* زخرفة هندسية خفيفة */
   .pattern{
-    position:absolute;
-    inset:0;
-    background-image:url('https://i.imgur.com/iwZ1G4J.png');
-    background-size:cover;
-    opacity:.08;
+    position:absolute; inset:0; opacity:.08; pointer-events:none; mix-blend-mode:soft-light;
+    background-image:
+      radial-gradient(circle at 16px 16px, #ffffff 1px, transparent 1.2px);
+    background-size:28px 28px;
   }
 
-  /* زخرفة ذهبية عليا */
-  .gold-top{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:220px;
-    background:linear-gradient(180deg, rgba(212,175,55,.9), rgba(212,175,55,.0));
-    clip-path:polygon(0 0, 100% 0, 100% 65%, 0 45%);
-    opacity:0.25;
+  /* شريط علم عُمان */
+  .flag{
+    position:absolute; left:0; right:0; top:0; height:14px; display:flex;
   }
+  .flag span{flex:1}
+  .flag .red{background:#c8102e}
+  .flag .white{background:#ffffff}
+  .flag .green{background:#007a3d}
 
-  /* العنوان */
-  .title{
-    position:absolute;
-    top:90px;
-    right:70px;
-    font-family:'Aref Ruqaa', serif;
-    font-size:90px;
-    line-height:1.1;
-    color:#ffffff;
-    text-shadow:0 4px 12px rgba(0,0,0,.3);
+  /* الرأس */
+  header{
+    position:absolute; top:40px; left:40px; right:40px; display:flex; align-items:center; gap:20px;
   }
-
-  .subtitle{
-    position:absolute;
-    top:300px;
-    right:70px;
-    font-size:40px;
-    font-weight:700;
-    color:#ffe6e6;
-  }
-
-  /* صورة رمزية للمعلم العماني (بدون نقد أو ملاحظات على الوجوه) */
-  .teacher-illustration{
-    position:absolute;
-    bottom:0;
-    left:0;
-    width:580px;
-    height:auto;
-  }
-
-  /* مربع أبيض سفلي */
-  .footer-box{
-    position:absolute;
-    bottom:0;
-    width:100%;
-    height:320px;
-    background:#ffffff;
-    border-top-left-radius:40px;
-    border-top-right-radius:40px;
-    box-shadow:0 -10px 25px rgba(0,0,0,.2);
-    padding-top:40px;
-    text-align:center;
-    color:#333;
-  }
-
-  .footer-title{
-    font-size:48px;
-    font-weight:900;
-    color:#b80000;
-    margin-bottom:20px;
-  }
-
-  .footer-msg{
-    font-size:32px;
-    font-weight:600;
-    line-height:1.7;
-    margin-bottom:30px;
-    color:#222;
-  }
-
   .school{
-    font-size:36px;
-    font-weight:900;
-    color:#b80000;
+    color:#e9efe9; font-weight:900; letter-spacing:.3px; font-size:26px;
+    text-shadow:0 2px 6px rgba(0,0,0,.35);
   }
 
-  /* QR اختياري */
-  .qr{
-    position:absolute;
-    bottom:30px;
-    right:40px;
-    width:180px;
+  /* شعار أنيق: "المعلّم العُماني ٢٠٢٦" داخل ميدالية */
+  .emblem{
+    margin-inline-start:auto; /* لليمين في RTL */
+    width:200px; height:200px;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,.35));
+  }
+  .emblem text{
+    font-family:"ThuluthPro","Aref Ruqaa","Amiri",serif;
   }
 
+  /* منطقة النصوص الرئيسية */
+  .hero{
+    position:absolute; top:260px; right:72px; left:72px; text-align:center;
+    color:#fffdf8;
+  }
+  .hero h1{
+    margin:0 0 10px;
+    font-family:"ThuluthPro","Aref Ruqaa","Amiri",serif;
+    font-weight:700; line-height:1.15;
+    font-size:86px; color:#fff9ec;
+    text-shadow:0 6px 16px rgba(0,0,0,.35);
+  }
+  .hero p{
+    margin:6px auto 0; max-width:840px; font-size:28px; color:#f4efe4; opacity:.95; line-height:1.8;
+  }
+
+  /* مشهد رسومي: المعلم العماني والطلبة */
+  .scene{
+    position:absolute; bottom:200px; left:56px; right:56px; display:grid;
+    grid-template-columns:1.1fr .9fr; gap:22px;
+  }
+  .panel{
+    background:linear-gradient(180deg, #0f3b36, #0c2e2b);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:18px; padding:16px; position:relative; overflow:hidden;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  }
+  .panel h3{margin:0 0 8px; font-size:22px; color:#ffecc0; font-weight:800}
+  .panel p{margin:6px 0 0; color:#e9efe9; line-height:1.9; font-size:18px}
+
+  /* تذييل */
+  footer{
+    position:absolute; bottom:28px; left:40px; right:40px;
+    display:flex; justify-content:space-between; align-items:center; color:#eadfb4;
+    font-size:20px; border-top:1px dashed rgba(255,255,255,.18); padding-top:14px;
+  }
+  .tag{background:linear-gradient(180deg, #1a544b, #14413a); border:1px solid rgba(255,255,255,.15);
+       padding:8px 14px; border-radius:999px; color:#fff; font-weight:800}
+
+  /* كونفتّي احتفالي بسيط */
+  .confetti{ position:absolute; inset:0; pointer-events:none; }
+  .piece{ position:absolute; width:9px; height:14px; border-radius:2px; opacity:.9;
+          animation:drop 6.2s linear infinite; }
+  @keyframes drop{ 0%{transform:translateY(-120%) rotate(0)} 100%{transform:translateY(120%) rotate(540deg)} }
+
+  /* للاستعراض على شاشات أصغر */
+  @media (max-width:1140px){
+    .post{ transform:scale(.85); transform-origin:top center; height:1270px; } /* فقط للمعاينة */
+  }
 </style>
 </head>
-
 <body>
+  <main class="post" role="group" aria-label="بطاقة تهنئة يوم المعلّم العُماني ٢٠٢٦">
+    <div class="pattern" aria-hidden="true"></div>
+    <div class="flag" aria-hidden="true"><span class="red"></span><span class="white"></span><span class="green"></span></div>
 
-<div class="card">
+    <header>
+      <div class="school">مدرسة المشاش للتعليم الأساسي</div>
 
-  <div class="pattern"></div>
-  <div class="gold-top"></div>
+      <!-- شعار أنيق: المعلّم العُماني ٢٠٢٦ -->
+      <svg class="emblem" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-label="المعلّم العُماني ٢٠٢٦">
+        <!-- حلية ذهبية خارجية -->
+        <defs>
+          <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f4e6b9"/><stop offset="1" stop-color="#d4af37"/>
+          </linearGradient>
+        </defs>
+        <circle cx="150" cy="150" r="142" fill="url(#goldGrad)" opacity=".95"/>
+        <circle cx="150" cy="150" r="128" fill="#0d3a35" stroke="#08322e" stroke-width="6"/>
+        <!-- زخارف نقطية -->
+        <g fill="#d4af37" opacity=".8">
+          <circle cx="150" cy="20" r="4"/><circle cx="150" cy="280" r="4"/>
+          <circle cx="20" cy="150" r="4"/><circle cx="280" cy="150" r="4"/>
+        </g>
+        <!-- نص الشعار -->
+        <text x="150" y="130" text-anchor="middle" fill="#fff8e8" font-size="34" font-weight="700">المعلّم</text>
+        <text x="150" y="172" text-anchor="middle" fill="#fff8e8" font-size="34" font-weight="700">العُماني</text>
+        <text x="150" y="212" text-anchor="middle" fill="#d4ffea" font-size="28" font-weight="800">٢٠٢٦</text>
+      </svg>
+    </header>
 
-  <div class="title">
-    يوم المعلّم<br>
-    العُماني ٢٠٢٦
-  </div>
+    <!-- العنوان والتهنئة الرئيسية -->
+    <section class="hero">
+      <h1>تهنئة بمناسبة يوم المعلّم العُماني</h1>
+      <p>
+        بكل فخر واعتزاز، تتقدّم <strong style="color:#ffefb0">مدرسة المشاش للتعليم الأساسي</strong>
+        بأطيب التهاني والتبريكات إلى المعلّم العُماني في يومه.
+        أنتم ركيزة النهضة وشركاء صناعة المستقبل، وبجهودكم يزدهر العلم وتعلو القيم.
+      </p>
+    </section>
 
-  <div class="subtitle">
-    شكراً لصنّاع العِلْم وبُنَاة الأجيال
-  </div>
+    <!-- مشهد رسومي يعبّر عن المعلّم العُماني -->
+    <section class="scene" role="region" aria-label="رسوم تعليمية بطابع عُماني">
+      <!-- لوحة رسومية -->
+      <figure class="panel" aria-label="مشهد تدريسي">
+        <svg viewBox="0 0 860 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#22a67e"/><stop offset="1" stop-color="#0a5a44"/>
+            </linearGradient>
+            <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f3e6b9"/><stop offset="1" stop-color="#d4af37"/>
+            </linearGradient>
+            <style>.line{stroke:#123c36;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}</style>
+          </defs>
 
-  <!-- ضع صورة رسومية لرمز المعلم هنا -->
-  <img src="https://i.imgur.com/5XJrUvE.png" class="teacher-illustration">
+          <!-- أرضية -->
+          <rect x="0" y="320" width="860" height="100" fill="#0d2f2c"/>
 
-  <!-- القسم الأبيض -->
-  <div class="footer-box">
+          <!-- نخلة/زخارف نباتية -->
+          <path d="M80 320 q-18 -52 24 -92 q-24 10 -12 -16 q0 -30 50 -40 q-20 0 -8 -20 q18 -20 52 -22 q-44 22 -10 26 q44 4 -4 20 q-34 12 -8 18 q24 6 -14 16 q-38 10 8 20 q20 4 -20 18 q-26 10 -38 54Z" fill="url(#gGreen)" opacity=".35"/>
+          <path d="M780 330 q20 -50 0 -90 q24 10 14 -20 q-6 -30 -50 -40 q22 -2 6 -20 q-16 -20 -50 -20 q42 20 10 26 q-44 4 6 18 q34 12 8 18 q-24 6 16 18 q36 10 -10 18 q-24 6 24 20 q26 10 26 52Z" fill="url(#gGreen)" opacity=".35"/>
 
-    <div class="footer-title">
-      تهنئة خاصة بمناسبة يوم المعلّم العُماني
-    </div>
+          <!-- سبورة -->
+          <rect x="60" y="80" rx="14" ry="14" width="320" height="190" fill="#eafff5" stroke="#0b5b49" stroke-width="4"/>
+          <path d="M84 112 L352 112" stroke="#2fb7a7" stroke-width="4"/>
+          <circle cx="100" cy="206" r="7" fill="#2fb7a7"/>
+          <path d="M118 206 L198 174" class="line"/>
 
-    <div class="footer-msg">
-      بكل فخر واعتزاز تتقدّم<br>
-      <strong>مدرسة المشاش للتعليم الأساسي</strong><br>
-      بأطيب التهاني لجميع المعلّمين والمعلّمات في يومهم.
-    </div>
+          <!-- كتاب مفتوح -->
+          <g transform="translate(420,110)">
+            <rect x="0" y="0" width="140" height="88" rx="10" ry="10" fill="#fffaf2" class="line"/>
+            <path d="M70 0 V88" class="line"/>
+            <path d="M12 24 q56 36 116 0" class="line" fill="none" opacity=".7"/>
+          </g>
 
-    <div class="school">
-      مدرسة المشاش للتعليم الأساسي
-    </div>
+          <!-- شخصية معلّم بزيّ عماني مبسّط + مصحف/دفتر ذهبي -->
+          <g transform="translate(570,158)">
+            <rect x="8" y="26" width="92" height="122" rx="18" fill="#eef3f1" stroke="#a7b4b0" stroke-width="3"/>
+            <ellipse cx="54" cy="16" rx="18" ry="16" fill="url(#gGold)" stroke="#9e7e3f" stroke-width="3"/>
+            <rect x="40" y="0" width="28" height="10" rx="4" fill="#c8102e"/>
+            <path d="M90 72 q40 -18 120 -38" class="line"/>
+            <rect x="16" y="92" width="36" height="26" rx="4" fill="url(#gGold)" stroke="#9e7e3f" stroke-width="2"/>
+          </g>
 
-    <img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://example.com">
-  </div>
+          <!-- طالب وطاولة -->
+          <g transform="translate(270,240)">
+            <rect x="0" y="76" width="130" height="24" rx="10" fill="#1a6b5a" opacity=".9"/>
+            <rect x="10" y="0" width="86" height="78" rx="16" fill="#1c7565"/>
+            <circle cx="52" cy="20" r="16" fill="url(#gGold)" stroke="#9e7e3f" stroke-width="3"/>
+            <line x1="72" y1="52" x2="130" y2="38" class="line"/>
+          </g>
 
-</div>
+          <!-- قبعة تخرج ذهبية -->
+          <g transform="translate(430,12)">
+            <path d="M0,40 l80,-20 l80,20 l-80,24 z" fill="#0f2d2b"/>
+            <rect x="74" y="44" width="12" height="24" fill="#0f2d2b"/>
+            <circle cx="80" cy="68" r="5" fill="url(#gGold)"/>
+            <path d="M80 68 q16 18 6 34" stroke="#d4af37" stroke-width="4" fill="none"/>
+            <circle cx="84" cy="104" r="6" fill="#d4af37"/>
+          </g>
+        </svg>
+      </figure>
 
+      <!-- رسالة التهنئة -->
+      <article class="panel">
+        <h3>رسالة تقدير</h3>
+        <p>
+          تتقدّم <strong style="color:#ffefb0">مدرسة المشاش للتعليم الأساسي</strong>
+          بأسمى آيات الشكر والامتنان إلى كل معلّمٍ في عُمان
+          بمناسبة <strong>يوم المعلّم العُماني ٢٠٢٦</strong>.
+        </p>
+        <p>
+          أنتم المنارة التي تهدي الأجيال، وبجهودكم يزدهر العلم وتُبنى القيم ويعلو الوطن.
+          دمتم عطاءً ونورًا.
+        </p>
+      </article>
+    </section>
+
+    <footer>
+      <span class="tag">٢٤ فبراير • يوم المعلّم العُماني</span>
+      <span>مع تحيات: مدرسة المشاش للتعليم الأساسي</span>
+    </footer>
+
+    <!-- كونفتّي -->
+    <div class="confetti" id="confetti" aria-hidden="true"></div>
+  </main>
+
+  <script>
+    // توليد كونفتّي بألوان العلم + الذهب
+    const colors = ["#c8102e","#007a3d","#ffffff","#d4af37"];
+    const confetti = document.getElementById("confetti");
+    function spawn(){
+      const n = 80;
+      confetti.innerHTML = "";
+      for(let i=0;i<n;i++){
+        const el = document.createElement("span");
+        el.className = "piece";
+        el.style.left = Math.random()*100 + "%";
+        el.style.top  = (-10 - Math.random()*50) + "px";
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.animationDuration = (4 + Math.random()*4) + "s";
+        el.style.animationDelay = (Math.random()*2) + "s";
+        el.style.transform = `translateY(-120%) rotate(${Math.random()*360}deg)`;
+        confetti.appendChild(el);
+      }
+    }
+    spawn(); addEventListener("resize", spawn);
+  </script>
 </body>
 </html>
