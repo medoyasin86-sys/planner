@@ -1,157 +1,104 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>مبادرة فرسان الانضباط | مدرسة المشاش</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #1A5F7A; /* أزرق عماني رسمي */
-            --accent: #C89666;  /* ذهبي رملي */
-            --bg: #FDF7F2;
-        }
-
-        body { font-family: 'Tajawal', sans-serif; background: #e0e0e0; margin: 0; padding: 0; }
-
-        /* تنسيق الشريحة الاحترافي A4 عرضي */
-        .slide {
-            width: 297mm; height: 210mm;
-            margin: 20px auto; background: white;
-            border: 15px solid var(--primary);
-            position: relative; display: flex; flex-direction: column;
-            page-break-after: always; box-sizing: border-box;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
-
-        /* إطار زخرفي عماني داخلي */
-        .slide::after {
-            content: ""; position: absolute;
-            top: 10px; left: 10px; right: 10px; bottom: 10px;
-            border: 2px solid var(--accent); pointer-events: none;
-        }
-
-        .header {
-            background: var(--primary); color: white;
-            padding: 25px 60px; display: flex; justify-content: space-between;
-            align-items: center; z-index: 10;
-        }
-
-        .content { display: flex; flex: 1; padding: 50px; gap: 50px; align-items: center; }
-
-        .text-section { flex: 1; z-index: 5; }
-        .description-box {
-            background: var(--bg); padding: 30px;
-            border-right: 12px solid var(--accent); border-radius: 20px;
-            font-size: 24px; line-height: 1.8; color: #2c3e50;
-        }
-
-        .image-placeholder {
-            flex: 1.2; height: 100%; border-radius: 30px;
-            background: #f0f4f8; border: 5px dashed var(--accent);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; color: var(--primary);
-        }
-
-        /* رسم SVG مدمج لتمثيل الشخصيات العمانية */
-        .oman-icon { width: 150px; height: 150px; fill: var(--primary); margin-bottom: 20px; }
-
-        .slide-num {
-            position: absolute; bottom: 30px; left: 40px;
-            background: var(--primary); color: white; padding: 8px 25px; border-radius: 50px;
-        }
-
-        footer { position: absolute; bottom: 30px; right: 60px; font-weight: bold; color: var(--primary); }
-
-        .controls { position: fixed; top: 20px; left: 20px; z-index: 1000; }
-        .btn {
-            padding: 15px 30px; background: #27ae60; color: white;
-            border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px;
-        }
-
-        @media print { .controls { display: none; } body { background: none; } .slide { margin: 0; border-width: 5px; } }
-    </style>
-</head>
-<body>
-
-<div class="controls">
-    <button class="btn" onclick="window.print()">تصدير المبادرة كملف PDF</button>
-</div>
-
-<div class="slide">
-    <div class="header"><h1>مدرسة المشاش للتعليم الأساسي (1-12)</h1></div>
-    <div class="content" style="flex-direction: column; text-align: center;">
-        <svg class="oman-icon" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4M12,20c-2.03,0-3.8-1.04-4.84-2.63C7.45,15.82 9.5,15 12,15s4.55,0.82 4.84,2.37C15.8,18.96 14.03,20 12,20Z"/></svg>
-        <h2 style="font-size: 50px; color: var(--primary); margin: 0;">مبادرة فرسان الانضباط</h2>
-        <p style="font-size: 28px; color: var(--accent); margin-top: 10px;">للعام الدراسي 2025/2026م</p>
-        <div style="margin-top: 30px; font-size: 22px;">رؤية عمانية عصرية لبيئة مدرسية منضبطة</div>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>منارة الانضباط – مدرسة المشاش للتعليم الأساسي</title>
+  <meta name="description" content="محفظة رقمية لمبادرة منارة الانضباط – مدرسة المشاش للتعليم الأساسي (1–12) للعام 2025/2026م" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet s.id + 'ogo.svg
+      <div>
+        <h1 class="title">منارة الانضباط</h1>
+        <p class="subtitle">مدرسة المشاش للتعليم الأساسي (1–12) – العام الدراسي <span id="year"></span></p>
+      </div>
     </div>
-    <div class="slide-num">1</div>
-    <footer>إعداد: محمد ياسين حلمي</footer>
-</div>
+    <nav class="nav">
+      #aboutعن المبادرة</a>
+      #identityالهوية البصرية</a>
+      #scenesالمشاهد</a>
+      #kpisالمؤشرات</a>
+      #timelineالجدول الزمني</a>
+      #resourcesالموارد</a>
+      #contactالتواصل</a>
+      <button class="btn primary" onclick="window.print()">طباعة/حفظ PDF</button>
+    </nav>
+  </header>
 
-<div class="slide">
-    <div class="header"><h1>المشهد الأول: طابور الفخر</h1></div>
-    <div class="content">
-        <div class="text-section">
-            <div class="description-box">
-                <strong>الهدف:</strong> تعزيز الهوية الوطنية والالتزام.<br><br>
-                يظهر الطلاب العمانيون في اصطفاف مثالي بزيّهم التقليدي، حيث تبدأ المبادرة بغرس قيمة الوقت والاحترام من الطابور الصباحي.
-            </div>
-        </div>
-        <div class="image-placeholder">
-            <svg class="oman-icon" style="width:200px; height:200px;" viewBox="0 0 24 24"><path d="M16 17H5V7H16L19 12L16 17M14 9H7V15H14L16 12L14 9M21 4H3V20H21V4Z"/></svg>
-            <h3>[هنا تظهر صورة طفل عماني بزي رسمي ومنضبط]</h3>
-        </div>
+  <section class="hero">
+    <div class="hero-content">
+      <h2 id="tagline"></h2>
+      <p>محفظة رقمية توثّق الرؤية والأهداف والمشاهد المصوّرة والنتائج وفق هوية عمانية أصيلة.</p>
+      #scenesاستكشاف المشاهد</a>
     </div>
-    <div class="slide-num">2</div>
-</div>
+  </section>
 
-<div class="slide">
-    <div class="header"><h1>المشهد الثاني: التحول الرقمي</h1></div>
-    <div class="content">
-        <div class="text-section">
-            <div class="description-box">
-                <strong>الوسيلة:</strong> شاشات ذكية تفاعلية.<br><br>
-                تستخدم المدرسة شاشات تعرض "مؤشر الانضباط" للفصول بأسلوب رسوم كرتونية محببة، مما يحفز التنافس الإيجابي.
-            </div>
-        </div>
-        <div class="image-placeholder">
-            <svg class="oman-icon" style="width:200px; height:200px;" viewBox="0 0 24 24"><path d="M21,17H3V5H21M21,3H3A2,2 0 0,0 1,5V17A2,2 0 0,0 3,19H10V21H14V19H21A2,2 0 0,0 23,17V5A2,2 0 0,0 21,3Z"/></svg>
-            <h3>[هنا صورة المعلم يشرح النظام التقني للطلاب]</h3>
-        </div>
-    </div>
-    <div class="slide-num">3</div>
-</div>
+  <main>
+    <section id="about" class="section page">
+      <h3>عن المبادرة</h3>
+      <div class="grid two">
+        <article>
+          <h4>الرؤية</h4>
+          <p id="vision"></p>
+          <h4>الرسالة</h4>
+          <p id="mission"></p>
+          <h4>القيم</h4>
+          <ul id="values" class="tags"></ul>
+        </article>
+        <article>
+          <h4>الأهداف العامة</h4>
+          <ul id="objectives" class="checks"></ul>
+        </article>
+      </div>
+    </section>
 
-<div class="slide">
-    <div class="header"><h1>المشهد الثالث: مجالس الفرسان</h1></div>
-    <div class="content">
-        <div class="text-section">
-            <div class="description-box">
-                <strong>الفئة المستهدفة:</strong> قيادات الطلاب.<br><br>
-                ورش عمل لتدريب "فرسان الانضباط" ليكونوا قدوة لزملائهم، مرتدين وشاح المبادرة الذهبي.
-            </div>
-        </div>
-        <div class="image-placeholder">
-            <svg class="oman-icon" style="width:200px; height:200px;" viewBox="0 0 24 24"><path d="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16 8.41,15 12,15C15.59,15 18.5,16 18.5,18.25V20H5.5V18.25Z"/></svg>
-            <h3>[هنا صورة ورشة عمل قيادية للطلاب]</h3>
-        </div>
-    </div>
-    <div class="slide-num">4</div>
-</div>
+    <section id="identity" class="section page">
+      <h3>الهوية البصرية</h3>
+      <div class="grid three">
+        <div class="swatch" data-color="terracotta"><span>#B55A3C</span><b>التراكوتا</b></div>
+        <div class="swatch" data-color="navy"><span>#0A3A5A</span><b>الأزرق البحري</b></div>
+        <div class="swatch" data-color="sandGold"><span>#C9A25D</span><b>الذهبي الرملي</b></div>
+      </div>
+      <p class="muted">الخطوط: Tajawal للعناوين، Noto Naskh Arabic للنصوص. زخارف هندسية عُمانية مبسّطة في الزوايا.</p>
+    </section>
 
-<div class="slide">
-    <div class="header"><h1>الخاتمة: بصمة نجاح</h1></div>
-    <div class="content" style="flex-direction: column; text-align: center;">
-        <svg class="oman-icon" style="width:200px; height:200px; fill:#27ae60;" viewBox="0 0 24 24"><path d="M12,2L15.09,8.26L22,9.27L17,14.14L18.18,21.02L12,17.77L5.82,21.02L7,14.14L2,9.27L8.91,8.26L12,2Z"/></svg>
-        <h2 style="font-size: 40px; color: var(--primary);">مدرسة المشاش: انضباط اليوم.. ريادة الغد</h2>
-        <div class="description-box" style="margin-top:20px;">
-            تم بحمد الله اكتمال ملف مبادرة الانضباط للعام الدراسي 2026م.
-        </div>
-        <p style="margin-top: 40px; font-weight: bold;">تصميم: محمد ياسين حلمي</p>
-    </div>
-    <div class="slide-num">15</div>
-</div>
+    <section id="scenes" class="section page">
+      <h3>المشاهد</h3>
+      <div id="scenesGrid" class="grid three"></div>
+    </section>
 
+    <section id="kpis" class="section page">
+      <h3>مؤشرات الأداء</h3>
+      <ul id="kpisList" class="checks"></ul>
+    </section>
+
+    <section id="timeline" class="section page">
+      <h3>الجدول الزمني</h3>
+      <div id="timelineItems" class="timeline"></div>
+    </section>
+
+    <section id="resources" class="section page">
+      <h3>الموارد</h3>
+      <ul id="resourcesList" class="dots"></ul>
+      <h4>إدارة المخاطر والامتثال</h4>
+      <ul id="risksList" class="dots"></ul>
+      <h4>التواصل</h4>
+      <ul id="commList" class="dots"></ul>
+      <p class="muted">نموذج Google Forms: #فتح الرابط</a></p>
+    </section>
+
+    <section id="contact" class="section page">
+      <h3>التواصل</h3>
+      <p>هذه المحفظة أنشئت لتوثيق مبادرة «منارة الانضباط». للاقتراحات والتحديثات يمكن فتح قضية (Issue) في مستودع GitHub بعد النشر.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    assets/svg/omani-pattern.svg
+    assets/svg/omani-pattern.svg
+    <small>© مدرسة المشاش – مبادرة منارة الانضباط – <span id="yearFoot"></span></small>
+  </footer>
+
+  assets/js/app.js</script>
 </body>
 </html>
