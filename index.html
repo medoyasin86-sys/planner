@@ -1,477 +1,242 @@
 <!DOCTYPE html>
-      --terracotta:#B55A3C; --navy:#0A3A5A; --sand:#C9A25D; --cream:#F3E9DA; --ink:#12222E;<html lang="ar" dir="rtl">
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.85 'Noto Naskh Arabic','Tajawal',system-ui,sans-serif}
-    a{color:var(--navy);text-decoration:none}
-    .site-header{position:sticky;top:0;background:linear-gradient(180deg,#fff 0%, #fff8ee 100%);border-bottom:1px solid #eee;z-index:10}
-    .brand{display:flex;gap:16px;align-items:center;padding:12px 20px}
-    .logo{width:56px;height:56px}
-    .title{margin:0;font-family:'Tajawal',sans-serif;font-weight:800;color:var(--navy)}
-    .subtitle{margin:2px 0 0;color:#444}
-    .nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 20px 16px}
-    .nav a{padding:6px 10px;border-radius:8px}
-    .nav a:hover{background:#eef3f7}
-    .btn{background:var(--terracotta);color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer}
-    .btn.primary{background:var(--navy)}
-    .hero{
-      color:#fff;padding:60px 20px;position:relative;overflow:hidden;
-      background:linear-gradient(135deg, rgba(10,58,90,.95), rgba(181,90,60,.85));
-    }
-    .hero::before{
-      content:"";position:absolute;inset:0;opacity:.25;pointer-events:none;
-      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g><polygon points="0,0 20,0 0,20" fill="%230A3A5A"/><polygon points="0,10 10,10 0,20" fill="%23B55A3C"/><polygon points="10,0 20,0 20,10" fill="%23C9A25D"/><polygon points="20,0 40,0 20,20" fill="%230A3A5A"/><polygon points="0,20 20,20 0,40" fill="%230A3A5A"/><polygon points="20,20 40,20 20,40" fill="%23B55A3C"/></g></svg>');
-      background-size:160px; background-position: top left;
-    }
-    .hero-content{max-width:1100px;margin:auto;text-align:center;position:relative}
-    .hero .actions{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    .section{max-width:1100px;margin:40px auto;padding:20px;background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-    .section h3{margin-top:0;color:var(--navy);font-family:'Tajawal',sans-serif}
-    .grid{display:grid;gap:18px}
-    .grid.two{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-    .grid.three{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-    .tags{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}
-    .tags li{background:#f0efe9;border:1px solid #e3dccf;border-radius:999px;padding:6px 12px}
-    .checks{list-style:none;padding:0}
-    .checks li{padding:8px 0;border-bottom:1px dashed #eee;position:relative}
-    .checks li::before{content:'✓';color:var(--terracotta);margin-left:8px}
-    .dots{list-style:disc;padding-inline-start:20px}
-    .swatch{padding:16px;border-radius:12px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.04);position:relative;color:#fff}
-    .swatch[data-color='terracotta']{background:var(--terracotta)}
-    .swatch[data-color='navy']{background:var(--navy)}
-    .swatch[data-color='sandGold']{background:var(--sand);color:#222}
-    .swatch span{opacity:.9}
-    #scenesGrid .card{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
-    .card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#f6f4ee}
-    .card .meta{padding:12px}
-    .card h4{margin:0;color:var(--navy)}
-    .muted{color:#6b6b6b}
-    .timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-    .timeline .item{background:#f8f6f1;border:1px solid #eee;border-radius:10px;padding:12px}
-    .site-footer{position:relative;text-align:center;padding:28px 12px;color:#5a5a5a;margin-bottom:24px}
-    .corner{position:absolute;width:96px;opacity:.35}
-    .corner.tl{top:-6px;left:12px;transform:scaleX(-1)}
-    .corner.br{bottom:-6px;right:12px}
-    .brand .logo{filter: drop-shadow(0 2px 2px rgba(0,0,0,.08));}
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادرة منارة الانضباط | مدرسة المشاش</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --oman-blue: #1A5F7A;
+            --oman-gold: #C89666;
+            --oman-red: #D2122E;
+            --bg-light: #F9F7F2;
+            --white: #FFFFFF;
+        }
 
-    /* طباعة A4 */
-    @media print {
-      @page { size: A4; margin: 12mm; }
-      .nav, .btn, .hero{display:none !important}
-      body{background:#fff}
-      .section{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid}
-      .page{page-break-after:always}
-    }
-  </style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* تنسيق الشريحة - مقاس A4 عرضي */
+        .slide {
+            width: 297mm;
+            height: 210mm;
+            margin: 40px auto;
+            background: var(--white);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            page-break-after: always;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 15px solid var(--oman-blue);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* الزخرفة العمانية */
+        .slide::before {
+            content: "";
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 2px solid var(--oman-gold);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .header {
+            background: var(--oman-blue);
+            color: var(--white);
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .header h1 { margin: 0; font-size: 32px; font-weight: 900; }
+
+        .content {
+            display: flex;
+            flex: 1;
+            padding: 50px;
+            gap: 50px;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .text-section {
+            flex: 1;
+        }
+
+        .title-box {
+            color: var(--oman-blue);
+            border-right: 8px solid var(--oman-gold);
+            padding-right: 20px;
+            margin-bottom: 25px;
+        }
+
+        .description-box {
+            background: var(--bg-light);
+            padding: 30px;
+            border-radius: 20px;
+            font-size: 24px;
+            line-height: 1.8;
+            color: #333;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .image-section {
+            flex: 1.2;
+            height: 450px;
+            border-radius: 30px;
+            overflow: hidden;
+            border: 6px solid var(--oman-gold);
+            background: #eee;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-footer {
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: var(--oman-blue);
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+        }
+
+        .btn-print {
+            padding: 15px 35px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .btn-print:hover { transform: scale(1.05); background: #2ecc71; }
+
+        @media print {
+            .controls { display: none; }
+            body { background: none; }
+            .slide { margin: 0; border-width: 8px; }
+        }
+    </style>
 </head>
 <body>
-  <!-- رأس الصفحة -->
-  <header class="site-header">
-    <div class="brand">
-      <!-- شعار SVG مضمّن -->
-      <svg class="logo" viewBox="0 0 256 256" aria-hidden="true">
-        <defs><style>.a{fill:#0A3A5A}.b{fill:#B55A3C}.c{fill:#C9A25D}</style></defs>
-        <path class="a" d="M24 176c0-40 32-72 72-72h16v64c-8-12-24-20-40-20s-32 8-40 28Z"/>
-        <path class="a" d="M232 176c-8-20-24-28-40-28s-32 8-40 20v-64h16c40 0 72 32 72 72Z"/>
-        <path class="b" d="M128 24l18 18v44a18 18 0 1 1-36 0V42Z"/>
-        <circle cx="128" cy="86" r="10" fill="#fff"/>
-        <rect x="124" y="70" width="4" height="18" fill="#0A3A5A"/>
-        <rect x="128" y="78" width="12" height="4" transform="rotate(45 128 80)" fill="#0A3A5A"/>
-        <path class="c" d="M120 232h16V136h-16z"/>
-      </svg>
-      <div>
-        <h1 class="title">منارة الانضباط</h1>
-        <p class="subtitle">مدرسة المشاش للتعليم الأساسي (1–12) – العام الدراسي <span id="year"></span></p>
-      </div>
+
+<div class="controls">
+    <button class="btn-print" onclick="window.print()">تحميل البورتفوليو (PDF)</button>
+</div>
+
+<div class="slide">
+    <div class="header"><h1>مدرسة المشاش للتعليم الأساسي (1-12)</h1></div>
+    <div class="content" style="flex-direction: column; text-align: center;">
+        <div class="image-section" style="width: 50%; height: 350px; margin-bottom: 30px;">
+            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20illustration%20of%20a%20bright%20lighthouse%20with%20Omani%20architecture%20patterns%20shining%20light%20on%20a%20modern%20Omani%20school%20building%20bright%20sunny%20day?nologo=true" alt="منارة الانضباط">
+        </div>
+        <h1 style="font-size: 60px; color: var(--oman-blue); margin: 0;">مبادرة: منارة الانضباط المدرسي</h1>
+        <p style="font-size: 30px; color: var(--oman-gold);">نحو بيئة تعليمية منضبطة ومستدامة</p>
+        <p style="font-size: 22px;">للعام الدراسي: 2025 / 2026 م</p>
     </div>
-    <nav class="nav">
-      <a href="#about">عن المبادرة</a>
-      <a href="#identity">الهوية البصرية</a>
-      <a href="#scenes">المشاهد</a>
-      <a href="#kpis">المؤشرات</a>
-      <a href="#timeline">الجدول الزمني</a>
-      <a href="#resources">الموارد</a>
-      <a href="#contact">التواصل</a>
-      <button class="btn primary" onclick="window.print()">طباعة/حفظ PDF</button>
-    </nav>
-  </header>
-
-  <!-- بطل الصفحة -->
-  <section class="hero">
-    <div class="hero-content">
-      <h2 id="tagline"></h2>
-      <p>محفظة رقمية توثّق الرؤية والأهداف والمشاهد المصوّرة والنتائج وفق هوية عُمانية أصيلة.</p>
-      <div class="actions">
-        <a class="btn" href="#scenes">استكشاف المشاهد</a>
-        <a class="btn" href="https://forms.gle/1gEErnJSFmFYueeK7" target="_blank" rel="noopener">نموذج Google Forms</a>
-      </div>
+    <div class="slide-footer">
+        <span>سلطنة عمان - مدرسة المشاش</span>
+        <span>إعداد: الأستاذ محمد ياسين حلمي</span>
     </div>
-  </section>
+</div>
 
-  <main>
-    <!-- عن المبادرة -->
-    <section id="about" class="section page">
-      <h3>عن المبادرة</h3>
-      <div class="grid two">
-        <article>
-          <h4>الرؤية</h4>
-          <p id="vision"></p>
-          <h4>الرسالة</h4>
-          <p id="mission"></p>
-          <h4>القيم</h4>
-          <ul id="values" class="tags"></ul>
-        </article>
-        <article>
-          <h4>الأهداف العامة</h4>
-          <ul id="objectives" class="checks"></ul>
-        </article>
-      </div>
-    </section>
+<div class="slide">
+    <div class="header"><h1>رؤية ورسالة المبادرة</h1></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="title-box"><h2>رؤيتنا</h2></div>
+            <div class="description-box">
+                الارتقاء بمستوى الالتزام الطلابي في مدرسة المشاش ليصبح نموذجاً يُحتذى به على مستوى السلطنة في الانضباط الذاتي والتميز الدراسي.
+            </div>
+        </div>
+        <div class="image-section">
+            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20Omani%20teacher%20standing%20proudly%20next%20to%20smiling%20Omani%20students%20in%20front%20of%20a%20beautiful%20Omani%20school%20entrance?nologo=true">
+        </div>
+    </div>
+    <div class="slide-footer"><span>شريحة 2</span><span>منارة الانضباط المدرسي</span></div>
+</div>
 
-    <!-- الهوية البصرية -->
-    <section id="identity" class="section page">
-      <h3>الهوية البصرية</h3>
-      <div class="grid three">
-        <div class="swatch" data-color="terracotta"><span>#B55A3C</span><b>التراكوتا</b></div>
-        <div class="swatch" data-color="navy"><span>#0A3A5A</span><b>الأزرق البحري</b></div>
-        <div class="swatch" data-color="sandGold"><span>#C9A25D</span><b>الذهبي الرملي</b></div>
-      </div>
-      <p class="muted">الخطوط: Tajawal للعناوين، Noto Naskh Arabic للنصوص. زخارف هندسية عُمانية مبسّطة في الزوايا، واتساق لوني عبر كامل الصفحات.</p>
-    </section>
+<div class="slide">
+    <div class="header"><h1>تحليل ظاهرة الغياب</h1></div>
+    <div class="content">
+        <div class="image-section">
+            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20data%20charts%20and%20graphs%20on%20a%20smartboard%20with%20Omani%20patterns%20showing%20improvement%20in%20attendance?nologo=true">
+        </div>
+        <div class="text-section">
+            <div class="title-box"><h2>التحدي والحل</h2></div>
+            <div class="description-box">
+                تهدف المبادرة إلى معالجة الغياب المتكرر عبر حلول تقنية واجتماعية، وربط الطالب بالمدرسة من خلال أنشطة جاذبة تعزز روح الانتماء.
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer"><span>شريحة 3</span><span>مدرسة المشاش</span></div>
+</div>
 
-    <!-- المشاهد -->
-    <section id="scenes" class="section page">
-      <h3>المشاهد</h3>
-      <div id="scenesGrid" class="grid three"></div>
-    </section>
+<div class="slide">
+    <div class="header"><h1>الحلول الرقمية</h1></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="description-box">
+                استخدام تطبيق "منارة" الذكي لرصد الحضور الفوري وإرسال رسائل تحفيزية لأولياء الأمور، مع تفعيل نظام النجوم للطلاب الأكثر انضباطاً.
+            </div>
+        </div>
+        <div class="image-section">
+            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20hand%20holding%20a%20smartphone%20showing%20a%20school%20app%20with%20Omani%20language%20and%20happy%20stars?nologo=true">
+        </div>
+    </div>
+    <div class="slide-footer"><span>شريحة 4</span><span>منارة الانضباط</span></div>
+</div>
 
-    <!-- مؤشرات الأداء -->
-    <section id="kpis" class="section page">
-      <h3>مؤشرات الأداء</h3>
-      <ul id="kpisList" class="checks"></ul>
-    </section>
+<div class="slide">
+    <div class="header"><h1>الانضباط والهوية الوطنية</h1></div>
+    <div class="content">
+        <div class="image-section">
+            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20Omani%20students%20in%20traditional%20white%20dishdasha%20and%20colorful%20kumma%20standing%20in%20a%20very%20organized%20school%20line?nologo=true">
+        </div>
+        <div class="text-section">
+            <div class="description-box">
+                نغرس في طلابنا أن الانضباط هو جزء من الشخصية العمانية الأصيلة، حيث يمثل الالتزام بالزي الرسمي والوقت فخراً وطنياً.
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer"><span>شريحة 5</span><span>التراث والنظام</span></div>
+</div>
 
-    <!-- الجدول الزمني -->
-    <section id="timeline" class="section page">
-      <h3>الجدول الزمني</h3>
-      <div id="timelineItems" class="timeline"></div>
-    </section>
+<div class="slide">
+    <div class="header"><h1>كلمة ختامية</h1></div>
+    <div class="content" style="flex-direction: column; text-align: center;">
+        <h2 style="font-size: 40px; color: var(--oman-blue);">مدرسة المشاش.. بيت يجمعنا ونظام يرفعنا</h2>
+        <div class="image-section" style="width: 40%; height: 250px; margin: 20px 0;">
+            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20Omani%20national%20flag%20waving%20over%20a%20happy%20and%20organized%20school%20building?nologo=true">
+        </div>
+        <p style="font-size: 24px;">شكراً لتعاونكم في إنجاح هذه المبادرة الوطنية</p>
+        <p>تصميم وإعداد: أ. محمد ياسين حلمي - 2026</p>
+    </div>
+    <div class="slide-footer"><span>شريحة 15</span><span>Design By Mo. Yasin</span></div>
+</div>
 
-    <!-- الموارد والمخاطر والتواصل -->
-    <section id="resources" class="section page">
-      <h3>الموارد</h3>
-      <ul id="resourcesList" class="dots"></ul>
-      <h4>إدارة المخاطر والامتثال</h4>
-      <ul id="risksList" class="dots"></ul>
-      <h4>التواصل</h4>
-      <ul id="commList" class="dots"></ul>
-      <p class="muted">رابط الاستمارة: <a id="formsLink" href="#" target="_blank" rel="noopener">فتح الاستمارة</a></p>
-    </section>
-
-    <!-- تذييل -->
-    <section id="contact" class="section">
-      <h3>التواصل</h3>
-      <p>هذه المحفظة أنشئت لتوثيق مبادرة «منارة الانضباط». للاقتراحات والتحديثات يمكن فتح قضية (Issue) عند نشر المستودع على GitHub.</p>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <!-- زخارف ركنية -->
-    <svg class="corner tl" viewBox="0 0 100 100" aria-hidden="true">
-      <polygon points="0,0 20,0 0,20" fill="#0A3A5A"/><polygon points="0,10 10,10 0,20" fill="#B55A3C"/>
-      <polygon points="10,0 20,0 20,10" fill="#C9A25D"/><polygon points="20,0 40,0 20,20" fill="#0A3A5A"/>
-      <polygon points="0,20 20,20 0,40" fill="#0A3A5A"/><polygon points="20,20 40,20 20,40" fill="#B55A3C"/>
-    </svg>
-    <svg class="corner br" viewBox="0 0 100 100" aria-hidden="true">
-      <polygon points="0,0 20,0 0,20" fill="#0A3A5A"/><polygon points="0,10 10,10 0,20" fill="#B55A3C"/>
-      <polygon points="10,0 20,0 20,10" fill="#C9A25D"/><polygon points="20,0 40,0 20,20" fill="#0A3A5A"/>
-      <polygon points="0,20 20,20 0,40" fill="#0A3A5A"/><polygon points="20,20 40,20 20,40" fill="#B55A3C"/>
-    </svg>
-    <small>© مدرسة المشاش – مبادرة منارة الانضباط – <span id="yearFoot"></span></small>
-  </footer>
-
-  <!-- بيانات ومولّد الصور -->
-  <script>
-    // بيانات المحتوى
-    const DATA = {
-      site: {
-        year: "2025/2026م",
-        tagline: "عامٌ من الحضور المسؤول والإنجاز",
-        forms: "https://forms.gle/1gEErnJSFmFYueeK7"
-      },
-      about: {
-        vision: "مدرسة يسودها الانضباط بوصفه سلوكًا واعيًا يقود إلى تعلُّم عميق وإنجازٍ مستدام.",
-        mission: "بناء وتنفيذ حزمة إجراءات عملية قابلة للقياس لتعزيز الحضور المنتظم، والالتزام الصباحي والصفّي، والمسؤولية الذاتية لدى الطلبة بشراكة فاعلة مع المعلمين والإدارة وأولياء الأمور.",
-        values: ["القدوة","المسؤولية","الاحترام","التماسك المجتمعي","التحسين المستمر"],
-        objectives: [
-          "رفع نسبة الحضور اليومي وخفض التأخر الصباحي.",
-          "تعزيز الانضباط الصفّي: تنظيم الأدوات، احترام زمن الحصة، وإنجاز المهام.",
-          "تمكين مجالس الطلبة لقيادة أنشطة الانضباط والتأثير الإيجابي على الأقران.",
-          "توظيف نظام رقمي مبسّط لمتابعة المؤشرات واتخاذ القرار.",
-          "ترسيخ التحفيز الإيجابي عبر لوحات شرف وجوائز دورية.",
-          "توثيق المبادرة بملف مصوّر احترافي يعكس الهوية العُمانية ويصلح للاعتماد الرسمي."
-        ]
-      },
-      kpis: [
-        "الحضور اليومي ومعدّل التأخر الصباحي لكل فصل/حلقة",
-        "الانضباط الصفّي: الالتزام بزمن الحصة، إنجاز المهام، عدد الملاحظات",
-        "التفاعل الطلابي: عدد سفراء الانضباط، عدد الورش والمبادرات",
-        "التحفيز: عدد المكرّمين أسبوعيًا وفصليًا",
-        "التوعية الرقمية: نسبة تفعيل النظام، انتظام التقارير، دقّة البيانات",
-        "رضا أولياء الأمور والمعلمين: استبانات بداية/منتصف/نهاية العام"
-      ],
-      timeline: [
-        { phase: "التهيئة", desc: "أسبوعان قبل بدء الدراسة: اعتماد الهوية، إعداد النظام، تدريب الفرق" },
-        { phase: "الإطلاق", desc: "الأسبوع الأول: طابور صباحي، إعلان المؤشرات، نشر قواعد الحصة" },
-        { phase: "التشغيل", desc: "طوال العام: ورش شهرية، تقارير أسبوعية، تكريم دوري" },
-        { phase: "المراجعة النصفية", desc: "منتصف العام: تحليل المؤشرات وسد الفجوات" },
-        { phase: "التتويج", desc: "نهاية العام: حفل ختامي، إعلان النتائج، تثبيت اللوحة الجدارية" }
-      ],
-      resources: [
-        "تصميم وهوية: شعار، قوالب لوحات وشهادات",
-        "طباعة وتجهيزات: لافتات الطابور، بطاقات المؤشر، لوحة الشرف",
-        "تقنية: واجهة تتبّع، شاشة عرض بالمختبر",
-        "جوائز وتحفيز: دروع، شهادات، شارات سفير الانضباط",
-        "توثيق: جلسات تصوير وتنظيم الحقوق"
-      ],
-      risks: [
-        "فتور الالتزام بعد البداية: متابعة أسبوعية وربط الحوافز بالمؤشرات",
-        "تعثر تقني: خطة بديلة ورقية ودعم فني مبسّط",
-        "الخصوصية: موافقات استخدام الصور وفق لوائح المدرسة",
-        "ضغط الجدول: إدراج الأنشطة في حصص النشاط بأوقات مناسبة"
-      ],
-      communication: [
-        "نشرات لأولياء الأمور مع رمز QR للمؤشرات العامة",
-        "لوحات داخلية وشاشات عرض",
-        "رسائل دورية للمعلمين تتضمن أفضل ممارسات الانضباط الصفّي"
-      ],
-      scenes: [
-        { id:1, title:"الغلاف والشعار", subtitle:"The Cover & Identity", caption:"منارة الانضباط – عامٌ من الحضور المسؤول والإنجاز" },
-        { id:2, title:"الانطلاقة – طابور الصباح", subtitle:"The Launch - Morning Assembly", caption:"نبدأ من الساحة… انتظامنا يصنع يومنا" },
-        { id:3, title:"التوعية الرقمية – نظام التتبع", subtitle:"Digital Awareness", caption:"البيانات ترشدنا… والانضباط يمكن قياسه" },
-        { id:4, title:"ورشة العمل التفاعلية – مجالس الطلبة", subtitle:"Student Council Workshop", caption:"نقود بالقدوة… وننشر ثقافة الالتزام" },
-        { id:5, title:"الانضباط في الفصول الدراسية", subtitle:"Classroom Discipline", caption:"كل دقيقة تُحترم… تصنع درسًا يُتقن" },
-        { id:6, title:"التكريم والتحفيز – لوحة الشرف", subtitle:"Recognition & Motivation", caption:"نكرّم الالتزام… لنحتفي بالإنجاز" },
-        { id:7, title:"الاحتفال السنوي – التكريم الختامي", subtitle:"Annual Celebration", caption:"الالتزام طريقنا… والإنجاز ثمرته" },
-        { id:8, title:"الإنجاز والهوية المستدامة", subtitle:"Achievement & Sustainability", caption:"هنا تبدأ الحكاية… وهنا تستمر" }
-      ]
-    };
-
-    // دالة توليد زخرفة ركنية (تستخدم داخل الصور أيضًا)
-    function cornerPattern(x=40,y=40,size=180,flip=false){
-      const t = flip ? `translate(${x+size},${y}) scale(-1,1)` : `translate(${x},${y})`;
-      return `
-        <g transform="${t}">
-          <polygon points="0,0 20,0 0,20" fill="#0A3A5A"/>
-          <polygon points="0,10 10,10 0,20" fill="#B55A3C"/>
-          <polygon points="10,0 20,0 20,10" fill="#C9A25D"/>
-          <polygon points="20,0 40,0 20,20" fill="#0A3A5A"/>
-          <polygon points="0,20 20,20 0,40" fill="#0A3A5A"/>
-          <polygon points="20,20 40,20 20,40" fill="#B55A3C"/>
-        </g>`;
-    }
-
-    // صانع صور لكل مشهد (SVG بالهوية العمانية)
-    function sceneSVG(sceneId, title){
-      const W=1200,H=900;
-      const bg = `
-        <defs>
-          <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stop-color="#0A3A5A"/>
-            <stop offset="100%" stop-color="#B55A3C"/>
-          </linearGradient>
-        </defs>
-        <rect width="${W}" height="${H}" fill="url(#bg)"/>
-        ${cornerPattern(40,40,180,false)}
-        ${cornerPattern(W-220,H-220,180,true)}
-      `;
-
-      // طبقة رموز مختلفة حسب المشهد
-      let layer = "";
-      switch(sceneId){
-        case 1: // الغلاف – كتاب + ساعة + قوس ذهبي
-          layer = `
-            <g transform="translate(0,30)">
-              <rect x="300" y="240" width="600" height="420" rx="28" fill="rgba(243,233,218,0.12)" stroke="#F3E9DA" stroke-width="2"/>
-              <g transform="translate(560,310)">
-                <path d="M-200,120 q100,-80 200,0 q100,-80 200,0 v120 h-400z" fill="#0A3A5A" opacity="0.35"/>
-              </g>
-              <g transform="translate(600,460)">
-                <circle r="70" fill="#B55A3C" stroke="#C9A25D" stroke-width="10"/>
-                <rect x="-180" y="-90" width="160" height="120" rx="10" fill="#0A3A5A"/>
-                <rect x="20" y="-90" width="160" height="120" rx="10" fill="#0A3A5A"/>
-                <line x1="0" y1="-10" x2="0" y2="-60" stroke="#F3E9DA" stroke-width="8"/>
-                <line x1="0" y1="-10" x2="50" y2="-10" stroke="#F3E9DA" stroke-width="8"/>
-              </g>
-            </g>`;
-          break;
-
-        case 2: // طابور صباحي – صفوف + شمس + سارية
-          layer = `
-            <circle cx="160" cy="160" r="60" fill="#C9A25D" opacity="0.9"/>
-            <rect x="1040" y="160" width="6" height="420" fill="#F3E9DA"/>
-            <polygon points="1046,180 1180,240 1046,300" fill="#F3E9DA"/>
-            ${Array.from({length:5}).map((_,r)=>(
-              Array.from({length:10}).map((__,c)=>{
-                const x=160+c*90, y=380+r*80;
-                return `<rect x="${x}" y="${y}" width="60" height="36" rx="8" fill="#F3E9DA" opacity="0.85"/>`;
-              }).join('')
-            )).join('')}
-          `;
-          break;
-
-        case 3: // التوعية الرقمية – شاشات ولوحة بيانية
-          layer = `
-            <rect x="160" y="260" width="360" height="240" rx="14" fill="#0A3A5A" stroke="#F3E9DA" stroke-width="3"/>
-            <rect x="680" y="260" width="360" height="240" rx="14" fill="#0A3A5A" stroke="#F3E9DA" stroke-width="3"/>
-            <g transform="translate(200,300)" fill="#C9A25D">
-              <rect x="0" y="120" width="40" height="80"/><rect x="60" y="80" width="40" height="120"/>
-              <rect x="120" y="40" width="40" height="160"/><rect x="180" y="20" width="40" height="180"/>
-            </g>
-            <g transform="translate(720,300)">
-              <polyline points="0,160 60,120 120,140 180,90 240,110 300,60" fill="none" stroke="#C9A25D" stroke-width="6"/>
-              <circle cx="0" cy="160" r="6" fill="#C9A25D"/><circle cx="60" cy="120" r="6" fill="#C9A25D"/>
-              <circle cx="120" cy="140" r="6" fill="#C9A25D"/><circle cx="180" cy="90" r="6" fill="#C9A25D"/>
-              <circle cx="240" cy="110" r="6" fill="#C9A25D"/><circle cx="300" cy="60" r="6" fill="#C9A25D"/>
-            </g>
-          `;
-          break;
-
-        case 4: // ورشة مجالس الطلبة – طاولة مستديرة + أوسمة
-          layer = `
-            <circle cx="600" cy="480" r="220" fill="rgba(243,233,218,0.12)" stroke="#F3E9DA" stroke-width="2"/>
-            ${[0,60,120,180,240,300].map(a=>{
-              const x=600+300*Math.cos(a*Math.PI/180), y=480+180*Math.sin(a*Math.PI/180);
-              return `<g transform="translate(${x},${y})">
-                        <circle r="28" fill="#C9A25D"/><rect x="-14" y="28" width="28" height="48" fill="#0A3A5A"/>
-                      </g>`;
-            }).join('')}
-            <text x="600" y="500" font-family="Tajawal" font-size="44" fill="#F3E9DA" text-anchor="middle">سفراء الانضباط</text>
-          `;
-          break;
-
-        case 5: // الانضباط الصفي – طاولات مرتبة + إشارات صح
-          layer = `
-            ${[0,1,2].map(r=>[0,1,2,3].map(c=>{
-              const x=180+c*240, y=260+r*160;
-              return `<rect x="${x}" y="${y}" width="200" height="100" rx="12" fill="#0A3A5A" stroke="#F3E9DA" stroke-width="2"/>`;
-            }).join('')).join('')}
-            ${[0,1,2,3,4,5].map(i=>{
-              const x=220+(i%3)*240, y=300+Math.floor(i/3)*160;
-              return `<polyline points="${x},${y+30} ${x+20},${y+50} ${x+60},${y+10}" fill="none" stroke="#C9A25D" stroke-width="8"/>`;
-            }).join('')}
-            <rect x="800" y="100" width="280" height="60" rx="10" fill="#C9A25D"/><text x="940" y="142" font-family="Tajawal" font-size="34" fill="#0A3A5A" text-anchor="middle">مؤشر الانضباط</text>
-          `;
-          break;
-
-        case 6: // جدار التكريم – إطارات وصكوك
-          layer = `
-            <rect x="140" y="220" width="920" height="460" rx="18" fill="rgba(243,233,218,0.12)" stroke="#F3E9DA" stroke-width="3"/>
-            ${Array.from({length:2}).map((_,r)=>Array.from({length:4}).map((__,c)=>{
-              const x=180+c*220, y=260+r*220;
-              return `<rect x="${x}" y="${y}" width="180" height="180" fill="#fff" opacity="0.85" stroke="#C9A25D" stroke-width="6"/>`;
-            }).join('')).join('')}
-            <text x="600" y="720" font-family="Tajawal" font-size="42" fill="#F3E9DA" text-anchor="middle">فرسان الانضباط</text>
-          `;
-          break;
-
-        case 7: // احتفال ختامي – منصة وإضاءات ودروع
-          layer = `
-            <rect x="200" y="580" width="800" height="140" fill="#0A3A5A" stroke="#F3E9DA" stroke-width="3"/>
-            ${[260,420,580,740,900].map((x,i)=>`
-              <g transform="translate(${x},560)">
-                <polygon points="0,0 40,-160 80,0" fill="#C9A25D"/>
-                <circle cx="40" cy="-190" r="26" fill="#B55A3C" stroke="#C9A25D" stroke-width="6"/>
-              </g>`).join('')}
-            ${[260,940].map((x)=>`<polygon points="${x},160 ${x+60},280 ${x-60},280" fill="rgba(201,162,93,0.5)"/>`).join('')}
-            <text x="600" y="220" font-family="Tajawal" font-size="46" fill="#F3E9DA" text-anchor="middle">منارة الانضباط: عام من الإنجاز</text>
-          `;
-          break;
-
-        case 8: // لوحة جدارية مستدامة – فسيفساء ومسار مستقيم
-          layer = `
-            <rect x="120" y="220" width="960" height="420" fill="rgba(243,233,218,0.08)" stroke="#F3E9DA" stroke-width="2"/>
-            ${Array.from({length:9}).map((_,r)=>Array.from({length:18}).map((__,c)=>{
-              const x=140+c*50, y=240+r*44;
-              const color = (r+c)%3===0 ? '#0A3A5A' : ( (r+c)%3===1 ? '#B55A3C' : '#C9A25D');
-              return `<rect x="${x}" y="${y}" width="46" height="40" fill="${color}" opacity="0.9"/>`;
-            }).join('')).join('')}
-            <rect x="140" y="560" width="920" height="14" fill="#F3E9DA"/>
-            <text x="600" y="720" font-family="Tajawal" font-size="40" fill="#F3E9DA" text-anchor="middle">هوية متجذّرة وأثرٌ مستدام</text>
-          `;
-          break;
-      }
-
-      const caption = `
-        <text x="${W/2}" y="${H-40}" font-family="Tajawal" font-size="36" fill="#F3E9DA" text-anchor="middle">${title}</text>
-      `;
-
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">${bg}${layer}${caption}</svg>`;
-      return 'data:image/svg+xml;utf8,' + svg.trim().replace(/\n+/g,' ').replace(/\s{2,}/g,' ');
-    }
-
-    // بناء الواجهة
-    (function build(){
-      // رأس الصفحة
-      document.getElementById('year').textContent = DATA.site.year;
-      document.getElementById('yearFoot').textContent = DATA.site.year;
-      document.getElementById('tagline').textContent = DATA.site.tagline;
-      document.getElementById('formsLink').href = DATA.site.forms;
-
-      // عن المبادرة
-      document.getElementById('vision').textContent = DATA.about.vision;
-      document.getElementById('mission').textContent = DATA.about.mission;
-      const values = document.getElementById('values');
-      DATA.about.values.forEach(v=>{ const li=document.createElement('li'); li.textContent=v; values.appendChild(li);});
-      const obj = document.getElementById('objectives');
-      DATA.about.objectives.forEach(o=>{ const li=document.createElement('li'); li.textContent=o; obj.appendChild(li);});
-
-      // المشاهد (مع صور بالهوية العمانية)
-      const grid = document.getElementById('scenesGrid');
-      DATA.scenes.forEach(s=>{
-        const card = document.createElement('article');
-        card.className = 'card';
-        const img = document.createElement('img');
-        img.alt = s.title;
-        img.src = sceneSVG(s.id, s.caption);
-        const meta = document.createElement('div'); meta.className='meta';
-        const h4 = document.createElement('h4'); h4.textContent = s.id + ' — ' + s.title;
-        const p = document.createElement('p'); p.className='muted'; p.textContent = s.caption;
-        meta.appendChild(h4); meta.appendChild(p);
-        card.appendChild(img); card.appendChild(meta);
-        grid.appendChild(card);
-      });
-
-      // مؤشرات الأداء
-      const kpis = document.getElementById('kpisList');
-      DATA.kpis.forEach(k=>{ const li=document.createElement('li'); li.textContent=k; kpis.appendChild(li);});
-
-      // الجدول الزمني
-      const tl = document.getElementById('timelineItems');
-      DATA.timeline.forEach(t=>{ const d=document.createElement('div'); d.className='item'; d.innerHTML = `<b>${t.phase}</b><p>${t.desc}</p>`; tl.appendChild(d);});
-
-      // الموارد والمخاطر والتواصل
-      const r = document.getElementById('resourcesList');
-      DATA.resources.forEach(x=>{ const li=document.createElement('li'); li.textContent=x; r.appendChild(li);});
-      const risks = document.getElementById('risksList');
-      DATA.risks.forEach(x=>{ const li=document.createElement('li'); li.textContent=x; risks.appendChild(li);});
-      const comm = document.getElementById('commList');
-      DATA.communication.forEach(x=>{ const li=document.createElement('li'); li.textContent=x; comm.appendChild(li);});
-    })();
-  </script>
 </body>
 </html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منارة الانضباط – مدرسة المشاش للتعليم الأساسي</title>
-  <meta name="description" content="محفظة رقمية متكاملة لمبادرة منارة الانضباط – مدرسة المشاش للتعليم الأساسي (1–12) للعام 2025/2026م" />
-
-  <!-- خطوط عربية -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
