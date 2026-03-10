@@ -1,242 +1,292 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مبادرة منارة الانضباط | مدرسة المشاش</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --oman-blue: #1A5F7A;
-            --oman-gold: #C89666;
-            --oman-red: #D2122E;
-            --bg-light: #F9F7F2;
-            --white: #FFFFFF;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: #e0e0e0;
-            margin: 0;
-            padding: 0;
-        }
+<title>منارة الانضباط المدرسي</title>
 
-        /* تنسيق الشريحة - مقاس A4 عرضي */
-        .slide {
-            width: 297mm;
-            height: 210mm;
-            margin: 40px auto;
-            background: var(--white);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            page-break-after: always;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            border: 15px solid var(--oman-blue);
-            box-sizing: border-box;
-            overflow: hidden;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
 
-        /* الزخرفة العمانية */
-        .slide::before {
-            content: "";
-            position: absolute;
-            top: 5px; left: 5px; right: 5px; bottom: 5px;
-            border: 2px solid var(--oman-gold);
-            pointer-events: none;
-            z-index: 10;
-        }
+<style>
 
-        .header {
-            background: var(--oman-blue);
-            color: var(--white);
-            padding: 20px 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 20;
-        }
+body{
+font-family:'Cairo',sans-serif;
+margin:0;
+background:#f6f6f6;
+color:#333;
+}
 
-        .header h1 { margin: 0; font-size: 32px; font-weight: 900; }
+header{
+background:linear-gradient(135deg,#c8102e,#007a3d);
+color:white;
+padding:60px;
+text-align:center;
+}
 
-        .content {
-            display: flex;
-            flex: 1;
-            padding: 50px;
-            gap: 50px;
-            align-items: center;
-            z-index: 5;
-        }
+header h1{
+font-size:40px;
+margin:0;
+}
 
-        .text-section {
-            flex: 1;
-        }
+header p{
+font-size:20px;
+}
 
-        .title-box {
-            color: var(--oman-blue);
-            border-right: 8px solid var(--oman-gold);
-            padding-right: 20px;
-            margin-bottom: 25px;
-        }
+nav{
+background:#fff;
+display:flex;
+justify-content:center;
+box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
 
-        .description-box {
-            background: var(--bg-light);
-            padding: 30px;
-            border-radius: 20px;
-            font-size: 24px;
-            line-height: 1.8;
-            color: #333;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-        }
+nav a{
+padding:15px 25px;
+text-decoration:none;
+color:#333;
+font-weight:bold;
+}
 
-        .image-section {
-            flex: 1.2;
-            height: 450px;
-            border-radius: 30px;
-            overflow: hidden;
-            border: 6px solid var(--oman-gold);
-            background: #eee;
-        }
+nav a:hover{
+color:#c8102e;
+}
 
-        .image-section img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+.section{
+padding:60px 10%;
+}
 
-        .slide-footer {
-            padding: 20px 60px;
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            color: var(--oman-blue);
-        }
+.title{
+font-size:30px;
+color:#c8102e;
+margin-bottom:20px;
+}
 
-        .controls {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 9999;
-        }
+.card-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
 
-        .btn-print {
-            padding: 15px 35px;
-            background: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: 0.3s;
-        }
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
 
-        .btn-print:hover { transform: scale(1.05); background: #2ecc71; }
+.card h3{
+color:#007a3d;
+}
 
-        @media print {
-            .controls { display: none; }
-            body { background: none; }
-            .slide { margin: 0; border-width: 8px; }
-        }
-    </style>
+.stats{
+display:flex;
+gap:30px;
+flex-wrap:wrap;
+}
+
+.stat{
+background:white;
+flex:1;
+min-width:200px;
+text-align:center;
+padding:30px;
+border-radius:12px;
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.stat h2{
+color:#c8102e;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+}
+
+.gallery img{
+width:100%;
+border-radius:10px;
+}
+
+footer{
+background:#222;
+color:#ccc;
+text-align:center;
+padding:30px;
+margin-top:40px;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+</style>
 </head>
+
 <body>
 
-<div class="controls">
-    <button class="btn-print" onclick="window.print()">تحميل البورتفوليو (PDF)</button>
+<header>
+
+<h1>مبادرة منارة الانضباط المدرسي</h1>
+
+<p>
+مدرسة المشاش للتعليم الأساسي  
+العام الدراسي 2025 / 2026
+</p>
+
+</header>
+
+<nav>
+
+<a href="#about">عن المبادرة</a>
+
+<a href="#goals">الأهداف</a>
+
+<a href="#solutions">الحلول</a>
+
+<a href="#stats">الإحصائيات</a>
+
+<a href="#gallery">الأنشطة</a>
+
+</nav>
+
+
+<section class="section" id="about">
+
+<div class="title">نبذة عن المبادرة</div>
+
+<div class="card">
+تهدف مبادرة <b>منارة الانضباط المدرسي</b> إلى تعزيز الالتزام بالدوام المدرسي
+وغرس قيم الانضباط والمسؤولية لدى الطلبة من خلال برامج توعوية
+وشراكات تربوية بين المدرسة والأسرة والمجتمع.
 </div>
 
-<div class="slide">
-    <div class="header"><h1>مدرسة المشاش للتعليم الأساسي (1-12)</h1></div>
-    <div class="content" style="flex-direction: column; text-align: center;">
-        <div class="image-section" style="width: 50%; height: 350px; margin-bottom: 30px;">
-            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20illustration%20of%20a%20bright%20lighthouse%20with%20Omani%20architecture%20patterns%20shining%20light%20on%20a%20modern%20Omani%20school%20building%20bright%20sunny%20day?nologo=true" alt="منارة الانضباط">
-        </div>
-        <h1 style="font-size: 60px; color: var(--oman-blue); margin: 0;">مبادرة: منارة الانضباط المدرسي</h1>
-        <p style="font-size: 30px; color: var(--oman-gold);">نحو بيئة تعليمية منضبطة ومستدامة</p>
-        <p style="font-size: 22px;">للعام الدراسي: 2025 / 2026 م</p>
-    </div>
-    <div class="slide-footer">
-        <span>سلطنة عمان - مدرسة المشاش</span>
-        <span>إعداد: الأستاذ محمد ياسين حلمي</span>
-    </div>
+</section>
+
+
+
+<section class="section" id="goals">
+
+<div class="title">أهداف المبادرة</div>
+
+<div class="card-container">
+
+<div class="card">
+<h3>تعزيز الانضباط</h3>
+رفع مستوى الالتزام بالحضور اليومي للطلبة.
 </div>
 
-<div class="slide">
-    <div class="header"><h1>رؤية ورسالة المبادرة</h1></div>
-    <div class="content">
-        <div class="text-section">
-            <div class="title-box"><h2>رؤيتنا</h2></div>
-            <div class="description-box">
-                الارتقاء بمستوى الالتزام الطلابي في مدرسة المشاش ليصبح نموذجاً يُحتذى به على مستوى السلطنة في الانضباط الذاتي والتميز الدراسي.
-            </div>
-        </div>
-        <div class="image-section">
-            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20Omani%20teacher%20standing%20proudly%20next%20to%20smiling%20Omani%20students%20in%20front%20of%20a%20beautiful%20Omani%20school%20entrance?nologo=true">
-        </div>
-    </div>
-    <div class="slide-footer"><span>شريحة 2</span><span>منارة الانضباط المدرسي</span></div>
+<div class="card">
+<h3>تقليل الغياب</h3>
+تقليل ظاهرة الغياب المتكرر والتأخر الصباحي.
 </div>
 
-<div class="slide">
-    <div class="header"><h1>تحليل ظاهرة الغياب</h1></div>
-    <div class="content">
-        <div class="image-section">
-            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20data%20charts%20and%20graphs%20on%20a%20smartboard%20with%20Omani%20patterns%20showing%20improvement%20in%20attendance?nologo=true">
-        </div>
-        <div class="text-section">
-            <div class="title-box"><h2>التحدي والحل</h2></div>
-            <div class="description-box">
-                تهدف المبادرة إلى معالجة الغياب المتكرر عبر حلول تقنية واجتماعية، وربط الطالب بالمدرسة من خلال أنشطة جاذبة تعزز روح الانتماء.
-            </div>
-        </div>
-    </div>
-    <div class="slide-footer"><span>شريحة 3</span><span>مدرسة المشاش</span></div>
+<div class="card">
+<h3>تعزيز الشراكة</h3>
+تفعيل دور الأسرة في متابعة انتظام الطلاب.
 </div>
 
-<div class="slide">
-    <div class="header"><h1>الحلول الرقمية</h1></div>
-    <div class="content">
-        <div class="text-section">
-            <div class="description-box">
-                استخدام تطبيق "منارة" الذكي لرصد الحضور الفوري وإرسال رسائل تحفيزية لأولياء الأمور، مع تفعيل نظام النجوم للطلاب الأكثر انضباطاً.
-            </div>
-        </div>
-        <div class="image-section">
-            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20hand%20holding%20a%20smartphone%20showing%20a%20school%20app%20with%20Omani%20language%20and%20happy%20stars?nologo=true">
-        </div>
-    </div>
-    <div class="slide-footer"><span>شريحة 4</span><span>منارة الانضباط</span></div>
+<div class="card">
+<h3>تحسين التحصيل</h3>
+تحقيق نتائج تعليمية أفضل من خلال الانتظام.
 </div>
 
-<div class="slide">
-    <div class="header"><h1>الانضباط والهوية الوطنية</h1></div>
-    <div class="content">
-        <div class="image-section">
-            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20Omani%20students%20in%20traditional%20white%20dishdasha%20and%20colorful%20kumma%20standing%20in%20a%20very%20organized%20school%20line?nologo=true">
-        </div>
-        <div class="text-section">
-            <div class="description-box">
-                نغرس في طلابنا أن الانضباط هو جزء من الشخصية العمانية الأصيلة، حيث يمثل الالتزام بالزي الرسمي والوقت فخراً وطنياً.
-            </div>
-        </div>
-    </div>
-    <div class="slide-footer"><span>شريحة 5</span><span>التراث والنظام</span></div>
 </div>
 
-<div class="slide">
-    <div class="header"><h1>كلمة ختامية</h1></div>
-    <div class="content" style="flex-direction: column; text-align: center;">
-        <h2 style="font-size: 40px; color: var(--oman-blue);">مدرسة المشاش.. بيت يجمعنا ونظام يرفعنا</h2>
-        <div class="image-section" style="width: 40%; height: 250px; margin: 20px 0;">
-            <img src="https://image.pollinations.ai/prompt/3D%20cartoon%20Omani%20national%20flag%20waving%20over%20a%20happy%20and%20organized%20school%20building?nologo=true">
-        </div>
-        <p style="font-size: 24px;">شكراً لتعاونكم في إنجاح هذه المبادرة الوطنية</p>
-        <p>تصميم وإعداد: أ. محمد ياسين حلمي - 2026</p>
-    </div>
-    <div class="slide-footer"><span>شريحة 15</span><span>Design By Mo. Yasin</span></div>
+</section>
+
+
+
+<section class="section" id="solutions">
+
+<div class="title">الحلول المطبقة</div>
+
+<div class="card-container">
+
+<div class="card">
+<h3>نظام متابعة إلكتروني</h3>
+متابعة يومية للحضور والغياب.
 </div>
+
+<div class="card">
+<h3>جوائز الانضباط</h3>
+تكريم الطلبة الملتزمين بالحضور.
+</div>
+
+<div class="card">
+<h3>شراكة مع أولياء الأمور</h3>
+تواصل مستمر مع أولياء الأمور.
+</div>
+
+<div class="card">
+<h3>برامج توعوية</h3>
+محاضرات وورش عن أهمية الانتظام المدرسي.
+</div>
+
+</div>
+
+</section>
+
+
+
+<section class="section" id="stats">
+
+<div class="title">مؤشرات المبادرة</div>
+
+<div class="stats">
+
+<div class="stat">
+<h2>95%</h2>
+نسبة الحضور المستهدفة
+</div>
+
+<div class="stat">
+<h2>30%</h2>
+خفض الغياب المتوقع
+</div>
+
+<div class="stat">
+<h2>20+</h2>
+نشاط تحفيزي
+</div>
+
+</div>
+
+</section>
+
+
+
+<section class="section" id="gallery">
+
+<div class="title">معرض الأنشطة</div>
+
+<div class="gallery">
+
+<img src="images/activity1.jpg">
+<img src="images/activity2.jpg">
+<img src="images/activity3.jpg">
+<img src="images/activity4.jpg">
+
+</div>
+
+</section>
+
+
+
+<footer>
+
+<div class="logo">
+منارة الانضباط المدرسي
+</div>
+
+مدرسة المشاش للتعليم الأساسي  
+سلطنة عمان 🇴🇲
+
+</footer>
+
 
 </body>
 </html>
