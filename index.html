@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -8,40 +9,55 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
 body{
 font-family:'Cairo',sans-serif;
-margin:0;
-background:#f6f6f6;
+background:#f4f6f8;
 color:#333;
 }
 
 header{
 background:linear-gradient(135deg,#c8102e,#007a3d);
 color:white;
-padding:60px;
+padding:70px 20px;
 text-align:center;
 }
 
+.logo{
+font-size:45px;
+margin-bottom:10px;
+}
+
 header h1{
-font-size:40px;
-margin:0;
+font-size:38px;
 }
 
 header p{
-font-size:20px;
+font-size:18px;
+margin-top:10px;
 }
 
 nav{
-background:#fff;
+background:white;
 display:flex;
 justify-content:center;
-box-shadow:0 2px 5px rgba(0,0,0,.1);
+gap:25px;
+padding:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.1);
+position:sticky;
+top:0;
 }
 
 nav a{
-padding:15px 25px;
 text-decoration:none;
 color:#333;
 font-weight:bold;
@@ -52,16 +68,16 @@ color:#c8102e;
 }
 
 .section{
-padding:60px 10%;
+padding:70px 10%;
 }
 
 .title{
-font-size:30px;
+font-size:32px;
 color:#c8102e;
-margin-bottom:20px;
+margin-bottom:30px;
 }
 
-.card-container{
+.cards{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:25px;
@@ -71,64 +87,107 @@ gap:25px;
 background:white;
 padding:25px;
 border-radius:12px;
-box-shadow:0 4px 10px rgba(0,0,0,.08);
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+transition:0.3s;
 }
 
-.card h3{
-color:#007a3d;
+.card:hover{
+transform:translateY(-8px);
 }
 
-.stats{
-display:flex;
-gap:30px;
-flex-wrap:wrap;
+.dashboard{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:40px;
 }
 
 .stat{
 background:white;
-flex:1;
-min-width:200px;
+padding:25px;
+border-radius:10px;
 text-align:center;
-padding:30px;
-border-radius:12px;
-box-shadow:0 4px 10px rgba(0,0,0,.08);
+box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
 
 .stat h2{
 color:#c8102e;
+font-size:35px;
 }
 
-.gallery{
+.team{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:15px;
+gap:25px;
 }
 
-.gallery img{
+.member{
+background:white;
+padding:20px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.member img{
+width:90px;
+height:90px;
+border-radius:50%;
+margin-bottom:10px;
+}
+
+table{
 width:100%;
+border-collapse:collapse;
+background:white;
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+th,td{
+padding:15px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+th{
+background:#007a3d;
+color:white;
+}
+
+.btn{
+display:inline-block;
+background:#c8102e;
+color:white;
+padding:12px 25px;
+border-radius:8px;
+text-decoration:none;
+margin-top:20px;
+}
+
+canvas{
+background:white;
+padding:20px;
 border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
 
 footer{
 background:#222;
-color:#ccc;
+color:#bbb;
 text-align:center;
-padding:30px;
-margin-top:40px;
-}
-
-.logo{
-font-size:22px;
-font-weight:bold;
-margin-bottom:10px;
+padding:40px;
+margin-top:60px;
 }
 
 </style>
 </head>
 
+
 <body>
 
 <header>
+
+<div class="logo">🏫</div>
 
 <h1>مبادرة منارة الانضباط المدرسي</h1>
 
@@ -139,59 +198,41 @@ margin-bottom:10px;
 
 </header>
 
+
 <nav>
 
-<a href="#about">عن المبادرة</a>
+<a href="#about">المبادرة</a>
 
-<a href="#goals">الأهداف</a>
+<a href="#dashboard">لوحة الإحصائيات</a>
 
-<a href="#solutions">الحلول</a>
+<a href="#chart">الرسوم البيانية</a>
 
-<a href="#stats">الإحصائيات</a>
+<a href="#team">فريق المبادرة</a>
 
-<a href="#gallery">الأنشطة</a>
+<a href="#plan">خطة التنفيذ</a>
+
+<a href="#report">التقرير</a>
 
 </nav>
 
 
+
 <section class="section" id="about">
 
-<div class="title">نبذة عن المبادرة</div>
+<div class="title">عن المبادرة</div>
+
+<div class="cards">
 
 <div class="card">
-تهدف مبادرة <b>منارة الانضباط المدرسي</b> إلى تعزيز الالتزام بالدوام المدرسي
-وغرس قيم الانضباط والمسؤولية لدى الطلبة من خلال برامج توعوية
-وشراكات تربوية بين المدرسة والأسرة والمجتمع.
-</div>
-
-</section>
-
-
-
-<section class="section" id="goals">
-
-<div class="title">أهداف المبادرة</div>
-
-<div class="card-container">
-
-<div class="card">
-<h3>تعزيز الانضباط</h3>
-رفع مستوى الالتزام بالحضور اليومي للطلبة.
+تعزيز الانضباط المدرسي وغرس قيمة الالتزام بالحضور اليومي.
 </div>
 
 <div class="card">
-<h3>تقليل الغياب</h3>
-تقليل ظاهرة الغياب المتكرر والتأخر الصباحي.
+تقليل ظاهرة الغياب الطلابي وتحسين التحصيل الدراسي.
 </div>
 
 <div class="card">
-<h3>تعزيز الشراكة</h3>
-تفعيل دور الأسرة في متابعة انتظام الطلاب.
-</div>
-
-<div class="card">
-<h3>تحسين التحصيل</h3>
-تحقيق نتائج تعليمية أفضل من خلال الانتظام.
+تعزيز الشراكة بين المدرسة والأسرة والمجتمع.
 </div>
 
 </div>
@@ -200,57 +241,30 @@ margin-bottom:10px;
 
 
 
-<section class="section" id="solutions">
+<section class="section" id="dashboard">
 
-<div class="title">الحلول المطبقة</div>
+<div class="title">لوحة التحكم الإحصائية</div>
 
-<div class="card-container">
-
-<div class="card">
-<h3>نظام متابعة إلكتروني</h3>
-متابعة يومية للحضور والغياب.
-</div>
-
-<div class="card">
-<h3>جوائز الانضباط</h3>
-تكريم الطلبة الملتزمين بالحضور.
-</div>
-
-<div class="card">
-<h3>شراكة مع أولياء الأمور</h3>
-تواصل مستمر مع أولياء الأمور.
-</div>
-
-<div class="card">
-<h3>برامج توعوية</h3>
-محاضرات وورش عن أهمية الانتظام المدرسي.
-</div>
-
-</div>
-
-</section>
-
-
-
-<section class="section" id="stats">
-
-<div class="title">مؤشرات المبادرة</div>
-
-<div class="stats">
+<div class="dashboard">
 
 <div class="stat">
 <h2>95%</h2>
-نسبة الحضور المستهدفة
+نسبة الحضور
 </div>
 
 <div class="stat">
 <h2>30%</h2>
-خفض الغياب المتوقع
+انخفاض الغياب
 </div>
 
 <div class="stat">
-<h2>20+</h2>
-نشاط تحفيزي
+<h2>20</h2>
+الأنشطة المنفذة
+</div>
+
+<div class="stat">
+<h2>300</h2>
+عدد الطلبة
 </div>
 
 </div>
@@ -259,18 +273,103 @@ margin-bottom:10px;
 
 
 
-<section class="section" id="gallery">
+<section class="section" id="chart">
 
-<div class="title">معرض الأنشطة</div>
+<div class="title">تحليل الغياب الطلابي</div>
 
-<div class="gallery">
+<canvas id="attendanceChart"></canvas>
 
-<img src="images/activity1.jpg">
-<img src="images/activity2.jpg">
-<img src="images/activity3.jpg">
-<img src="images/activity4.jpg">
+</section>
+
+
+
+<section class="section" id="team">
+
+<div class="title">فريق المبادرة</div>
+
+<div class="team">
+
+<div class="member">
+<img src="https://i.pravatar.cc/100?img=1">
+<h3>مدير المدرسة</h3>
+<p>المشرف العام</p>
+</div>
+
+<div class="member">
+<img src="https://i.pravatar.cc/100?img=2">
+<h3>الأخصائي الاجتماعي</h3>
+<p>منسق المبادرة</p>
+</div>
+
+<div class="member">
+<img src="https://i.pravatar.cc/100?img=3">
+<h3>معلم أول</h3>
+<p>متابعة الانضباط</p>
+</div>
 
 </div>
+
+</section>
+
+
+
+<section class="section" id="plan">
+
+<div class="title">خطة التنفيذ</div>
+
+<table>
+
+<tr>
+<th>الفترة</th>
+<th>النشاط</th>
+<th>الجهة المسؤولة</th>
+</tr>
+
+<tr>
+<td>سبتمبر</td>
+<td>إطلاق المبادرة</td>
+<td>إدارة المدرسة</td>
+</tr>
+
+<tr>
+<td>أكتوبر</td>
+<td>محاضرات توعوية</td>
+<td>الأخصائي الاجتماعي</td>
+</tr>
+
+<tr>
+<td>نوفمبر</td>
+<td>تكريم الطلبة المنتظمين</td>
+<td>لجنة المبادرة</td>
+</tr>
+
+<tr>
+<td>يناير</td>
+<td>تقييم المرحلة الأولى</td>
+<td>إدارة المدرسة</td>
+</tr>
+
+</table>
+
+</section>
+
+
+
+<section class="section" id="report">
+
+<div class="title">تقرير المبادرة</div>
+
+<p>
+
+يمكن تحميل التقرير الكامل للمبادرة بصيغة PDF.
+
+</p>
+
+<a class="btn" href="report.pdf" download>
+
+تحميل التقرير
+
+</a>
 
 </section>
 
@@ -278,14 +377,57 @@ margin-bottom:10px;
 
 <footer>
 
-<div class="logo">
-منارة الانضباط المدرسي
-</div>
+<p>
 
+مبادرة منارة الانضباط المدرسي  
 مدرسة المشاش للتعليم الأساسي  
 سلطنة عمان 🇴🇲
 
+</p>
+
 </footer>
+
+
+
+<script>
+
+const ctx = document.getElementById('attendanceChart');
+
+new Chart(ctx, {
+
+type: 'bar',
+
+data: {
+
+labels: ['سبتمبر','أكتوبر','نوفمبر','ديسمبر','يناير','فبراير'],
+
+datasets: [{
+
+label:'نسبة الغياب',
+
+data:[12,9,7,6,5,4],
+
+backgroundColor:'#c8102e'
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+legend:{
+display:true
+}
+}
+
+}
+
+});
+
+</script>
 
 
 </body>
