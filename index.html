@@ -2,128 +2,259 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مبادرة فرسان الانضباط - مدرسة المشاش</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادرة فرسان الانضباط | مدرسة المشاش</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        :root {
+            --primary: #1A5F7A; /* أزرق عماني رسمي */
+            --accent: #C89666;  /* ذهبي رملي */
+            --bg-page: #FDF7F2;
+            --white: #FFFFFF;
+        }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f5;
-            color: #333;
+            background-color: #e0e0e0;
+            margin: 0; padding: 0;
         }
 
-        .page {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 20px;
+        /* تنسيق الشريحة - قياس A4 عرضي */
+        .slide {
+            width: 297mm;
+            height: 210mm;
             margin: 20px auto;
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            page-break-after: always;
+            background: var(--white);
             position: relative;
+            display: flex;
+            flex-direction: column;
+            page-break-after: always;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border: 12px solid var(--primary);
             box-sizing: border-box;
-            border: 15px solid #e8f4f8; /* لون الهوية البصرية */
+        }
+
+        /* زخرفة عمانية مدمجة بالكود */
+        .slide::after {
+            content: "";
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 2px solid var(--accent);
+            pointer-events: none;
         }
 
         .header {
-            text-align: center;
-            border-bottom: 3px solid #1a5f7a;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            background: var(--primary);
+            color: var(--white);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
         }
 
-        .title {
-            color: #1a5f7a;
-            font-size: 28px;
-            margin: 10px 0;
-        }
-
-        .subtitle {
-            color: #c89666; /* لون ذهبي رملي */
-            font-size: 20px;
-        }
+        .header h1 { margin: 0; font-size: 28px; }
 
         .content {
-            text-align: justify;
-            line-height: 1.6;
+            display: flex;
+            flex: 1;
+            padding: 40px;
+            gap: 40px;
+            align-items: center;
         }
 
-        .scene-img {
-            width: 100%;
+        .text-section {
+            flex: 1;
+            font-size: 22px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .description-box {
+            background: var(--bg-page);
+            padding: 25px;
+            border-right: 10px solid var(--accent);
             border-radius: 15px;
-            margin: 20px 0;
-            border: 5px solid #f9f9f9;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.05);
         }
 
-        .description {
-            background: #fdfaf6;
-            padding: 15px;
-            border-right: 5px solid #c89666;
-            margin-top: 10px;
+        .image-section {
+            flex: 1.2;
+            height: 100%;
+            border-radius: 25px;
+            overflow: hidden;
+            border: 6px solid var(--accent);
+            background: #f9f9f9;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 50px;
+            font-weight: bold;
         }
 
         footer {
             position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 12px;
-            color: #777;
+            bottom: 30px;
+            right: 50px;
+            font-weight: bold;
+            color: var(--primary);
         }
 
-        @media print {
-            body { background: none; }
-            .page { margin: 0; border: none; box-shadow: none; }
-            button { display: none; }
-        }
-
-        .download-btn {
+        .print-btn {
             position: fixed;
             top: 20px;
             left: 20px;
-            padding: 10px 20px;
-            background: #1a5f7a;
+            z-index: 9999;
+            padding: 15px 30px;
+            background: #27ae60;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             cursor: pointer;
-            z-index: 1000;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        @media print {
+            .print-btn { display: none; }
+            body { background: none; }
+            .slide { margin: 0; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
-<button class="download-btn" onclick="window.print()">تحميل المبادرة بصيغة PDF</button>
+<button class="print-btn" onclick="window.print()">تحميل المبادرة بصيغة PDF</button>
 
-<div class="page">
-    <div class="header">
-        <img src="https://raw.githubusercontent.com/YourUsername/YourRepo/main/logo.png" style="width:120px;" alt="شعار المدرسة">
-        <h1 class="title">مبادرة فرسان الانضباط</h1>
-        <p class="subtitle">مدرسة المشاش للتعليم الأساسي (1-12)</p>
+<div class="slide">
+    <div class="header"><h1>مدرسة المشاش للتعليم الأساسي (1-12)</h1></div>
+    <div class="content" style="flex-direction: column; text-align: center;">
+        <div class="image-section" style="width: 60%; height: 400px; margin-bottom: 20px;">
+            <img src="https://r.jina.ai/i/8" alt="شعار المبادرة">
+        </div>
+        <h2 style="font-size: 45px; color: var(--primary); margin: 10px 0;">مبادرة فرسان الانضباط</h2>
+        <p style="font-size: 26px; color: var(--accent);">للعام الدراسي: 2025 - 2026 م</p>
     </div>
-    <div class="content" style="text-align:center;">
-        <img src="https://raw.githubusercontent.com/YourUsername/YourRepo/main/scene1.png" class="scene-img">
-        <h2>للعام الدراسي 2025/2026م</h2>
-        <p>نحو بيئة مدرسية عمانية منضبطة ومبدعة</p>
-    </div>
-    <footer>مدرسة المشاش - سلطنة عمان</footer>
+    <div class="slide-number">1</div>
+    <footer>إعداد: أ. محمد ياسين حلمي</footer>
 </div>
 
-<div class="page">
-    <div class="header">
-        <h2 class="title">المشهد الأول: طابور الصباح</h2>
-    </div>
+<div class="slide">
+    <div class="header"><h1>رؤية المبادرة</h1></div>
     <div class="content">
-        <img src="https://raw.githubusercontent.com/YourUsername/YourRepo/main/scene2.png" class="scene-img">
-        <div class="description">
-            <strong>الهدف:</strong> تعزيز الالتزام بالوقت والزي الرسمي العماني من خلال طابور صباحي منتظم وبث روح الحماس في نفوس الطلاب.
+        <div class="text-section">
+            <div class="description-box">
+                <strong>رؤيتنا:</strong><br>
+                خلق بيئة تعليمية ملهمة يسودها النظام، حيث يصبح الانضباط قيمة ذاتية نابعة من فخر الطالب بانتمائه لمدرسة المشاش ووطنه عمان.
+            </div>
         </div>
+        <div class="image-section"><img src="https://r.jina.ai/i/9"></div>
     </div>
-    <footer>تصميم المبادرة: محمد ياسين حلمي</footer>
+    <div class="slide-number">2</div>
+</div>
+
+<div class="slide">
+    <div class="header"><h1>أولاً: طابور الصباح (بداية الهمة)</h1></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="description-box">
+                نركز في مدرسة المشاش على الاصطفاف المنتظم وتحية العلم، حيث يظهر الطلاب بالزي العماني التقليدي الكامل، مما يعزز قيم الهوية والنظام من الدقيقة الأولى.
+            </div>
+        </div>
+        <div class="image-section"><img src="https://r.jina.ai/i/9"></div>
+    </div>
+    <div class="slide-number">3</div>
+</div>
+
+<div class="slide">
+    <div class="header"><h1>ثانياً: الانضباط الرقمي</h1></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="description-box">
+                تفعيل نظام "النجوم الرقمية" لتتبع حضور وانضباط الفصول عبر الشاشات الذكية، مما يحفز التنافس الشريف بأسلوب تقني طفولي محبب.
+            </div>
+        </div>
+        <div class="image-section"><img src="https://r.jina.ai/i/10"></div>
+    </div>
+    <div class="slide-number">4</div>
+</div>
+
+<div class="slide">
+    <div class="header"><h1>ثالثاً: سفراء الانضباط</h1></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="description-box">
+                تمكين طلاب مدرسة المشاش من قيادة المبادرة بأنفسهم من خلال "مجلس الفرسان"، حيث يتولى الطلاب الأكبر سناً توجيه زملائهم الأصغر بروح الأخوة.
+            </div>
+        </div>
+        <div class="image-section"><img src="https://r.jina.ai/i/11"></div>
+    </div>
+    <div class="slide-number">5</div>
+</div>
+
+<div class="slide">
+    <div class="header"><h1>رابعاً: الصف المنضبط</h1></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="description-box">
+                خلق بيئة صفية هادئة ومنظمة، حيث يتم توزيع المهام على الطلاب لضمان الحفاظ على نظافة وهدوء الفصل الدراسي طوال اليوم.
+            </div>
+        </div>
+        <div class="image-section"><img src="https://r.jina.ai/i/12"></div>
+    </div>
+    <div class="slide-number">6</div>
+</div>
+
+<div class="slide">
+    <div class="header"><h1>خامساً: جدار التميز</h1></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="description-box">
+                تكريم أسبوعي بوضع صور الطلاب الأكثر انضباطاً على "جدار الفرسان"، مما يشجع بقية الطلاب على الاقتداء بهم للوصول لهذا الجدار.
+            </div>
+        </div>
+        <div class="image-section"><img src="https://r.jina.ai/i/13"></div>
+    </div>
+    <div class="slide-number">7</div>
+</div>
+
+<div class="slide">
+    <div class="header"><h1>سادساً: يوم التتويج</h1></div>
+    <div class="content">
+        <div class="text-section">
+            <div class="description-box">
+                احتفالية كبرى بنهاية كل فصل دراسي لتكريم "فرسان الانضباط" بحضور أولياء الأمور، لترسيخ أن الالتزام هو طريق التكريم والنجاح.
+            </div>
+        </div>
+        <div class="image-section"><img src="https://r.jina.ai/i/14"></div>
+    </div>
+    <div class="slide-number">8</div>
+</div>
+
+<div class="slide">
+    <div class="header"><h1>مدرسة المشاش: منارة الانضباط</h1></div>
+    <div class="content" style="flex-direction: column; justify-content: center; text-align: center;">
+        <div class="image-section" style="width: 50%; height: 300px; margin-bottom: 30px;">
+            <img src="https://r.jina.ai/i/15">
+        </div>
+        <h2 style="color: var(--primary);">معاً نحو مستقبل مشرق لعمان</h2>
+        <p style="font-size: 20px;">نشكركم على حسن المتابعة ودعم المبادرة</p>
+    </div>
+    <div class="slide-number">15</div>
+    <footer>بإشراف أ. محمد ياسين حلمي</footer>
 </div>
 
 </body>
