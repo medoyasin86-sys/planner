@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>تقسيم صورة إلى صفحات A4 لملصق 100×70 سم مع شرائط "الصق هنا | paste here"</title>
 
-  <!-- خط عربي للواجهة -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- تحميل الخط بشكل صحيح -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -34,11 +36,7 @@
       padding: 20px;
       box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
     }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .row { display: grid; gap: 10px; }
     label { font-size: 14px; color: var(--muted); }
     input[type="number"], select, input[type="file"], input[type="text"] {
@@ -66,25 +64,14 @@
       background: #f6faff; border: 1px solid #e6f0ff; border-radius: 10px; padding: 10px 12px;
     }
     details summary { cursor: pointer; font-weight: 700; color: #0b61c2; }
-    .progress {
-      height: 8px; background: #eef2f7; border-radius: 999px; overflow: hidden; margin-top: 10px;
-    }
-    .bar {
-      height: 100%; width: 0%; background: linear-gradient(90deg, #37a2ff, #1f8bff);
-      transition: width .2s ease;
-    }
-    .preview {
-      display: grid; gap: 8px; margin-top: 8px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
+    .progress { height: 8px; background: #eef2f7; border-radius: 999px; overflow: hidden; margin-top: 10px; }
+    .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #37a2ff, #1f8bff); transition: width .2s ease; }
+    .preview { display: grid; gap: 8px; margin-top: 8px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
     .thumb {
       border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff;
-      display: grid; place-items: center; aspect-ratio: 3/4;
-      font-size: 12px; color: #94a3b8;
+      display: grid; place-items: center; aspect-ratio: 3/4; font-size: 12px; color: #94a3b8;
     }
-    .badge {
-      display: inline-block; background:#eef6ff; color:#0b61c2; padding:2px 8px; border-radius:999px; font-size:12px;
-    }
-    /* إطار الطباعة المخفي */
+    .badge { display: inline-block; background:#eef6ff; color:#0b61c2; padding:2px 8px; border-radius:999px; font-size:12px; }
     #printFrame { position: fixed; right: -9999px; bottom: -9999px; width: 0; height: 0; border: 0; }
   </style>
 </head>
@@ -157,21 +144,19 @@
     <div class="preview" id="preview" hidden></div>
   </div>
 
-  <!-- إطار مخفي لطباعة ملف PDF الناتج -->
   <iframe id="printFrame"></iframe>
 
   <!-- jsPDF من CDN -->
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
   <script>
-    // ==============================
-    // ثوابت عامة
-    // ==============================
-    const POSTER_W_MM = 1000; // 100 سم
-    const POSTER_H_MM = 700;  // 70 سم
+    // أبعاد الملصق النهائي (مم)
+    const POSTER_W_MM = 1000;
+    const POSTER_H_MM = 700;
 
-    const A4_P_MM = { w: 210, h: 297 }; // Portrait
-    const A4_L_MM = { w: 297, h: 210 }; // Landscape
+    // A4 (مم)
+    const A4_P_MM = { w: 210, h: 297 }; // عمودي
+    const A4_L_MM = { w: 297, h: 210 }; // أفقي
 
     // عناصر DOM
     const fileInput = document.getElementById('fileInput');
@@ -189,9 +174,9 @@
     const pagesBadge = document.getElementById('pagesBadge');
     const printFrame = document.getElementById('printFrame');
 
-    let imageObj = null; // HTMLImageElement بعد التحميل
+    let imageObj = null;
     let imgURL = null;
-    let lastPdfUrl = null; // Blob URL للـ PDF الأخير
+    let lastPdfUrl = null;
 
     // تحميل الصورة
     fileInput.addEventListener('change', async (e) => {
@@ -226,6 +211,8 @@
     function getPageSizeMM() {
       return orientationEl.value === 'landscape' ? A4_L_MM : A4_P_MM;
     }
+
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
     function updateSummary() {
       if (!imageObj) { summary.hidden = true; return; }
@@ -264,69 +251,101 @@
       if (v > 12) pxPerMMEl.value = 12;
     });
 
-    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+    // —— ملاءمة الصورة داخل إطار الملصق ——
+    function computeImagePlacementOnPoster(img, mode) {
+      const srcW = img.naturalWidth;
+      const srcH = img.naturalHeight;
+      let s = (mode === 'cover')
+        ? Math.max(srcW / POSTER_W_MM, srcH / POSTER_H_MM)
+        : Math.min(srcW / POSTER_W_MM, srcH / POSTER_H_MM);
+      const renderedW_mm = srcW / s;
+      const renderedH_mm = srcH / s;
+      const offsetX_mm = (POSTER_W_MM - renderedW_mm) / 2;
+      const offsetY_mm = (POSTER_H_MM - renderedH_mm) / 2;
+      return { s, renderedW_mm, renderedH_mm, offsetX_mm, offsetY_mm };
+    }
 
-    // ==============================
-    // رسم الشرائط وعبارات "الصق هنا" + "paste here"
-    // ==============================
-    function drawGlueStrips(ctx, pagePxW, pagePxH, gluePx) {
+    // —— رسم النص داخل شريط اللصق (ثنائي اللغة) ——
+    function drawGlueTextPair(ctx, xStart, xEnd, y, dpr) {
+      const center = (xStart + xEnd) / 2;
+      // العربية يمين المركز
+      ctx.save();
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.direction = 'rtl';
+      ctx.fillText('الصق هنا', center - 8 * dpr, y);
+      ctx.restore();
+
+      // الإنجليزية يسار المركز
+      ctx.save();
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.direction = 'ltr';
+      ctx.fillText('paste here', center + 8 * dpr, y);
+      ctx.restore();
+    }
+
+    // —— الشرائط الزرقاء + النصوص ——
+    function drawGlueStrips(ctx, pagePxW, pagePxH, gluePx, dpr) {
       if (gluePx <= 0) return;
       ctx.save();
-      ctx.fillStyle = '#358cf2'; // أزرق واضح
+      ctx.fillStyle = '#358cf2';
 
-      // الشريط السفلي عند أسفل الصفحة
+      // الشريط السفلي (على أسفل الصفحة)
       ctx.fillRect(gluePx, pagePxH - gluePx, pagePxW - gluePx, gluePx);
-      // الشريط الأيسر من أعلى حتى أعلى الشريط السفلي
+      // الشريط الأيسر (من أعلى حتى أعلى الشريط السفلي)
       ctx.fillRect(0, 0, gluePx, pagePxH - gluePx);
       // مربع الزاوية السفلية اليسرى
       ctx.fillRect(0, pagePxH - gluePx, gluePx, gluePx);
 
-      // النص داخل الشرائط
+      // نص أبيض واضح
+      ctx.fillStyle = '#ffffff';
+      const labelSize = Math.round(18 * dpr);
+      ctx.font = `700 ${labelSize}px "Noto Kufi Arabic", sans-serif`;
+
+      // تكرارات على الشريط السفلي
       const repeats = 3;
       const margin = gluePx * 0.25;
-      ctx.fillStyle = '#ffffff';
-      ctx.textBaseline = 'middle';
-      ctx.direction = 'rtl';
-      ctx.font = '700 16px "Noto Kufi Arabic", sans-serif';
-
-      // الشريط السفلي: "الصق هنا | paste here"
       const usableW = Math.max(1, pagePxW - gluePx - 2 * margin);
       const step = usableW / repeats;
       const yBottom = pagePxH - gluePx * 0.5;
       for (let i = 0; i < repeats; i++) {
-        const x = gluePx + margin + i * step + step * 0.1;
-        ctx.fillText('الصق هنا  |  paste here', x, yBottom);
+        const x1 = gluePx + margin + i * step;
+        const x2 = x1 + step;
+        drawGlueTextPair(ctx, x1, x2, yBottom, dpr);
       }
 
-      // الشريط الأيسر: تدوير وكتابة نفس النص
+      // تكرارات على الشريط الأيسر (بتدوير -90°)
       const repeatsV = 3;
       const usableH = Math.max(1, (pagePxH - gluePx) - 2 * margin);
       const stepV = usableH / repeatsV;
-      const xTextV = gluePx * 0.55;
+      const xText = Math.round(gluePx * 0.55);
       for (let i = 0; i < repeatsV; i++) {
-        const yCenter = margin + i * stepV + stepV * 0.5;
+        const yTop = margin + i * stepV;
+        const yBottomSeg = yTop + stepV;
+        const yCenter = (yTop + yBottomSeg) / 2;
+
         ctx.save();
-        ctx.translate(xTextV, yCenter);
+        ctx.translate(xText, yCenter);
         ctx.rotate(-Math.PI / 2);
-        ctx.fillText('الصق هنا  |  paste here', 0, 0);
+        drawGlueTextPair(ctx, 0, stepV, 0, dpr); // بعد التدوير: (xStart..xEnd) تصبح أفقية
         ctx.restore();
       }
+
       ctx.restore();
     }
 
-    // ==============================
-    // خطوط القص (أعلى + يمين) باللون الأحمر
-    // ==============================
+    // —— خطوط القص (أعلى + يمين) باللون الأحمر ——
     function drawCutLines(ctx, pagePxW, pagePxH, dpr) {
       ctx.save();
       ctx.strokeStyle = '#ef4444';
-      ctx.lineWidth = Math.max(1, Math.round(2 * dpr)); // خط مستقيم وواضح
-      // خط القص العلوي
+      ctx.lineWidth = Math.max(2, Math.round(2 * dpr));
+      // علوي
       ctx.beginPath();
       ctx.moveTo(0, ctx.lineWidth / 2);
       ctx.lineTo(pagePxW, ctx.lineWidth / 2);
       ctx.stroke();
-      // خط القص الأيمن
+      // أيمن
       ctx.beginPath();
       ctx.moveTo(pagePxW - ctx.lineWidth / 2, 0);
       ctx.lineTo(pagePxW - ctx.lineWidth / 2, pagePxH);
@@ -334,54 +353,29 @@
       ctx.restore();
     }
 
-    // ==============================
-    // حسابات الملاءمة (fit/cover) على إطار الملصق
-    // ==============================
-    function computeImagePlacementOnPoster(img, mode) {
-      const srcW = img.naturalWidth;
-      const srcH = img.naturalHeight;
-
-      let s;
-      if (mode === 'cover') {
-        s = Math.max(srcW / POSTER_W_MM, srcH / POSTER_H_MM);
-      } else {
-        s = Math.min(srcW / POSTER_W_MM, srcH / POSTER_H_MM);
-      }
-      const renderedW_mm = srcW / s;
-      const renderedH_mm = srcH / s;
-      const offsetX_mm = (POSTER_W_MM - renderedW_mm) / 2;
-      const offsetY_mm = (POSTER_H_MM - renderedH_mm) / 2;
-
-      return { s, renderedW_mm, renderedH_mm, offsetX_mm, offsetY_mm };
-    }
-
-    // ==============================
-    // رسم جزء الصورة داخل صفحة واحدة
-    // ==============================
+    // —— قص الجزء من الصورة ورسمه على الصفحة ——
     function drawTileImageToPageCanvas(ctx, img, tileRectMM, placement, pxPerMM, gluePx) {
       const { x: x0, y: y0, w: wMM, h: hMM } = tileRectMM;
       const { s, renderedW_mm, renderedH_mm, offsetX_mm, offsetY_mm } = placement;
 
       const imgRect = { x: offsetX_mm, y: offsetY_mm, w: renderedW_mm, h: renderedH_mm };
 
-      // تقاطع (tileRect) مع (imgRect) بالملم
+      // تقاطع بالملم
       const ix = Math.max(x0, imgRect.x);
       const iy = Math.max(y0, imgRect.y);
       const ix2 = Math.min(x0 + wMM, imgRect.x + imgRect.w);
       const iy2 = Math.min(y0 + hMM, imgRect.y + imgRect.h);
       const iw = ix2 - ix;
       const ih = iy2 - iy;
+      if (iw <= 0 || ih <= 0) return;
 
-      if (iw <= 0 || ih <= 0) return; // لا جزء مرئي (حواف بيضاء في وضع FIT)
-
-      // مستطيل المصدر داخل الصورة (بالبكسل)
+      // مصدر بالبكسل
       const sx = (ix - imgRect.x) * s;
       const sy = (iy - imgRect.y) * s;
       const sWidth = iw * s;
       const sHeight = ih * s;
 
-      // موضع الوجهة على قماش الصفحة:
-      // يسار: نترك مساحة الشريط (gluePx) — أسفل: هناك شريط، لذلك لا نزاح للأعلى (نبدأ من أعلى الصفحة)
+      // وجهة بالبكسل (نترك شريط يسار فقط)
       const dx = gluePx + (ix - x0) * pxPerMM;
       const dy = 0 + (iy - y0) * pxPerMM;
 
@@ -391,22 +385,19 @@
       ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
     }
 
-    // ==============================
-    // ترقيم واضح وكبير مع حد خارجي
-    // ==============================
+    // —— ترقيم كبير وواضح مع حد خارجي ——
     function drawPageLabel(ctx, pagePxW, pagePxH, r, rows, c, cols, dpr) {
       const text = `صف ${r+1}/${rows}  •  عمود ${c+1}/${cols}`;
       ctx.save();
       ctx.textAlign = 'right';
       ctx.textBaseline = 'top';
-      const fontSize = Math.round(24 * dpr); // أكبر و أوضح
+      const fontSize = Math.round(28 * dpr); // أكبر لتكون القراءة واضحة
       ctx.font = `700 ${fontSize}px "Noto Kufi Arabic", sans-serif`;
 
       const x = pagePxW - 16 * dpr;
       const y = 10 * dpr;
 
-      // حد خارجي قوي + تعبئة بيضاء
-      ctx.lineWidth = Math.max(3, Math.round(4 * dpr));
+      ctx.lineWidth = Math.max(4, Math.round(4 * dpr));
       ctx.strokeStyle = 'rgba(0,0,0,0.9)';
       ctx.strokeText(text, x, y);
 
@@ -416,39 +407,37 @@
       ctx.restore();
     }
 
-    // ==============================
-    // توليد PDF
-    // ==============================
+    // —— توليد PDF ——
     btnMake.addEventListener('click', async () => {
       try {
         if (!imageObj) { alert('يرجى اختيار صورة أولاً.'); return; }
 
-        // مدخلات
-        const orientation = orientationEl.value; // 'portrait' | 'landscape'
+        // تأكد من تحميل الخط قبل الرسم
+        if (document.fonts && document.fonts.ready) {
+          try { await document.fonts.ready; } catch (e) {}
+        }
+
+        const orientation = orientationEl.value;
         const glueMM = clamp(Number(glueMMEl.value) || 10, 0, 30);
         const pxPerMM = clamp(Number(pxPerMMEl.value) || 8, 4, 12);
         const outName = (outNameEl.value || 'ملصق_A4.pdf').trim();
-        const fitMode = fitModeEl.value; // 'fit' | 'cover'
+        const fitMode = fitModeEl.value;
 
-        // أبعاد الصفحة (ملم)
         const { w: pageWMM, h: pageHMM } = getPageSizeMM();
         const effWMM = pageWMM - glueMM;
         const effHMM = pageHMM - glueMM;
         if (effWMM <= 0 || effHMM <= 0) { alert('قيمة شريط اللصق كبيرة جدًا بالنسبة لحجم الصفحة. قلّل عرض الشريط.'); return; }
 
-        // شبكة التبليط
         const cols = Math.ceil(POSTER_W_MM / effWMM);
         const rows = Math.ceil(POSTER_H_MM / effHMM);
         const totalPages = rows * cols;
 
-        // التحضير العام
         const placement = computeImagePlacementOnPoster(imageObj, fitMode);
-        const dpr = Math.min(2, window.devicePixelRatio || 1); // لتحسين نعومة النص
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
         const pagePxW = Math.round(pageWMM * pxPerMM * dpr);
         const pagePxH = Math.round(pageHMM * pxPerMM * dpr);
         const gluePx = Math.round(glueMM * pxPerMM * dpr);
 
-        // إعداد jsPDF
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({
           orientation: orientation === 'landscape' ? 'l' : 'p',
@@ -457,13 +446,11 @@
           compress: true
         });
 
-        // إنشاء قماش صفحة لإنتاج صورة لكل صفحة PDF
         const pageCanvas = document.createElement('canvas');
         pageCanvas.width = pagePxW;
         pageCanvas.height = pagePxH;
         const ctx = pageCanvas.getContext('2d');
 
-        // معاينة مصغّرة
         preview.hidden = false;
         preview.innerHTML = '';
 
@@ -472,7 +459,7 @@
           for (let c = 0; c < cols; c++) {
             pageIndex++;
 
-            // تنظيف الصفحة
+            // خلفية بيضاء
             ctx.save();
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.clearRect(0, 0, pagePxW, pagePxH);
@@ -480,31 +467,30 @@
             ctx.fillRect(0, 0, pagePxW, pagePxH);
             ctx.restore();
 
-            // شرائط اللصق + النص
-            drawGlueStrips(ctx, pagePxW, pagePxH, gluePx);
+            // شرائط اللصق + الكتابات
+            drawGlueStrips(ctx, pagePxW, pagePxH, gluePx, dpr);
 
-            // مستطيل الجزء (بالملم) على إطار الملصق
+            // جزء الصورة لهذه الصفحة
             const x0 = c * effWMM;
             const y0 = r * effHMM;
             const wMM = Math.min(effWMM, POSTER_W_MM - x0);
             const hMM = Math.min(effHMM, POSTER_H_MM - y0);
             const tileRectMM = { x: x0, y: y0, w: wMM, h: hMM };
 
-            // رسم الجزء من الصورة
             drawTileImageToPageCanvas(ctx, imageObj, tileRectMM, placement, pxPerMM * dpr, gluePx);
 
-            // خطوط القص الحمراء (أعلى + يمين)
+            // خطوط القص (أعلى + يمين)
             drawCutLines(ctx, pagePxW, pagePxH, dpr);
 
-            // ترقيم واضح وكبير
+            // ترقيم كبير وواضح
             drawPageLabel(ctx, pagePxW, pagePxH, r, rows, c, cols, dpr);
 
-            // تحويل القماش إلى صورة وإضافتها إلى PDF
+            // إضافة إلى PDF
             const dataURL = pageCanvas.toDataURL('image/jpeg', 0.92);
             if (pageIndex > 1) doc.addPage();
             doc.addImage(dataURL, 'JPEG', 0, 0, pageWMM, pageHMM);
 
-            // إضافة مصغّر للمعاينة
+            // معاينة مصغرة
             const thumb = document.createElement('div');
             thumb.className = 'thumb';
             const imgEl = document.createElement('img');
@@ -516,18 +502,17 @@
             thumb.appendChild(imgEl);
             preview.appendChild(thumb);
 
-            // تقدّم
             bar.style.width = `${Math.round((pageIndex / totalPages) * 100)}%`;
-            await nextFrame(); // فسحة تحديث للواجهة
+            await new Promise(res => requestAnimationFrame(res));
           }
         }
 
-        // حفظ الملف
+        // تنزيل وحفظ
         const fileName = outName || 'ملصق_A4.pdf';
         doc.save(fileName);
 
-        // Blob URL للطباعة
-        revokePdfUrl();
+        // تفعيل زر الطباعة
+        if (lastPdfUrl) URL.revokeObjectURL(lastPdfUrl);
         const blob = doc.output('blob');
         lastPdfUrl = URL.createObjectURL(blob);
         btnPrint.disabled = false;
@@ -539,7 +524,7 @@
       }
     });
 
-    // زر الطباعة: حمّل الـ PDF في iframe مخفي ثم استدعِ نافذة الطباعة
+    // الطباعة عبر iframe
     btnPrint.addEventListener('click', () => {
       try {
         if (!lastPdfUrl) { alert('يرجى توليد الملف أولاً.'); return; }
@@ -561,8 +546,6 @@
         alert('تعذّر بدء الطباعة.');
       }
     });
-
-    function nextFrame() { return new Promise(res => requestAnimationFrame(res)); }
   </script>
 </body>
 </html>
