@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>تقسيم صورة إلى صفحات A4 لملصق 100×70 سم مع شرائط "الصق هنا"</title>
 
-  <!-- خط عربي للواجهة وللكتابة على القماش (Canvas) -->
+  <!-- خط عربي للواجهة -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
@@ -42,7 +42,7 @@
     }
     .row { display: grid; gap: 10px; }
     label { font-size: 14px; color: var(--muted); }
-    input[type="number"], select, input[type="file"] {
+    input[type="number"], select, input[type="file"], input[type="text"] {
       width: 100%; padding: 10px 12px; border: 1px solid var(--border);
       border-radius: 8px; background: #fff; color: var(--text); font-size: 14px;
     }
@@ -52,7 +52,10 @@
     button {
       background: var(--accent); color: #fff; border: none; border-radius: 10px;
       padding: 10px 16px; font-size: 15px; font-weight: 700; cursor: pointer;
-      transition: transform .05s ease;
+      transition: transform .05s ease, opacity .2s ease;
+    }
+    button:disabled {
+      opacity: .6; cursor: not-allowed;
     }
     button:active { transform: translateY(1px); }
     .btn-secondary {
@@ -83,14 +86,13 @@
     .thumb {
       border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff;
       display: grid; place-items: center; aspect-ratio: 3/4;
-      font-size: 12px; color: var(--muted);
-    }
-    .small {
-      font-size: 12px;
+      font-size: 12px; color: #94a3b8;
     }
     .badge {
       display: inline-block; background:#eef6ff; color:#0b61c2; padding:2px 8px; border-radius:999px; font-size:12px;
     }
+    /* إطار الطباعة المخفي */
+    #printFrame { position: fixed; right: -9999px; bottom: -9999px; width: 0; height: 0; border: 0; }
   </style>
 </head>
 <body>
@@ -147,6 +149,7 @@
     <div class="actions">
       <button id="btnMake">توليد ملف PDF</button>
       <button class="btn-secondary" id="btnClear">مسح الصورة</button>
+      <button id="btnPrint" disabled>طباعة</button>
       <span class="badge" id="pagesBadge" hidden></span>
     </div>
 
@@ -161,7 +164,10 @@
     <div class="preview" id="preview" hidden></div>
   </div>
 
-  <!-- jsPDF من CDN. للتشغيل بدون إنترنت: حمّل الملف محليًا وعدّل هذا المسار. -->
+  <!-- إطار مخفي لطباعة ملف PDF الناتج -->
+  <iframe id="printFrame"></iframe>
+
+  <!-- jsPDF من CDN -->
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
   <script>
@@ -183,13 +189,16 @@
     const outNameEl = document.getElementById('outName');
     const btnMake = document.getElementById('btnMake');
     const btnClear = document.getElementById('btnClear');
+    const btnPrint = document.getElementById('btnPrint');
     const bar = document.getElementById('bar');
     const summary = document.getElementById('summary');
     const preview = document.getElementById('preview');
     const pagesBadge = document.getElementById('pagesBadge');
+    const printFrame = document.getElementById('printFrame');
 
     let imageObj = null; // HTMLImageElement بعد التحميل
     let imgURL = null;
+    let lastPdfUrl = null; // Blob URL للـ PDF الأخير
 
     // تحميل الصورة
     fileInput.addEventListener('change', async (e) => {
@@ -214,14 +223,23 @@
       resetState();
     });
 
+    function revokePdfUrl() {
+      if (lastPdfUrl) {
+        URL.revokeObjectURL(lastPdfUrl);
+        lastPdfUrl = null;
+      }
+    }
+
     function resetState() {
       imageObj = null;
       if (imgURL) { URL.revokeObjectURL(imgURL); imgURL = null; }
+      revokePdfUrl();
       bar.style.width = '0%';
       summary.hidden = true;
       preview.hidden = true;
       preview.innerHTML = '';
       pagesBadge.hidden = true;
+      btnPrint.disabled = true;
     }
 
     function getPageSizeMM() {
@@ -237,6 +255,7 @@
       if (effW <= 0 || effH <= 0) {
         summary.hidden = false;
         summary.innerHTML = '⚠️ قيمة شريط اللصق كبيرة جدًا بالنسبة لحجم الصفحة. قلّل عرض الشريط.';
+        btnPrint.disabled = true;
         return;
       }
       const cols = Math.ceil(POSTER_W_MM / effW);
@@ -273,37 +292,41 @@
       if (gluePx <= 0) return;
       ctx.save();
       ctx.fillStyle = '#358cf2'; // أزرق واضح
-      // سفلي
-      ctx.fillRect(gluePx, pagePxH - (pagePxH - gluePx), pagePxW - gluePx, gluePx); // (x=glue, y=0) لأننا سنرسم من أصل القماش
-      ctx.fillRect(0, 0, gluePx, pagePxH - gluePx);                                  // يسار
-      ctx.fillRect(0, 0, gluePx, gluePx);                                            // زاوية
+
+      // الشريط السفلي: بعرض gluePx، يبدأ من x=gluePx حتى نهاية الصفحة، عند أسفل القماش
+      ctx.fillRect(gluePx, pagePxH - gluePx, pagePxW - gluePx, gluePx);
+      // الشريط الأيسر: من أعلى حتى فوق الشريط السفلي
+      ctx.fillRect(0, 0, gluePx, pagePxH - gluePx);
+      // المربع السفلي الأيسر (الزاوية)
+      ctx.fillRect(0, pagePxH - gluePx, gluePx, gluePx);
+
       // نص "الصق هنا" على الشرائط
       ctx.fillStyle = '#ffffff';
       ctx.textBaseline = 'middle';
       ctx.direction = 'rtl';
       ctx.font = 'bold 14px "Noto Kufi Arabic", sans-serif';
 
-      // تكرارات أسفل
+      // تكرارات على الشريط السفلي
       const repeats = 3;
       const margin = gluePx * 0.25;
       const usableW = Math.max(1, pagePxW - gluePx - 2 * margin);
       const step = usableW / repeats;
-      const yText = gluePx * 0.55; // داخل الشريط السفلي
+      const yText = pagePxH - gluePx * 0.5; // وسط الشريط السفلي
       for (let i = 0; i < repeats; i++) {
-        const xText = gluePx + margin + i * step + step * 0.75; // مسافة لطيفة
+        const xText = gluePx + margin + i * step + step * 0.75;
         ctx.fillText('الصق هنا', xText, yText);
       }
 
-      // تكرارات يسار (بنص مدوّر)
+      // تكرارات على الشريط الأيسر (رأسي بالتدوير)
       const repeatsV = 3;
-      const usableH = Math.max(1, pagePxH - gluePx - 2 * margin);
+      const usableH = Math.max(1, (pagePxH - gluePx) - 2 * margin);
       const stepV = usableH / repeatsV;
-      const xTextV = gluePx * 0.5;
+      const xTextV = gluePx * 0.55;
       for (let i = 0; i < repeatsV; i++) {
-        const yCenter = gluePx + margin + i * stepV + stepV * 0.5;
+        const yCenter = margin + i * stepV + stepV * 0.5;
         ctx.save();
         ctx.translate(xTextV, yCenter);
-        ctx.rotate(Math.PI / 2); // 90°
+        ctx.rotate(-Math.PI / 2); // 90° للأعلى
         ctx.fillText('الصق هنا', 0, 0);
         ctx.restore();
       }
@@ -314,11 +337,9 @@
     // حسابات الملاءمة (fit/cover) على إطار الملصق
     // ==============================
     function computeImagePlacementOnPoster(img, mode) {
-      // نعمل بوحدات "ملم" مباشرة لتفادي قماش ضخم
       const srcW = img.naturalWidth;
       const srcH = img.naturalHeight;
 
-      // s: عدد البكسلات لكل 1 ملم ضمن إطار الملصق
       let s;
       if (mode === 'cover') {
         s = Math.max(srcW / POSTER_W_MM, srcH / POSTER_H_MM);
@@ -330,13 +351,7 @@
       const offsetX_mm = (POSTER_W_MM - renderedW_mm) / 2;
       const offsetY_mm = (POSTER_H_MM - renderedH_mm) / 2;
 
-      return {
-        s, // px per mm داخل إطار الملصق
-        renderedW_mm,
-        renderedH_mm,
-        offsetX_mm,
-        offsetY_mm
-      };
+      return { s, renderedW_mm, renderedH_mm, offsetX_mm, offsetY_mm };
     }
 
     // ==============================
@@ -346,13 +361,7 @@
       const { x: x0, y: y0, w: wMM, h: hMM } = tileRectMM;
       const { s, renderedW_mm, renderedH_mm, offsetX_mm, offsetY_mm } = placement;
 
-      // مساحة الصورة داخل إطار الملصق (بالملم)
-      const imgRect = {
-        x: offsetX_mm,
-        y: offsetY_mm,
-        w: renderedW_mm,
-        h: renderedH_mm
-      };
+      const imgRect = { x: offsetX_mm, y: offsetY_mm, w: renderedW_mm, h: renderedH_mm };
 
       // تقاطع (tileRect) مع (imgRect) بالملم
       const ix = Math.max(x0, imgRect.x);
@@ -362,10 +371,7 @@
       const iw = ix2 - ix;
       const ih = iy2 - iy;
 
-      if (iw <= 0 || ih <= 0) {
-        // لا جزء مرئي من الصورة هنا (ربما هامش أبيض في وضع FIT)
-        return;
-      }
+      if (iw <= 0 || ih <= 0) return; // لافتة بيضاء في وضع FIT
 
       // مستطيل المصدر داخل الصورة (بالبكسل)
       const sx = (ix - imgRect.x) * s;
@@ -379,7 +385,6 @@
       const dWidth = iw * pxPerMM;
       const dHeight = ih * pxPerMM;
 
-      // ارسم الجزء المقتطع
       ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
     }
 
@@ -498,12 +503,52 @@
           }
         }
 
-        // حفظ الملف
-        doc.save(outName || 'ملصق_A4.pdf');
+        // حفظ/تنزيل الملف كالمعتاد
+        const fileName = outName || 'ملصق_A4.pdf';
+        doc.save(fileName);
+
+        // إنشاء Blob URL للاستخدام مع زر "طباعة"
+        revokePdfUrl();
+        const blob = doc.output('blob');       // Blob للـ PDF
+        lastPdfUrl = URL.createObjectURL(blob);
+        btnPrint.disabled = false;
 
       } catch (err) {
         console.error(err);
         alert('حدث خطأ أثناء توليد الملف. راجع وحدة التحكم (Console) للتفاصيل.');
+        btnPrint.disabled = true;
+      }
+    });
+
+    // زر الطباعة: يحمّل الـ PDF في iframe مخفي ثم يستدعي نافذة الطباعة
+    btnPrint.addEventListener('click', () => {
+      try {
+        if (!lastPdfUrl) {
+          alert('يرجى توليد الملف أولاً.');
+          return;
+        }
+        // تحميل في iframe مخفي
+        printFrame.onload = () => {
+          try {
+            // تأخير بسيط لضمان جاهزية المحتوى في بعض المتصفحات
+            setTimeout(() => {
+              printFrame.contentWindow.focus();
+              printFrame.contentWindow.print();
+            }, 150);
+          } catch (e) {
+            // خيار بديل: فتح نافذة جديدة للطباعة
+            const w = window.open(lastPdfUrl, '_blank');
+            if (w) {
+              setTimeout(() => w.print(), 300);
+            } else {
+              alert('تعذّر فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة.');
+            }
+          }
+        };
+        printFrame.src = lastPdfUrl;
+      } catch (e) {
+        console.error(e);
+        alert('تعذّر بدء الطباعة. قد تحتاج للسماح بالنوافذ المنبثقة.');
       }
     });
 
