@@ -3,66 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة التكبير - مطابقة المعاينة - My Family's Mihrab</title>
+    <title>أداة التكبير - مطابقة 100% - My Family's Mihrab</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        :root { --primary: #2c3e50; --accent: #e67e22; }
-        body { font-family: 'Segoe UI', sans-serif; background: #fdfdfd; margin: 0; padding: 20px; text-align: center; }
-        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
-        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; background: #f1f2f6; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        :root { --primary: #2c3e50; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; background: #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
         .input-group { display: flex; flex-direction: column; text-align: right; gap: 5px; }
-        label { font-weight: bold; font-size: 13px; color: var(--primary); }
-        input, select { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        label { font-weight: bold; font-size: 13px; }
+        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
         .btn-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
         .btn-download { background: #27ae60; } .btn-print { background: #2980b9; }
-        .btn:hover { opacity: 0.8; transform: scale(1.02); }
-
-        /* منطقة المعاينة المزدوجة */
+        
         .preview-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { border: 1px solid #ddd; padding: 15px; border-radius: 10px; background: #fff; }
-        h4 { margin-top: 0; color: var(--primary); }
+        .card { border: 1px solid #ddd; padding: 15px; border-radius: 10px; text-align: center; }
 
-        /* المعاينة 1: الصورة الأصلية مع الشبكة */
-        .img-wrapper { position: relative; display: inline-block; border: 2px solid #333; line-height: 0; }
-        #orig-img { max-width: 100%; height: auto; }
+        /* خريطة الأصل */
+        .img-container { position: relative; display: inline-block; border: 2px solid #000; overflow: hidden; }
+        #orig-img { max-width: 100%; height: auto; display: block; }
         .grid-overlay { position: absolute; top:0; left:0; width:100%; height:100%; display:grid; pointer-events:none; }
-        .grid-cell { border: 1px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; color: yellow; font-weight: bold; text-shadow: 1px 1px 2px #000; font-size: 14px; }
+        .grid-cell { border: 1px solid rgba(255,255,0,0.5); display: flex; align-items: center; justify-content: center; color: yellow; font-weight: bold; text-shadow: 1px 1px 2px #000; }
 
-        /* المعاينة 2: الأوراق الفعلية بمحتواها */
-        #pages-view { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .page-tile { 
-            border: 1px solid #000; 
-            position: relative; 
-            overflow: hidden; 
-            background-repeat: no-repeat;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-        }
-        .page-num-label { position: absolute; top: 2px; left: 2px; background: rgba(0,0,0,0.6); color: white; padding: 2px 5px; border-radius: 3px; font-size: 10px; }
-        .overlap-shade { position: absolute; background: rgba(189, 195, 199, 0.7); border: 1px dashed red; pointer-events: none; }
+        /* خريطة الأوراق */
+        #pages-view { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: #ddd; padding: 10px; }
+        .page-tile { border: 1px solid #000; background-color: white; position: relative; overflow: hidden; background-repeat: no-repeat; }
+        .page-label { position: absolute; top: 2px; left: 2px; background: rgba(0,0,0,0.7); color: white; padding: 1px 4px; font-size: 9px; z-index: 10; }
+        .overlap-marker { position: absolute; background: rgba(189, 195, 199, 0.7); border: 1px dashed red; z-index: 5; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>أداة التكبير الاحترافية: مطابقة المعاينة بالصورة</h2>
+    <h2>أداة تكبير الصور (تطابق حسابي دقيق)</h2>
     
     <div class="controls">
         <div class="input-group">
             <label>1. ارفع الصورة:</label>
-            <input type="file" id="fileIn" accept="image/*" onchange="loadImage()">
+            <input type="file" id="fileIn" accept="image/*" onchange="init()">
         </div>
         <div class="input-group">
-            <label>2. العرض (سم):</label>
-            <input type="number" id="wCm" value="60" oninput="renderAll()">
+            <label>2. العرض الكلي (سم):</label>
+            <input type="number" id="wCm" value="60" oninput="render()">
         </div>
         <div class="input-group">
-            <label>3. الارتفاع (سم):</label>
-            <input type="number" id="hCm" value="80" oninput="renderAll()">
+            <label>3. الارتفاع الكلي (سم):</label>
+            <input type="number" id="hCm" value="80" oninput="render()">
         </div>
         <div class="input-group">
-            <label>4. الوضعية:</label>
-            <select id="mode" onchange="renderAll()">
+            <label>4. اتجاه الورق:</label>
+            <select id="mode" onchange="render()">
                 <option value="p">A4 عمودي</option>
                 <option value="l">A4 أفقي</option>
             </select>
@@ -70,44 +61,44 @@
     </div>
 
     <div class="btn-group">
-        <button class="btn btn-download" onclick="exportPDF(false)">حفظ PDF</button>
-        <button class="btn btn-print" onclick="exportPDF(true)">طباعة</button>
+        <button class="btn btn-download" onclick="exportDoc(false)">حفظ PDF</button>
+        <button class="btn btn-print" onclick="exportDoc(true)">طباعة فورية</button>
     </div>
 
     <div class="preview-section">
         <div class="card">
-            <h4>1. المخطط العام (الصورة الأصلية)</h4>
-            <div class="img-wrapper">
-                <img id="orig-img" src="">
+            <h4>المخطط الدليلي (الصورة الأصلية)</h4>
+            <div id="wrapper" class="img-container">
+                <img id="orig-img">
                 <div id="grid-layer" class="grid-overlay"></div>
             </div>
         </div>
-
         <div class="card">
-            <h4>2. تفاصيل الأوراق (ما سيتم طباعته)</h4>
+            <h4>معاينة الأوراق (مطابقة للطباعة)</h4>
             <div id="pages-view"></div>
         </div>
     </div>
 </div>
 
 <script>
-    const overlapMm = 15;
-    let currentImgData = "";
+    let imgSource = "";
+    const overlapMm = 15; // 1.5 سم
 
-    function loadImage() {
+    function init() {
         const file = document.getElementById('fileIn').files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (e) => {
-            currentImgData = e.target.result;
-            document.getElementById('orig-img').src = currentImgData;
-            document.getElementById('orig-img').onload = renderAll;
+            imgSource = e.target.result;
+            const img = document.getElementById('orig-img');
+            img.src = imgSource;
+            img.onload = render;
         };
         reader.readAsDataURL(file);
     }
 
-    function renderAll() {
-        if (!currentImgData) return;
+    function render() {
+        if (!imgSource) return;
         
         const wTarget = parseFloat(document.getElementById('wCm').value) * 10;
         const hTarget = parseFloat(document.getElementById('hCm').value) * 10;
@@ -120,21 +111,21 @@
         const cols = Math.ceil(wTarget / effW);
         const rows = Math.ceil(hTarget / effH);
 
-        // تحديث شبكة الصورة الأصلية
+        // 1. ضبط شبكة الأصل
         const layer = document.getElementById('grid-layer');
         layer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
         layer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
         layer.innerHTML = '';
         for(let i=1; i<=(rows*cols); i++) {
-            const d = document.createElement('div');
-            d.className = 'grid-cell'; d.innerText = i;
-            layer.appendChild(d);
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell'; cell.innerText = i;
+            layer.appendChild(cell);
         }
 
-        // تحديث معاينة الأوراق (مع عرض أجزاء الصورة الحقيقية)
+        // 2. ضبط معاينة الأوراق المنفصلة (المحاكاة الدقيقة)
         const pagesView = document.getElementById('pages-view');
         pagesView.innerHTML = '';
-        const scale = 0.3; // مقاس المعاينة
+        const scale = 0.25; 
 
         for (let r = 0; r < rows; r++) {
             const rowDiv = document.createElement('div');
@@ -145,23 +136,24 @@
                 tile.style.width = pW * scale + 'px';
                 tile.style.height = pH * scale + 'px';
                 
-                // عرض جزء الصورة داخل الورقة
-                tile.style.backgroundImage = `url(${currentImgData})`;
-                tile.style.backgroundSize = `${(wTarget/pW) * (pW * scale)}px ${(hTarget/pH) * (pH * scale)}px`;
+                // حسابات الخلفية لتطابق الـ PDF تماماً
+                // نستخدم نسبة الحجم الكلي المستهدف إلى حجم الورقة
+                tile.style.backgroundImage = `url(${imgSource})`;
+                tile.style.backgroundSize = `${(wTarget * scale)}px ${(hTarget * scale)}px`;
                 tile.style.backgroundPosition = `-${c * effW * scale}px -${r * effH * scale}px`;
 
-                tile.innerHTML = `<div class="page-num-label">${r*cols+c+1}</div>`;
+                tile.innerHTML = `<div class="page-label">${r*cols+c+1}</div>`;
 
-                // تظليل التراكب
+                // علامات التراكب والقص
                 if (c < cols - 1) {
-                    const s = document.createElement('div'); s.className = 'overlap-shade';
-                    s.style.right = '0'; s.style.top = '0'; s.style.width = overlapMm * scale + 'px'; s.style.height = '100%';
-                    tile.appendChild(s);
+                    const ov = document.createElement('div'); ov.className = 'overlap-marker';
+                    ov.style.right = '0'; ov.style.top = '0'; ov.style.width = overlapMm * scale + 'px'; ov.style.height = '100%';
+                    tile.appendChild(ov);
                 }
                 if (r < rows - 1) {
-                    const s = document.createElement('div'); s.className = 'overlap-shade';
-                    s.style.bottom = '0'; s.style.left = '0'; s.style.width = '100%'; s.style.height = overlapMm * scale + 'px';
-                    tile.appendChild(s);
+                    const ov = document.createElement('div'); ov.className = 'overlap-marker';
+                    ov.style.bottom = '0'; ov.style.left = '0'; ov.style.width = '100%'; ov.style.height = overlapMm * scale + 'px';
+                    tile.appendChild(ov);
                 }
                 rowDiv.appendChild(tile);
             }
@@ -169,7 +161,7 @@
         }
     }
 
-    async function exportPDF(isPrint) {
+    async function exportDoc(isPrint) {
         const { jsPDF } = window.jspdf;
         const img = document.getElementById('orig-img');
         if (!img.src) return;
@@ -189,9 +181,11 @@
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 if (r > 0 || c > 0) pdf.addPage();
+                
+                // الإزاحة في PDF تطابق تماماً إزاحة المعاينة (effW, effH)
                 pdf.addImage(img, 'JPEG', -c * effW, -r * effH, wTarget, hTarget, undefined, 'SLOW');
                 
-                // التراكب والقص
+                // تظليل التراكب والقص
                 pdf.setFillColor(200, 200, 200);
                 if (c < cols - 1) {
                     pdf.rect(pW - overlapMm, 0, overlapMm, pH, 'F');
@@ -206,11 +200,11 @@
                 if (r < rows - 1) pdf.line(0, pH - overlapMm, pW, pH - overlapMm);
 
                 pdf.setLineDashPattern([], 0); pdf.setTextColor(0, 0, 0);
-                pdf.text(`Page: ${r * cols + c + 1}`, 5, 10);
+                pdf.text(`رقم الورقة: ${r * cols + c + 1}`, 5, 10);
             }
         }
         if (isPrint) { pdf.autoPrint(); window.open(pdf.output('bloburl'), '_blank'); }
-        else { pdf.save("Mihrab_Poster.pdf"); }
+        else { pdf.save("Poster_Final.pdf"); }
     }
 </script>
 
