@@ -3,76 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة تكبير الصور - مقاس A4 احترافي</title>
+    <title>معاينة وطباعة البوسترات - My Family's Mihrab</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        :root { --primary: #2c3e50; --danger: #e74c3c; --gray: #bdc3c7; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; text-align: center; }
-        .main-container { max-width: 800px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: auto; }
-        .header { border-bottom: 2px solid #eee; margin-bottom: 25px; padding-bottom: 10px; }
-        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        :root { --primary: #2c3e50; --accent: #27ae60; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8f9fa; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: auto; }
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; background: #f1f2f6; padding: 20px; border-radius: 10px; }
         .input-group { display: flex; flex-direction: column; text-align: right; gap: 5px; }
         label { font-weight: bold; font-size: 13px; color: var(--primary); }
-        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
-        .btn-action { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-action:hover { background: #34495e; transform: translateY(-2px); }
-        .legend { margin-top: 20px; display: flex; justify-content: center; gap: 20px; font-size: 12px; }
-        .legend-item { display: flex; align-items: center; gap: 5px; }
-        .color-box { width: 15px; height: 15px; border-radius: 3px; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        .button-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; color: white; }
+        .btn-preview { background: var(--primary); }
+        .btn-download { background: var(--accent); }
+        .btn-print { background: #3498db; }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        
+        /* تصميم المعاينة */
+        #preview-area { 
+            margin-top: 30px; 
+            padding: 20px; 
+            border: 2px dashed #ccc; 
+            background: #fafafa; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 10px; 
+            min-height: 200px;
+        }
+        .page-preview {
+            background: white;
+            border: 1px solid #000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #999;
+        }
+        .overlap-zone { position: absolute; background: rgba(189, 195, 199, 0.8); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .cut-line { position: absolute; border: 1px dashed red; pointer-events: none; }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <div class="header">
-        <h2>أداة طباعة البوسترات العملاقة (A4)</h2>
-        <p>تحديد دقيق لمناطق القص والتراكب بمقاس 1.5 سم</p>
-    </div>
-
-    <div class="grid-inputs">
+<div class="container">
+    <h2>أداة تصميم ومعاينة البوسترات (A4)</h2>
+    
+    <div class="controls">
         <div class="input-group">
-            <label>1. ارفع الصورة:</label>
-            <input type="file" id="imgUpload" accept="image/*">
+            <label>ارفع الصورة:</label>
+            <input type="file" id="imgInput" accept="image/*" onchange="updatePreview()">
         </div>
         <div class="input-group">
-            <label>2. عرض البوستر (سم):</label>
-            <input type="number" id="wCm" value="100">
+            <label>العرض المطلوب (سم):</label>
+            <input type="number" id="wCm" value="60" oninput="updatePreview()">
         </div>
         <div class="input-group">
-            <label>3. ارتفاع البوستر (سم):</label>
-            <input type="number" id="hCm" value="100">
+            <label>الارتفاع المطلوب (سم):</label>
+            <input type="number" id="hCm" value="80" oninput="updatePreview()">
         </div>
         <div class="input-group">
-            <label>4. وضعية الورقة:</label>
-            <select id="orient">
-                <option value="p">عمودي (Portrait)</option>
-                <option value="l">أفقي (Landscape)</option>
+            <label>الاتجاه:</label>
+            <select id="orient" onchange="updatePreview()">
+                <option value="p">عمودي</option>
+                <option value="l">أفقي</option>
             </select>
         </div>
     </div>
 
-    <button class="btn-action" onclick="generateHighQualityPDF()">توليد ملف PDF للطباعة</button>
-
-    <div class="legend">
-        <div class="legend-item"><div class="color-box" style="background: #bdc3c7;"></div> منطقة التراكب (لاصق)</div>
-        <div class="legend-item"><div class="color-box" style="border: 1px dashed red;"></div> خط القص الأحمر</div>
+    <div class="button-group">
+        <button class="btn btn-preview" onclick="updatePreview()">تحديث المعاينة</button>
+        <button class="btn btn-download" onclick="generatePDF(false)">تحميل PDF</button>
+        <button class="btn btn-print" onclick="generatePDF(true)">طباعة فورية</button>
     </div>
-    
-    <div id="status" style="margin-top: 20px; color: #7f8c8d;"></div>
+
+    <div id="status" style="margin-top:10px; font-size:14px; color: var(--accent);"></div>
+
+    <h3 style="text-align: right; margin-top: 30px;">معاينة تقسيم الورق:</h3>
+    <div id="preview-area">
+        <p>قم برفع صورة لرؤية مخطط التقسيم هنا...</p>
+    </div>
 </div>
 
 <script>
-    async function generateHighQualityPDF() {
+    const overlapMm = 15; // 1.5 سم
+
+    function updatePreview() {
+        const previewArea = document.getElementById('preview-area');
+        const orient = document.getElementById('orient').value;
+        const targetW = parseFloat(document.getElementById('wCm').value) * 10;
+        const targetH = parseFloat(document.getElementById('hCm').value) * 10;
+        
+        // أبعاد A4 بالملم
+        const pW = orient === 'p' ? 210 : 297;
+        const pH = orient === 'p' ? 297 : 210;
+        
+        const effW = pW - overlapMm;
+        const effH = pH - overlapMm;
+        
+        const cols = Math.ceil(targetW / effW);
+        const rows = Math.ceil(targetH / effH);
+
+        previewArea.innerHTML = '';
+        const scale = 0.5; // مقاس المعاينة (نصف الحجم الحقيقي للعرض فقط)
+
+        for (let r = 0; r < rows; r++) {
+            const rowDiv = document.createElement('div');
+            rowDiv.style.display = 'flex';
+            rowDiv.style.gap = '5px';
+            rowDiv.style.marginBottom = '5px';
+            
+            for (let c = 0; c < cols; c++) {
+                const page = document.createElement('div');
+                page.className = 'page-preview';
+                page.style.width = pW * scale + 'px';
+                page.style.height = pH * scale + 'px';
+                page.innerHTML = `ورقة ${r * cols + c + 1}<br>(${r+1},${c+1})`;
+
+                // إضافة مناطق التراكب في المعاينة
+                if (c < cols - 1) {
+                    const ov = document.createElement('div');
+                    ov.className = 'overlap-zone';
+                    ov.style.right = '0'; ov.style.top = '0'; ov.style.width = overlapMm * scale + 'px'; ov.style.height = '100%';
+                    ov.style.fontSize = '8px'; ov.innerText = 'لاصق';
+                    page.appendChild(ov);
+                }
+                if (r < rows - 1) {
+                    const ov = document.createElement('div');
+                    ov.className = 'overlap-zone';
+                    ov.style.bottom = '0'; ov.style.left = '0'; ov.style.width = '100%'; ov.style.height = overlapMm * scale + 'px';
+                    ov.style.fontSize = '8px'; ov.innerText = 'لاصق';
+                    page.appendChild(ov);
+                }
+                rowDiv.appendChild(page);
+            }
+            previewArea.appendChild(rowDiv);
+        }
+        document.getElementById('status').innerText = `إجمالي الورق المطلوب: ${rows * cols} ورقة A4`;
+    }
+
+    async function generatePDF(isPrint) {
         const { jsPDF } = window.jspdf;
-        const input = document.getElementById('imgUpload');
+        const input = document.getElementById('imgInput');
+        if (!input.files[0]) { alert("ارفع صورة أولاً"); return; }
+
         const targetW = parseFloat(document.getElementById('wCm').value) * 10;
         const targetH = parseFloat(document.getElementById('hCm').value) * 10;
         const orient = document.getElementById('orient').value;
-        const status = document.getElementById('status');
-
-        if (!input.files[0]) { alert("يرجى اختيار صورة"); return; }
-
-        status.innerText = "جاري معالجة الأوراق... يرجى الانتظار";
 
         const img = new Image();
         img.src = URL.createObjectURL(input.files[0]);
@@ -81,61 +162,51 @@
             const pdf = new jsPDF({ orientation: orient, unit: 'mm', format: 'a4' });
             const pW = pdf.internal.pageSize.getWidth();
             const pH = pdf.internal.pageSize.getHeight();
-            const overlap = 15; // 1.5 سم
-
-            const effW = pW - overlap;
-            const effH = pH - overlap;
-
+            const effW = pW - overlapMm;
+            const effH = pH - overlapMm;
             const cols = Math.ceil(targetW / effW);
             const rows = Math.ceil(targetH / effH);
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
                     if (r > 0 || c > 0) pdf.addPage();
-
-                    // رسم الجزء المخصص من الصورة
-                    const xOffset = -c * effW;
-                    const yOffset = -r * effH;
-                    pdf.addImage(img, 'JPEG', xOffset, yOffset, targetW, targetH, undefined, 'SLOW');
-
-                    // --- رسم منطقة التراكب (رصاصي) ---
-                    pdf.setFillColor(189, 195, 199); // لون رصاصي واضح
                     
-                    // تراكب الجهة اليمنى (إذا كان هناك عمود تالٍ)
+                    const xOff = -c * effW;
+                    const yOff = -r * effH;
+                    pdf.addImage(img, 'JPEG', xOff, yOff, targetW, targetH, undefined, 'SLOW');
+
+                    // تراكب رصاصي
+                    pdf.setFillColor(189, 195, 199);
                     if (c < cols - 1) {
-                        pdf.rect(pW - overlap, 0, overlap, pH, 'F');
+                        pdf.rect(pW - overlapMm, 0, overlapMm, pH, 'F');
                         pdf.setTextColor(255, 255, 255);
-                        pdf.setFontSize(8);
-                        pdf.text("PASTE HERE", pW - (overlap/2), pH/2, { angle: 90, align: 'center' });
+                        pdf.text("PASTE HERE", pW - (overlapMm/2), pH/2, { angle: 90, align: 'center' });
                     }
-
-                    // تراكب الجهة السفلية (إذا كان هناك صف تالٍ)
                     if (r < rows - 1) {
-                        pdf.rect(0, pH - overlap, pW, overlap, 'F');
+                        pdf.rect(0, pH - overlapMm, pW, overlapMm, 'F');
                         pdf.setTextColor(255, 255, 255);
-                        pdf.text("PASTE HERE", pW/2, pH - (overlap/2), { align: 'center' });
+                        pdf.text("PASTE HERE", pW/2, pH - (overlapMm/2), { align: 'center' });
                     }
 
-                    // --- رسم خطوط القص (أحمر متقطع) ---
-                    pdf.setDrawColor(231, 76, 60); // أحمر
+                    // خطوط قص حمراء
+                    pdf.setDrawColor(231, 76, 60);
                     pdf.setLineDashPattern([2, 2], 0);
-                    pdf.setLineWidth(0.5);
+                    if (c < cols - 1) pdf.line(pW - overlapMm, 0, pW - overlapMm, pH);
+                    if (r < rows - 1) pdf.line(0, pH - overlapMm, pW, pH - overlapMm);
 
-                    // خط قص عمودي
-                    if (c < cols - 1) pdf.line(pW - overlap, 0, pW - overlap, pH);
-                    // خط قص أفقي
-                    if (r < rows - 1) pdf.line(0, pH - overlap, pW, pH - overlap);
-
-                    // --- الترقيم والمعلومات ---
+                    // ترقيم
                     pdf.setLineDashPattern([], 0);
-                    pdf.setTextColor(44, 62, 80);
-                    pdf.setFontSize(10);
-                    pdf.text(`الورقة: ${r * cols + c + 1} | الموقع: صف ${r+1}-عمود ${c+1}`, 5, 10);
+                    pdf.setTextColor(0, 0, 0);
+                    pdf.text(`P: ${r * cols + c + 1} | Row: ${r+1}, Col: ${c+1}`, 5, 10);
                 }
             }
 
-            pdf.save(`Poster_A4_${targetW/10}x${targetH/10}cm.pdf`);
-            status.innerText = "تم إنشاء الملف بنجاح!";
+            if (isPrint) {
+                pdf.autoPrint();
+                window.open(pdf.output('bloburl'), '_blank');
+            } else {
+                pdf.save(`Poster_${targetW/10}x${targetH/10}cm.pdf`);
+            }
         };
     }
 </script>
