@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة التكبير - مطابقة 100% - My Family's Mihrab</title>
+    <title>أداة التكبير الاحترافية - My Family's Mihrab</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        :root { --primary: #2c3e50; --danger: #e74c3c; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        :root { --primary: #2c3e50; --accent: #27ae60; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
         .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; background: #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
         .input-group { display: flex; flex-direction: column; text-align: right; gap: 5px; }
         label { font-weight: bold; font-size: 13px; }
         input, select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
@@ -26,9 +26,9 @@
         .grid-overlay { position: absolute; top:0; left:0; width:100%; height:100%; display:grid; pointer-events:none; }
         .grid-cell { border: 1px solid rgba(255,255,0,0.5); display: flex; align-items: center; justify-content: center; color: yellow; font-weight: bold; text-shadow: 1px 1px 2px #000; }
 
-        /* خريطة الأوراق */
+        /* خريطة الأوراق - دائماً عمودية A4 */
         #pages-view { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: #ddd; padding: 10px; }
-        .page-tile { border: 1px solid #000; background-color: white; position: relative; overflow: hidden; background-repeat: no-repeat; }
+        .page-tile { border: 1px solid #000; background-color: white; position: relative; overflow: hidden; background-repeat: no-repeat; width: 52.5px; height: 74.25px; /* نسبة A4 عمودي مصغرة */ }
         .page-label { position: absolute; top: 2px; left: 2px; background: rgba(0,0,0,0.7); color: white; padding: 1px 4px; font-size: 9px; z-index: 10; }
         .overlap-marker { position: absolute; background: rgba(189, 195, 199, 0.7); border: 1px dashed red; z-index: 5; }
     </style>
@@ -36,7 +36,7 @@
 <body>
 
 <div class="container">
-    <h2>أداة تكبير الصور (تطابق حسابي دقيق)</h2>
+    <h2 style="text-align: center;">نظام تكبير اللوحات (A4 عمودي ثابت)</h2>
     
     <div class="controls">
         <div class="input-group">
@@ -44,37 +44,37 @@
             <input type="file" id="fileIn" accept="image/*" onchange="init()">
         </div>
         <div class="input-group">
-            <label>2. العرض الكلي (سم):</label>
+            <label>2. عرض البوستر النهائي (سم):</label>
             <input type="number" id="wCm" value="60" oninput="render()">
         </div>
         <div class="input-group">
-            <label>3. الارتفاع الكلي (سم):</label>
+            <label>3. ارتفاع البوستر النهائي (سم):</label>
             <input type="number" id="hCm" value="80" oninput="render()">
         </div>
         <div class="input-group">
-            <label>4. اتجاه الورق:</label>
-            <select id="mode" onchange="render()">
-                <option value="p">A4 عمودي</option>
-                <option value="l">A4 أفقي</option>
+            <label>4. شكل البوستر المقترح:</label>
+            <select id="posterOrient" onchange="suggestDimensions()">
+                <option value="p">طولي (Portrait)</option>
+                <option value="l">عرضي (Landscape)</option>
             </select>
         </div>
     </div>
 
     <div class="btn-group">
-        <button class="btn btn-download" onclick="exportDoc(false)">حفظ PDF</button>
+        <button class="btn btn-download" onclick="exportDoc(false)">حفظ PDF (أوراق عمودية)</button>
         <button class="btn btn-print" onclick="exportDoc(true)">طباعة فورية</button>
     </div>
 
     <div class="preview-section">
         <div class="card">
-            <h4>المخطط الدليلي (الصورة الأصلية)</h4>
+            <h4>توزيع الشبكة على الأصل</h4>
             <div id="wrapper" class="img-container">
                 <img id="orig-img">
                 <div id="grid-layer" class="grid-overlay"></div>
             </div>
         </div>
         <div class="card">
-            <h4>معاينة الأوراق (مطابقة للطباعة)</h4>
+            <h4>الأوراق المطبوعة (كلها A4 عمودي)</h4>
             <div id="pages-view"></div>
         </div>
     </div>
@@ -82,7 +82,19 @@
 
 <script>
     let imgSource = "";
-    const overlapMm = 15; // 1.5 سم
+    const overlapMm = 15;
+
+    function suggestDimensions() {
+        const orient = document.getElementById('posterOrient').value;
+        const wInput = document.getElementById('wCm');
+        const hInput = document.getElementById('hCm');
+        if (orient === 'l' && parseFloat(wInput.value) < parseFloat(hInput.value)) {
+            [wInput.value, hInput.value] = [hInput.value, wInput.value];
+        } else if (orient === 'p' && parseFloat(wInput.value) > parseFloat(hInput.value)) {
+            [wInput.value, hInput.value] = [hInput.value, wInput.value];
+        }
+        render();
+    }
 
     function init() {
         const file = document.getElementById('fileIn').files[0];
@@ -102,16 +114,16 @@
         
         const wTarget = parseFloat(document.getElementById('wCm').value) * 10;
         const hTarget = parseFloat(document.getElementById('hCm').value) * 10;
-        const mode = document.getElementById('mode').value;
-        const pW = mode === 'p' ? 210 : 297;
-        const pH = mode === 'p' ? 297 : 210;
+        
+        // الطباعة دائماً A4 عمودي
+        const pW = 210; 
+        const pH = 297; 
         const effW = pW - overlapMm;
         const effH = pH - overlapMm;
 
         const cols = Math.ceil(wTarget / effW);
         const rows = Math.ceil(hTarget / effH);
 
-        // 1. ضبط شبكة الأصل
         const layer = document.getElementById('grid-layer');
         layer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
         layer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
@@ -122,7 +134,6 @@
             layer.appendChild(cell);
         }
 
-        // 2. ضبط معاينة الأوراق المنفصلة (المحاكاة الدقيقة)
         const pagesView = document.getElementById('pages-view');
         pagesView.innerHTML = '';
         const scale = 0.25; 
@@ -136,15 +147,12 @@
                 tile.style.width = pW * scale + 'px';
                 tile.style.height = pH * scale + 'px';
                 
-                // حسابات الخلفية لتطابق الـ PDF تماماً
-                // نستخدم نسبة الحجم الكلي المستهدف إلى حجم الورقة
                 tile.style.backgroundImage = `url(${imgSource})`;
                 tile.style.backgroundSize = `${(wTarget * scale)}px ${(hTarget * scale)}px`;
                 tile.style.backgroundPosition = `-${c * effW * scale}px -${r * effH * scale}px`;
 
                 tile.innerHTML = `<div class="page-label">${r*cols+c+1}</div>`;
 
-                // علامات التراكب والقص
                 if (c < cols - 1) {
                     const ov = document.createElement('div'); ov.className = 'overlap-marker';
                     ov.style.right = '0'; ov.style.top = '0'; ov.style.width = overlapMm * scale + 'px'; ov.style.height = '100%';
@@ -168,11 +176,11 @@
 
         const wTarget = parseFloat(document.getElementById('wCm').value) * 10;
         const hTarget = parseFloat(document.getElementById('hCm').value) * 10;
-        const mode = document.getElementById('mode').value;
 
-        const pdf = new jsPDF({ orientation: mode, unit: 'mm', format: 'a4' });
-        const pW = pdf.internal.pageSize.getWidth();
-        const pH = pdf.internal.pageSize.getHeight();
+        // وضعية PDF ثابتة عمودية A4
+        const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+        const pW = 210;
+        const pH = 297;
         const effW = pW - overlapMm;
         const effH = pH - overlapMm;
         const cols = Math.ceil(wTarget / effW);
@@ -181,11 +189,8 @@
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 if (r > 0 || c > 0) pdf.addPage();
-                
-                // الإزاحة في PDF تطابق تماماً إزاحة المعاينة (effW, effH)
                 pdf.addImage(img, 'JPEG', -c * effW, -r * effH, wTarget, hTarget, undefined, 'SLOW');
                 
-                // تظليل التراكب والقص
                 pdf.setFillColor(200, 200, 200);
                 if (c < cols - 1) {
                     pdf.rect(pW - overlapMm, 0, overlapMm, pH, 'F');
@@ -200,11 +205,11 @@
                 if (r < rows - 1) pdf.line(0, pH - overlapMm, pW, pH - overlapMm);
 
                 pdf.setLineDashPattern([], 0); pdf.setTextColor(0, 0, 0);
-                pdf.text(`رقم الورقة: ${r * cols + c + 1}`, 5, 10);
+                pdf.text(`P: ${r * cols + c + 1}`, 5, 10);
             }
         }
         if (isPrint) { pdf.autoPrint(); window.open(pdf.output('bloburl'), '_blank'); }
-        else { pdf.save("Poster_Final.pdf"); }
+        else { pdf.save("Mihrab_Poster_Vertical_Pages.pdf"); }
     }
 </script>
 
