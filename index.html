@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MYH Mega Interactive PDF Planner 2026-2027</title>
+    <title>MYH Ultra Premium PDF Planner 2026-2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght=300;400;500;700;900&display=swap');
 
         * {
             -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
             box-sizing: border-box;
         }
 
@@ -39,164 +38,135 @@
             flex-direction: column;
         }
 
-        /* حيلة إجبار المتصفح على إظهار كافة التفاصيل والخطوط والخلفيات عند التصدير للـ PDF */
-        .ruled-light { background-image: linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px) !important; background-size: 100% 22px !important; }
-        .ruled-wide { background-image: linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px) !important; background-size: 100% 26px !important; }
-        .dot-light { background-image: radial-gradient(circle, rgba(100, 100, 100, 0.15) 0.8px, transparent 0.8px) !important; background-size: 18px 18px !important; }
-
-        .sidebar-tab { transition: all 0.15s ease; }
-        .sidebar-tab.active { background: #2d4a43; color: #e5ad35; font-weight: 700; }
-
-        .mini-day {
-            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-            font-size: 10px; border-radius: 4px; cursor: pointer; transition: all 0.1s;
+        /* تنسيقات الأسطر والنقاط المحمية للمتصفح والطباعة */
+        .ruled-line-box {
+            border-bottom: 1px dashed rgba(100, 149, 237, 0.2) !important;
+            height: 24px;
         }
-        .mini-day:hover { background: #2d4a43; color: white; }
-        .mini-day.weekend { color: #c05c46; font-weight: bold; background: #fffaf8; }
+        .dot-cell {
+            border: 1px dotted rgba(150, 150, 150, 0.25) !important;
+            height: 20px;
+        }
 
+        .sidebar-tab.active { background: #2d4a43; color: #e5ad35; font-weight: 700; }
         .bottom-days-slider::-webkit-scrollbar { height: 3px; }
         .bottom-days-slider::-webkit-scrollbar-thumb { background: #2d4a43; border-radius: 2px; }
         
         .day-bubble {
             flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: bold; cursor: pointer; transition: all 0.15s;
+            font-size: 10px; font-weight: bold; cursor: pointer;
             border: 1px solid #e5e7eb; background: white;
         }
-        .day-bubble.active { background: #2d4a43; color: #e5ad35; border-color: #1b2b26; transform: scale(1.1); }
+        .day-bubble.active { background: #2d4a43; color: #e5ad35; border-color: #1b2b26; }
 
         .view-content { width: 100%; height: 100%; overflow: hidden; }
         .view-content.hidden { display: none !important; }
         
         #pdf-print-container { display: none; }
 
-        /* تفعيل القوانين الصارمة لحفظ الروابط والتفاصيل الكاملة أثناء التصدير للـ PDF */
+        /* قوالب وإعدادات الطباعة الصارمة والنهائية للـ PDF */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
             body, html { background: white !important; overflow: visible !important; height: auto !important; width: auto !important; }
             .no-print, #bottom-timeline-bar, .ipad-container { display: none !important; }
             #pdf-print-container { display: block !important; width: 1024px !important; }
+            
             .pdf-page {
                 width: 1024px !important;
-                height: 748px !important; /* تقليص طفيف لمنع تولد صفحات بيضاء فارغة */
+                height: 735px !important; 
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
                 position: relative !important;
                 overflow: hidden !important;
                 background: white !important;
                 box-sizing: border-box !important;
-                padding: 25px !important;
+                padding: 20px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
             }
             a { text-decoration: none !important; color: inherit !important; }
+            
+            /* حماية شريط الأيام السفلي المطبوع داخل الـ PDF */
+            .pdf-footer-timeline {
+                display: flex !important;
+                width: 100% !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                background: #f4f6f5 !important;
+                padding: 6px 10px !important;
+                border-radius: 6px !important;
+                border: 1px solid #e2e8f0 !important;
+                margin-top: auto !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- الواجهة الرقمية للمتصفح -->
     <div class="ipad-container no-print">
         <div class="flex flex-1 relative overflow-hidden w-full h-full">
 
-            <!-- شريط التنقل الجانبي -->
             <aside class="w-24 bg-[#1b2b26] text-stone-300 flex flex-col items-center py-3 z-20">
                 <div class="text-center mb-2 cursor-pointer" onclick="switchView('welcome')">
                     <span class="text-xl font-black text-[#e5ad35] block">MYH</span>
-                    <span class="text-[7px] text-stone-500 block uppercase">PREMIUM</span>
                 </div>
-
                 <div class="w-full px-2 flex flex-col gap-1 mb-2">
                     <button onclick="setMode('work')" id="mode-btn-work" class="w-full py-1.5 text-[9px] font-bold text-center rounded bg-[#2d4a43] text-[#e5ad35]">🎨 العملي</button>
                     <button onclick="setMode('personal')" id="mode-btn-personal" class="w-full py-1.5 text-[9px] font-bold text-center rounded bg-[#14201c] text-stone-400">🍏 الشخصي</button>
                 </div>
-
                 <div class="flex flex-col gap-0.5 w-full px-1 mb-2 border-b border-stone-800 pb-2 text-[9px]">
                     <button onclick="switchView('welcome')" class="w-full py-1 hover:bg-[#253c35] text-stone-300 rounded">🏠 المحطة</button>
                     <button onclick="switchView('yearly')" class="w-full py-1 hover:bg-[#253c35] text-stone-300 rounded">📅 السنوي</button>
                 </div>
-
                 <div class="flex-1 w-full overflow-y-auto custom-scroll px-1" id="sidebar-months-list"></div>
-                <button onclick="switchView('daily')" class="mt-2 w-full py-2 text-[10px] font-bold bg-[#14201c] text-[#e5ad35] text-center">📖 عرض اليوم</button>
             </aside>
 
-            <!-- المحتوى التفاعلي الرئيسي -->
             <main class="flex-1 relative flex flex-col p-5 overflow-hidden" style="margin-right: 96px;">
-                
                 <div id="view-welcome" class="view-content flex flex-col justify-between h-full">
                     <div>
-                        <div class="border-b pb-2 mb-3 flex justify-between items-center">
-                            <div>
-                                <h1 class="text-lg font-bold text-[#1b2b26]">تصدير المخطط الكامل العبقري بنظام عزل وحفظ الروابط</h1>
-                                <p class="text-xs text-stone-500">من يونيو 2026 إلى ديسمبر 2027 (حفظ التفاصيل التناظرية والارتباطات)</p>
-                            </div>
+                        <div class="border-b pb-2 mb-3">
+                            <h1 class="text-lg font-bold text-[#1b2b26]">محرك التصدير الاحترافي مع تجميد شريط الأيام السفلي بالـ PDF</h1>
+                            <p class="text-xs text-stone-500">تم حل مشكلة السطور واختفاء الأشرطة عند تفعيل حفظ الملف</p>
                         </div>
-
-                        <div class="bg-amber-50 border border-amber-200 rounded p-3 text-xs text-amber-900 leading-relaxed mb-4">
-                            <h4 class="font-bold mb-1">🛠️ هام جداً لنجاح التصدير:</h4>
-                            <p>عند الضغط على زر التصدير أدناه، ستفتح قائمة طباعة المتصفح. لضمان الحفاظ على الخلفيات المنقطة والمسطرة، <strong>يجب تفعيل خيار "رسومات الخلفية" (Background Graphics)</strong> من الإعدادات الإضافية للطباعة، واختيار حجم ورقة <strong>A4 بمحاذاة عرضية (Landscape)</strong>.</p>
+                        <div class="bg-emerald-50 border border-emerald-200 rounded p-3 text-xs text-emerald-900 mb-4">
+                            <h4 class="font-bold mb-1">💡 ميزة شريط الأيام المدمج بالـ PDF:</h4>
+                            <p>الملف المصدر سيحتوي الآن على <strong>شريط أيام حقيقي أسفل كل صفحة داخل الـ PDF</strong>. يمكنك الضغط على أي رقم يوم داخل الملف على الآيباد للتنقل الفوري والسلس دون الحاجة للعودة للفهرس.</p>
                         </div>
-
-                        <h3 class="text-xs font-bold text-stone-700 mb-2">📥 تصدير شهري مستقل كـ HTML خفيف:</h3>
-                        <div class="grid grid-cols-4 gap-1.5 overflow-y-auto max-h-[240px] p-1 custom-scroll bg-stone-50 border rounded" id="dashboard-export-grid"></div>
                     </div>
-
-                    <div class="border-t pt-3">
-                        <button onclick="compileAndDownloadFullInteractivePDF()" class="w-full bg-emerald-700 text-white py-4 rounded-lg shadow-xl hover:bg-emerald-800 transition font-black text-sm text-center">
-                            🚀 تصدير المخطط كاملاً بصيغة PDF تفاعلي (حفظ الأسطر والروابط 100%)
-                        </button>
-                    </div>
+                    <button onclick="compileAndDownloadFullInteractivePDF()" class="w-full bg-emerald-700 text-white py-4 rounded-lg shadow-xl font-black text-sm">
+                        🚀 تصدير المخطط كاملاً بصيغة PDF تفاعلي (أشرطة سفلية وروابط محمية 100%)
+                    </button>
                 </div>
 
-                <!-- العرض السنوي -->
                 <div id="view-yearly" class="view-content hidden flex flex-col">
-                    <div class="grid grid-cols-4 gap-2 overflow-y-auto flex-1 custom-scroll" id="mega-yearly-grid"></div>
+                    <div class="grid grid-cols-4 gap-2 overflow-y-auto flex-1" id="mega-yearly-grid"></div>
                 </div>
 
-                <!-- العرض اليومي للمتصفح -->
                 <div id="view-daily" class="view-content hidden flex flex-col justify-between h-full">
                     <div class="flex-1 flex flex-col overflow-hidden">
                         <div class="flex justify-between items-start mb-2 pb-2 border-b">
                             <div class="flex items-center gap-3">
-                                <div class="date-badge-simple w-20 flex-shrink-0 bg-white border rounded overflow-hidden">
-                                    <div class="py-0.5 text-[9px] font-bold text-center text-white bg-[#c05c46]" id="calendar-top-month">يونيو 2026</div>
-                                    <div class="text-center py-1">
-                                        <div class="text-xl font-black text-stone-800" id="calendar-main-day">1</div>
-                                        <div class="text-[9px] text-stone-400 font-bold" id="calendar-day-name">الإثنين</div>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col gap-0.5">
-                                    <span id="current-mode-badge" class="w-fit text-[9px] bg-[#2d4a43] text-[#e5ad35] font-bold px-1.5 py-0.5 rounded">القسم العملي</span>
+                                <div class="date-badge-simple w-20 bg-white border rounded overflow-hidden text-center">
+                                    <div class="py-0.5 text-[9px] text-white bg-[#c05c46]" id="calendar-top-month">يونيو 2026</div>
+                                    <div class="text-xl font-black text-stone-800 py-1" id="calendar-main-day">1</div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- شبكات العرض -->
-                        <div id="sub-view-work" class="daily-sub-view flex-1 flex flex-col gap-2 overflow-hidden">
-                            <div class="border rounded p-1.5 bg-white"><div class="grid grid-cols-8 gap-1" id="classes-grid-box"></div></div>
-                            <div class="border rounded p-1.5 bg-white flex-1 grid grid-cols-3 gap-2" id="art-handwriting-cards"></div>
-                        </div>
-                        <div id="sub-view-weekend" class="daily-sub-view hidden grid grid-cols-12 gap-2 flex-1 overflow-hidden">
-                            <div class="col-span-5 border rounded bg-white p-2 flex flex-col"><div class="flex-1 border p-1 rounded bg-[#fffdfb]" id="weekend-tasks-box"></div></div>
-                            <div class="col-span-7 border rounded bg-white p-2 ruled-wide"></div>
-                        </div>
-                        <div id="sub-view-personal" class="daily-sub-view hidden grid grid-cols-12 gap-2 flex-1 overflow-hidden">
-                            <div class="col-span-4 border rounded bg-white p-2 flex flex-col"><div class="flex-1 p-1" id="personal-tasks-box"></div></div>
-                            <div class="col-span-8 border rounded bg-white p-2 flex flex-col"><div class="flex-1 border border-stone-200 bg-white"></div></div>
-                        </div>
                     </div>
-                    <div class="text-center text-[8px] font-mono text-stone-400 mt-1" id="page-number-display">PAGE 1</div>
                 </div>
             </main>
         </div>
-
         <footer id="bottom-timeline-bar" class="h-12 bg-stone-100 border-t flex items-center px-4 gap-2 z-30">
             <div class="flex-1 flex gap-1 overflow-x-auto bottom-days-slider py-1 h-full items-center" id="bottom-days-container"></div>
         </footer>
     </div>
 
-    <!-- حاوية بناء صفحات الـ PDF المخفية (تُستدعى للطباعة والتصدير فقط) -->
     <div id="pdf-print-container"></div>
 
     <script>
@@ -211,18 +181,17 @@
         function initMainEngine() {
             const sidebar = document.getElementById('sidebar-months-list');
             const megaGrid = document.getElementById('mega-yearly-grid');
-            const dashGrid = document.getElementById('dashboard-export-grid');
 
             timeline.forEach(({ y, m }) => {
                 const tab = document.createElement('button');
-                tab.className = "sidebar-tab w-full py-1 text-[9px] text-center block text-stone-400";
+                tab.className = "sidebar-tab w-full py-1 text-[9px] text-stone-400";
                 tab.textContent = `${arabicMonths[m]} ${String(y).substring(2)}`;
                 tab.onclick = () => selectDailyDate(y, m, 1);
                 sidebar.appendChild(tab);
 
                 const box = document.createElement('div');
                 box.className = 'border p-1 bg-white rounded';
-                let html = `<div class="text-[9px] font-bold text-center mb-1 bg-stone-50 py-0.5">${arabicMonths[m]} ${y}</div><div class="grid grid-cols-7 gap-0.5">`;
+                let html = `<div class="text-[9px] font-bold text-center bg-stone-50 py-0.5">${arabicMonths[m]} ${y}</div><div class="grid grid-cols-7 gap-0.5">`;
                 let daysInMonth = new Date(y, m + 1, 0).getDate();
                 for(let d=1; d<=daysInMonth; d++) {
                     html += `<div onclick="selectDailyDate(${y},${m},${d})" class="mini-day text-center text-[8px]">${d}</div>`;
@@ -230,12 +199,6 @@
                 html += `</div>`;
                 box.innerHTML = html;
                 megaGrid.appendChild(box);
-
-                const btn = document.createElement('button');
-                btn.className = "p-1 bg-white border rounded text-[9px]";
-                btn.onclick = () => generateSingleMonthFile(y, m);
-                btn.innerHTML = `<b>${arabicMonths[m]} ${y}</b>`;
-                dashGrid.appendChild(btn);
             });
             updateBottomDaysSlider();
         }
@@ -258,46 +221,39 @@
             selectedDate = new Date(year, month, day);
             document.getElementById('view-welcome').classList.add('hidden');
             document.getElementById('view-yearly').classList.add('hidden');
-            document.getElementById('view-daily').classList.remove('hidden');
-            
-            document.getElementById('calendar-top-month').textContent = `${arabicMonths[month]} ${year}`;
-            document.getElementById('calendar-main-day').textContent = day;
-            document.getElementById('calendar-day-name').textContent = arabicDays[selectedDate.getDay()];
             updateBottomDaysSlider();
         }
 
         function switchView(v) {
             document.getElementById('view-welcome').classList.toggle('hidden', v !== 'welcome');
             document.getElementById('view-yearly').classList.toggle('hidden', v !== 'yearly');
-            document.getElementById('view-daily').classList.toggle('hidden', v !== 'daily');
         }
 
-        // ==========================================
-        // محرك التصدير المصلح لحفظ الروابط والتفاصيل بنسبة 100%
-        // ==========================================
+        // ==========================================================
+        // محرك التجميع الاحترافي المصلح كلياً لطباعة السطور والشريط السفلي
+        // ==========================================================
         function compileAndDownloadFullInteractivePDF() {
             const printContainer = document.getElementById('pdf-print-container');
             printContainer.innerHTML = ''; 
 
-            // الصفحة الأولى: الفهرس العام والربط الشامل
+            // 1. الفهرس الرئيسي والتقويم السنوي الشامل بالروابط
             let indexPage = document.createElement('div');
             indexPage.className = "pdf-page";
             indexPage.id = "pdf-index-page";
             
-            let indexHtml = `<h1 style="font-size:20px; font-weight:bold; color:#1b2b26; border-bottom:2px solid #2d4a43; padding-bottom:8px; margin-bottom:15px;">مخطط MYH الرقمي المترابط (٢٠٢٦ - ٢٠٢٧)</h1>`;
+            let indexHtml = `<h1 style="font-size:18px; font-weight:bold; color:#1b2b26; border-bottom:2px solid #2d4a43; padding-bottom:6px; margin-bottom:12px;">مخطط MYH الرقمي المترابط والأكاديمي (٢٠٢٦ - ٢٠٢٧)</h1>`;
             indexHtml += `<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;">`;
             
             timeline.forEach(({ y, m }) => {
-                indexHtml += `<div style="border:1px solid #eee; padding:4px; background:#fff;">`;
-                indexHtml += `<div style="font-size:9px; font-weight:bold; text-align:center; background:#f4f4f4; color:#2d4a43; padding:2px; margin-bottom:4px;">${arabicMonths[m]} ${y}</div>`;
+                indexHtml += `<div style="border:1px solid #e2e8f0; padding:4px; background:#fff; border-radius:4px;">`;
+                indexHtml += `<div style="font-size:9px; font-weight:bold; text-align:center; background:#f1f5f9; color:#1e293b; padding:2px; margin-bottom:4px; border-radius:2px;">${arabicMonths[m]} ${y}</div>`;
                 indexHtml += `<div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:1px;">`;
                 
                 let firstDay = new Date(y, m, 1).getDay();
                 let daysInMonth = new Date(y, m + 1, 0).getDate();
                 for(let i=0; i<firstDay; i++) indexHtml += `<div></div>`;
                 for(let d=1; d<=daysInMonth; d++) {
-                    // استخدام وسوم مرجعية ثابتة ومحمية يفهمها محرك الـ PDF لضمان بقاء الرابط فعالاً
-                    indexHtml += `<a href="#day-${y}-${m}-${d}" style="display:block; text-align:center; font-size:8px; padding:2px; background:#fafafa; border:0.5px solid #eaeaea; font-weight:bold;">${d}</a>`;
+                    indexHtml += `<a href="#day-${y}-${m}-${d}" style="display:block; text-align:center; font-size:8px; padding:2px; background:#f8fafc; border:1px solid #e2e8f0; font-weight:bold; border-radius:2px;">${d}</a>`;
                 }
                 indexHtml += `</div></div>`;
             });
@@ -305,7 +261,7 @@
             indexPage.innerHTML = indexHtml;
             printContainer.appendChild(indexPage);
 
-            // توليد باقي صفحات الأيام الـ 570+ بأسطرها وتفاصيلها الكاملة
+            // 2. توليد الصفحات اليومية المصلحة مع حماية السطور والشريط السفلي الحقيقي
             timeline.forEach(({ y, m }) => {
                 let daysInMonth = new Date(y, m + 1, 0).getDate();
                 for(let d=1; d<=daysInMonth; d++) {
@@ -317,58 +273,87 @@
                     dayPage.className = "pdf-page";
                     dayPage.id = `day-${y}-${m}-${d}`; 
 
+                    // الهيدر والترويسة العلوية
                     let pageHtml = `
-                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:6px; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #e2e8f0; padding-bottom:6px; margin-bottom:10px;">
                             <div style="display:flex; align-items:center; gap:12px;">
-                                <div style="border:1px solid #ccc; text-align:center; width:80px; background:#fff;">
+                                <div style="border:1px solid #cbd5e1; text-align:center; width:85px; background:#fff; border-radius:4px; overflow:hidden;">
                                     <div style="background:#c05c46; color:white; font-size:9px; font-weight:bold; padding:2px 0;">${arabicMonths[m]} ${y}</div>
-                                    <div style="font-size:20px; font-weight:900;">${d}</div>
-                                    <div style="font-size:8px; color:#555; font-weight:bold;">${arabicDays[dayOfWeek]}</div>
+                                    <div style="font-size:20px; font-weight:900; color:#0f172a;">${d}</div>
+                                    <div style="font-size:8px; color:#475569; font-weight:bold; background:#f1f5f9; padding:2px 0;">${arabicDays[dayOfWeek]}</div>
                                 </div>
                                 <div>
-                                    <h2 style="font-size:13px; font-weight:bold; color:#1b2b26; margin:0;">مخطط MYH اليومي الشامل</h2>
-                                    <a href="#pdf-index-page" style="font-size:9px; color:#2d4a43; font-weight:bold; text-decoration:underline;">⬅ العودة إلى الفهرس والتقويم السنوي</a>
+                                    <h2 style="font-size:13px; font-weight:bold; color:#1b2b26; margin:0;">مخطط MYH الاحترافي الشامل</h2>
+                                    <a href="#pdf-index-page" style="font-size:9px; color:#2d4a43; font-weight:bold; text-decoration:underline;">🏠 العودة للتقويم الرئيسي</a>
                                 </div>
                             </div>
+                            <span style="font-size:9px; font-weight:bold; color:#94a3b8; font-family:mono;">MYH PREMIUM WORKFLOW</span>
                         </div>
                     `;
 
+                    // حقن المحتوى الإنشائي الثابت المقاوم للحذف أو الاختفاء
                     if (!isWeekend) {
                         pageHtml += `
-                            <div style="border:1px solid #e0e0e0; padding:8px; margin-bottom:8px; background:white;">
-                                <span style="font-size:10px; font-weight:bold; display:block; margin-bottom:4px; color:#333;">📋 الحصص الأكاديمية (شبكة منقطة بدقة للرسم والكتابة):</span>
+                            <div style="border:1px solid #cbd5e1; border-radius:4px; padding:8px; margin-bottom:8px; background:white;">
+                                <span style="font-size:10px; font-weight:bold; display:block; margin-bottom:4px; color:#334155;">📋 شبكة الحصص والأكاديمية المهنية (منقطة ثابتة):</span>
                                 <div style="display:grid; grid-template-columns: repeat(8, 1fr); gap:4px;">
-                                    ${Array(8).fill(0).map((_, i) => `<div style="text-align:center;"><div style="font-size:8px; background:#f5f5f5; margin-bottom:2px;">${i+1}</div><div class="dot-light" style="height:50px; border:1px solid #e5e5e5; border-radius:3px;"></div></div>`).join('')}
+                                    ${Array(8).fill(0).map((_, i) => `
+                                        <div style="text-align:center; border:1px solid #e2e8f0; border-radius:3px;">
+                                            <div style="font-size:8px; background:#f1f5f9; color:#475569; padding:2px 0; font-weight:bold;">الحصة ${i+1}</div>
+                                            <div style="display:grid; grid-template-rows: repeat(3, 1fr); background:white;">
+                                                <div class="dot-cell"></div><div class="dot-cell"></div><div class="dot-cell"></div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
                                 </div>
                             </div>
-                            <div style="border:1px solid #e0e0e0; padding:8px; background:white;">
-                                <span style="font-size:10px; font-weight:bold; display:block; margin-bottom:4px; color:#333;">🎨 بطاقات وملاحظات التحضير الفني الأكاديمي الشامل (قالب مسطر عريض):</span>
+                            <div style="border:1px solid #cbd5e1; border-radius:4px; padding:8px; background:white; margin-bottom:10px;">
+                                <span style="font-size:10px; font-weight:bold; display:block; margin-bottom:4px; color:#334155;">🎨 بطاقات وملاحظات التحضير الإبداعي الهندسي والفني (خطوط مسطرة حقيقية ثابته):</span>
                                 <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
-                                    ${Array(3).fill(0).map((_, i) => `<div style="border:1px solid #e5e5e5;"><div style="background:#fafafa; font-size:8px; padding:3px; border-bottom:1px solid #e5e5e5;">بطاقة تحضير 0${i+1}</div><div class="ruled-wide" style="height:440px;"></div></div>`).join('')}
+                                    ${Array(3).fill(0).map((_, i) => `
+                                        <div style="border:1px solid #e2e8f0; border-radius:3px; overflow:hidden; background:white;">
+                                            <div style="background:#f8fafc; font-size:8px; padding:3px; font-weight:bold; border-bottom:1px solid #e2e8f0; color:#475569;">بطاقة تحضير فني 0${i+1}</div>
+                                            <div style="padding:2px;">
+                                                ${Array(12).fill(0).map(() => `<div class="ruled-line-box"></div>`).join('')}
+                                            </div>
+                                        </div>
+                                    `).join('')}
                                 </div>
                             </div>
                         `;
                     } else {
                         pageHtml += `
-                            <div style="display:grid; grid-template-columns: 4fr 8fr; gap:12px; height:80%;">
-                                <div style="border:1px solid #e0e0e0; padding:8px; background:white;">
-                                    <span style="font-size:10px; font-weight:bold; color:#c05c46; display:block; border-bottom:1px solid #eee; padding-bottom:2px; margin-bottom:6px;">🌿 مهام وإجازة نهاية الأسبوع</span>
-                                    <div class="ruled-light" style="height:520px;"></div>
+                            <div style="display:grid; grid-template-columns: 5fr 7fr; gap:12px; margin-bottom:10px;">
+                                <div style="border:1px solid #cbd5e1; border-radius:4px; padding:8px; background:white;">
+                                    <span style="font-size:10px; font-weight:bold; color:#c05c46; display:block; border-bottom:1px solid #e2e8f0; padding-bottom:4px; margin-bottom:6px;">🌿 مهام وإجازة نهاية الأسبوع</span>
+                                    ${Array(18).fill(0).map(() => `<div class="ruled-line-box" style="display:flex; align-items:center;"><div style="width:10px; height:10px; border:1px solid #ccc; margin-left:6px; border-radius:2px;"></div></div>`).join('')}
                                 </div>
-                                <div style="border:1px solid #e0e0e0; padding:8px; background:white;">
-                                    <span style="font-size:10px; font-weight:bold; color:#333; display:block; border-bottom:1px solid #eee; padding-bottom:2px; margin-bottom:6px;">📝 تأملات ومفكرة الأسبوع القادم (تطوير هندسي فني)</span>
-                                    <div class="ruled-wide" style="height:520px;"></div>
+                                <div style="border:1px solid #cbd5e1; border-radius:4px; padding:8px; background:white;">
+                                    <span style="font-size:10px; font-weight:bold; color:#334155; display:block; border-bottom:1px solid #e2e8f0; padding-bottom:4px; margin-bottom:6px;">📝 تأملات، حسابات مالية ومفكرة الأسبوع القادم</span>
+                                    ${Array(18).fill(0).map(() => `<div class="ruled-line-box"></div>`).join('')}
                                 </div>
                             </div>
                         `;
                     }
+
+                    // ➔ العبقرية البرمجية لحل شريط الأيام السفلي داخل الـ PDF:
+                    // بناء شريط متكامل ثابت ومطبوع أسفل كل صفحة، ومربوط بروابط حقيقية تعمل على الكود المطلق للملف!
+                    pageHtml += `<div class="pdf-footer-timeline">`;
+                    pageHtml += `<span style="font-size:8px; font-weight:bold; color:#1b2b26; background:#e2e8f0; padding:2px 6px; border-radius:3px;">أيام الشهر ➔</span>`;
+                    pageHtml += `<div style="display:flex; gap:3px;">`;
+                    for(let btnDay=1; btnDay<=daysInMonth; btnDay++) {
+                        let isCurrent = (btnDay === d);
+                        let bgStyle = isCurrent ? "background:#2d4a43 !important; color:#e5ad35 !important; border:1px solid #1b2b26 !important;" : "background:#ffffff !important; color:#334155 !important; border:1px solid #cbd5e1 !important;";
+                        pageHtml += `<a href="#day-${y}-${m}-${btnDay}" style="display:flex; align-items:center; justify-content:center; width:22px; height:22px; font-size:8px; font-weight:bold; border-radius:50%; ${bgStyle} text-decoration:none;">${btnDay}</a>`;
+                    }
+                    pageHtml += `</div></div>`;
 
                     dayPage.innerHTML = pageHtml;
                     printContainer.appendChild(dayPage);
                 }
             });
 
-            // بدء التصدير الفوري
+            // بدء تفعيل نافذة الحفظ الفوري
             setTimeout(() => { window.print(); }, 500);
         }
 
