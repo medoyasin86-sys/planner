@@ -3,215 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة التكبير الاحترافية - My Family's Mihrab</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>MYH Professional Art Planner 2026-2027</title>
+    <!-- Tailwind CSS للتحكم في التنسيق المرن وسرعة الاستجابة -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --primary: #2c3e50; --accent: #27ae60; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .input-group { display: flex; flex-direction: column; text-align: right; gap: 5px; }
-        label { font-weight: bold; font-size: 13px; }
-        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
-        .btn-download { background: #27ae60; } .btn-print { background: #2980b9; }
-        
-        .preview-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { border: 1px solid #ddd; padding: 15px; border-radius: 10px; text-align: center; }
-
-        /* خريطة الأصل */
-        .img-container { position: relative; display: inline-block; border: 2px solid #000; overflow: hidden; }
-        #orig-img { max-width: 100%; height: auto; display: block; }
-        .grid-overlay { position: absolute; top:0; left:0; width:100%; height:100%; display:grid; pointer-events:none; }
-        .grid-cell { border: 1px solid rgba(255,255,0,0.5); display: flex; align-items: center; justify-content: center; color: yellow; font-weight: bold; text-shadow: 1px 1px 2px #000; }
-
-        /* خريطة الأوراق - دائماً عمودية A4 */
-        #pages-view { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: #ddd; padding: 10px; }
-        .page-tile { border: 1px solid #000; background-color: white; position: relative; overflow: hidden; background-repeat: no-repeat; width: 52.5px; height: 74.25px; /* نسبة A4 عمودي مصغرة */ }
-        .page-label { position: absolute; top: 2px; left: 2px; background: rgba(0,0,0,0.7); color: white; padding: 1px 4px; font-size: 9px; z-index: 10; }
-        .overlap-marker { position: absolute; background: rgba(189, 195, 199, 0.7); border: 1px dashed red; z-index: 5; }
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        body { font-family: 'Tajawal', sans-serif; background-color: #f7f5f0; color: #333; }
+        /* أبعاد مخصصة ومثالية لشاشة iPad 10.2 بنسبة 4:3 */
+        .ipad-canvas { width: 1024px; height: 768px; max-width: 1024px; max-height: 768px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen bg-stone-200 p-2">
 
-<div class="container">
-    <h2 style="text-align: center;">نظام تكبير اللوحات (A4 عمودي ثابت)</h2>
-    
-    <div class="controls">
-        <div class="input-group">
-            <label>1. ارفع الصورة:</label>
-            <input type="file" id="fileIn" accept="image/*" onchange="init()">
-        </div>
-        <div class="input-group">
-            <label>2. عرض البوستر النهائي (سم):</label>
-            <input type="number" id="wCm" value="60" oninput="render()">
-        </div>
-        <div class="input-group">
-            <label>3. ارتفاع البوستر النهائي (سم):</label>
-            <input type="number" id="hCm" value="80" oninput="render()">
-        </div>
-        <div class="input-group">
-            <label>4. شكل البوستر المقترح:</label>
-            <select id="posterOrient" onchange="suggestDimensions()">
-                <option value="p">طولي (Portrait)</option>
-                <option value="l">عرضي (Landscape)</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="btn-group">
-        <button class="btn btn-download" onclick="exportDoc(false)">حفظ PDF (أوراق عمودية)</button>
-        <button class="btn btn-print" onclick="exportDoc(true)">طباعة فورية</button>
-    </div>
-
-    <div class="preview-section">
-        <div class="card">
-            <h4>توزيع الشبكة على الأصل</h4>
-            <div id="wrapper" class="img-container">
-                <img id="orig-img">
-                <div id="grid-layer" class="grid-overlay"></div>
+    <!-- الحاوية الرئيسية للبلانر بأبعاد الآيباد الثابتة -->
+    <div class="ipad-canvas bg-[#faf9f5] shadow-2xl rounded-xl overflow-hidden flex flex-row relative border border-stone-300">
+        
+        <!-- ================= الشريط الجانبي الثابت (SIDEBAR) ================= -->
+        <aside class="w-20 bg-[#1e2522] text-stone-300 flex flex-col items-center py-4 justify-between z-10 border-l border-stone-800">
+            <div class="flex flex-col items-center gap-1 w-full">
+                <span class="text-xs font-bold text-[#d4af37] tracking-wider mb-2">MYH</span>
+                <button onclick="switchView('yearly')" class="w-full py-1 text-[11px] font-medium text-center hover:bg-stone-800 transition mb-2 border-b border-stone-800 pb-2">التقويم</button>
+                
+                <!-- أزرار الشهور من يوليو 2026 إلى يوليو 2027 -->
+                <div class="flex flex-col gap-0.5 w-full overflow-y-auto hide-scrollbar max-h-[480px]">
+                    <button onclick="goToMonth(2026, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-6">يوليو 26</button>
+                    <button onclick="goToMonth(2026, 7)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-7">أغسطس</button>
+                    <button onclick="goToMonth(2026, 8)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-8">سبتمبر</button>
+                    <button onclick="goToMonth(2026, 9)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-9">أكتوبر</button>
+                    <button onclick="goToMonth(2026, 10)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-10">نوفمبر</button>
+                    <button onclick="goToMonth(2026, 11)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-11">ديسمبر</button>
+                    <button onclick="goToMonth(2027, 0)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-0">يناير 27</button>
+                    <button onclick="goToMonth(2027, 1)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-1">فبراير</button>
+                    <button onclick="goToMonth(2027, 2)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-2">مارس</button>
+                    <button onclick="goToMonth(2027, 3)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-3">أبريل</button>
+                    <button onclick="goToMonth(2027, 4)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-4">مايو</button>
+                    <button onclick="goToMonth(2027, 5)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-5">يونيو</button>
+                    <button onclick="goToMonth(2027, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-6">يوليو 27</button>
+                </div>
             </div>
-        </div>
-        <div class="card">
-            <h4>الأوراق المطبوعة (كلها A4 عمودي)</h4>
-            <div id="pages-view"></div>
-        </div>
+            <button onclick="switchView('financial')" class="w-full py-3 text-[12px] font-bold text-center bg-[#2d3a34] text-[#d4af37] hover:bg-stone-700 transition rounded-b mt-2">المالية 💰</button>
+        </aside>
+
+        <!-- ================= مساحة العرض الرئيسية (MAIN CONTAINER) ================= -->
+        <main class="flex-1 flex flex-col p-4 justify-between overflow-hidden">
+            
+            <!-- 1. واجهة التقويم السنوي -->
+            <div id="view-yearly" class="view-content flex-1 flex flex-col justify-center">
+                <h1 class="text-xl font-bold text-center text-stone-800 mb-4">التقويم السنوي ٢٠٢٦ - ٢٠٢٧</h1>
+                <div class="grid grid-cols-4 gap-3 overflow-y-auto max-h-[600px] p-2" id="yearly-grid">
+                    <!-- يتم توليد 13 شهراً تفاعلياً هنا بواسطة الـ JS -->
+                </div>
+            </div>
+
+            <!-- 2. واجهة الصفحة اليومية المخصصة (DAILY PAGE) -->
+            <div id="view-daily" class="view-content flex-1 hidden flex flex-col">
+                <!-- الهيدر ولوجو MYH -->
+                <header class="flex justify-between items-center border-b border-stone-200 pb-2 mb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-[#1e2522] text-[#d4af37] font-black px-3 py-1.5 rounded text-sm tracking-wider shadow">MYH</div>
+                        <h2 id="daily-date-title" class="text-base font-bold text-stone-700"></h2>
+                    </div>
+                    <span class="text-xs text-stone-400 font-medium">خطتك اليومية لعام الإبداع</span>
+                </header>
+
+                <!-- شبكة التقسيم الثنائي الميكرومتري -->
+                <div class="grid grid-cols-12 gap-4 flex-1 items-stretch">
+                    
+                    <!-- الجانب الأيمن (80% للعمل والفنون التشكيلية) -->
+                    <div class="col-span-7 flex flex-col justify-between">
+                        <!-- جدول الحصص الـ 8 المفرغة -->
+                        <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm mb-3">
+                            <h3 class="text-xs font-bold text-stone-600 mb-2 flex items-center gap-1">📋 جدول الحصص اليومي (التحضير المباشر)</h3>
+                            <div class="grid grid-cols-2 gap-2" id="timetable-inputs">
+                                <!-- سيتم توليد الـ 8 خانات مفرغة ومجهزة برمجياً -->
+                            </div>
+                        </div>
+
+                        <!-- المستطيلات الستة (التحضير الفني ومتابعة الخامات) -->
+                        <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex-1 flex flex-col">
+                            <h3 class="text-xs font-bold text-stone-600 mb-2">🎨 بطاقات الأفكار الفنية ومتابعة خامات الفنون</h3>
+                            <div class="grid grid-cols-2 gap-2 flex-1 items-stretch" id="art-cards">
+                                <!-- 6 بطاقات مسطرة ومجهزة -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الجانب الأيسر (الحياة اليومية والقائمة المالية والمذكرات) -->
+                    <div class="col-span-5 flex flex-col justify-between">
+                        <!-- تدوين المصروفات اليومي السريع -->
+                        <div class="bg-[#fcfaf2] p-3 rounded-lg border border-amber-100 shadow-sm mb-3">
+                            <h3 class="text-xs font-bold text-amber-900 mb-2">💰 متتبع المصروفات اليومي السريع</h3>
+                            <div class="flex gap-2">
+                                <input type="text" id="day-expense-title" placeholder="البيان (ألوان، وقود...)" class="flex-1 text-xs border border-stone-300 rounded px-2 py-1.5 bg-white">
+                                <input type="number" id="day-expense-amount" placeholder="المبلغ" class="w-20 text-xs border border-stone-300 rounded px-2 py-1.5 bg-white text-center">
+                                <button onclick="saveDayExpense()" class="bg-[#2d3a34] text-white text-xs font-bold px-3 rounded hover:bg-stone-800 transition">إضافة</button>
+                            </div>
+                            <div id="day-expenses-list" class="mt-2 text-[11px] text-stone-600 max-h-14 overflow-y-auto"></div>
+                        </div>
+
+                        <!-- قائمة المهام الشخصية والجانبية للعمل -->
+                        <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-stone-600 mb-1.5">📌 مهام العمل والمسؤوليات</h3>
+                                <textarea id="work-tasks" class="w-full h-16 text-xs p-1.5 border border-stone-200 rounded resize-none focus:outline-none focus:ring-1 focus:ring-stone-400 bg-stone-50" placeholder="• تحضير المعرض الخارجي&#10;• فرز لوحات الصف الحادي عشر..."></textarea>
+                            </div>
+                            <div class="mt-2">
+                                <h3 class="text-xs font-bold text-stone-600 mb-1.5">🍏 مهام ومذكرات الحياة الشخصية</h3>
+                                <textarea id="personal-tasks" class="w-full h-16 text-xs p-1.5 border border-stone-200 rounded resize-none focus:outline-none focus:ring-1 focus:ring-stone-400 bg-stone-50" placeholder="• مصاريف المنزل والتبضع&#10;• تمرين الأولاد ومتابعة الاختبارات..."></textarea>
+                            </div>
+                            <button onclick="saveDailyData()" class="w-full mt-2 bg-stone-700 text-white text-xs py-1 rounded font-medium hover:bg-stone-800 transition">حفظ التغييرات اليومية 💾</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= التذييل السفلي الثابت (FOOTER MINI-CALENDAR) ================= -->
+                <footer class="mt-3 bg-white border border-stone-200 rounded-lg p-2 shadow-inner">
+                    <div id="footer-calendar-container" class="flex flex-row items-center justify-between text-[11px]">
+                        <!-- يتم بناء تقويم تفاعلي للشهر الحالي هنا بالكامل -->
+                    </div>
+                </footer>
+            </div>
+
+            <!-- 3. لوحة التحكم المالية الاحترافية (FINANCIAL HUB) -->
+            <div id="view-financial" class="view-content flex-1 hidden flex flex-col overflow-y-auto max-h-[700px] p-2">
+                <h1 class="text-xl font-bold text-stone-800 mb-4 border-b pb-2">📊 السجل المالي الاحترافي الشامل (٢٠٢٦ - ٢٠٢٧)</h1>
+                
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div class="bg-white p-3 rounded-lg border shadow-sm text-center">
+                        <span class="text-xs text-stone-500 block">إجمالي الدخل المتوقع</span>
+                        <span class="text-lg font-bold text-green-700">المعاش والمدخولات الأساسية</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border shadow-sm text-center">
+                        <span class="text-xs text-stone-500 block">إجمالي مصروفات أدوات الفنون</span>
+                        <span id="fin-art-total" class="text-lg font-bold text-amber-700">0.000</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border shadow-sm text-center">
+                        <span class="text-xs text-stone-500 block">المصروفات العامة والشخصية</span>
+                        <span id="fin-general-total" class="text-lg font-bold text-stone-700">0.000</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg border shadow-sm flex-1">
+                    <h3 class="text-sm font-bold text-stone-700 mb-3">📝 سجل التدفقات المالية لجميع التواريخ</h3>
+                    <table class="w-full text-right text-xs">
+                        <thead>
+                            <tr class="bg-stone-100 border-b">
+                                <th class="p-2">التاريخ</th>
+                                <th class="p-2">البيان / الوصف</th>
+                                <th class="p-2">المبلغ المالي</th>
+                            </tr>
+                        </thead>
+                        <tbody id="financial-table-body">
+                            <!-- التحديث ديناميكي بالـ JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
     </div>
-</div>
 
-<script>
-    let imgSource = "";
-    const overlapMm = 15;
+    <!-- ================= الـ ENGINE البرمجي الذكي للبلانر (JAVASCRIPT) ================= -->
+    <script>
+        let currentDateStr = "2026-07-01"; // بداية النطاق الزمني المطلوب
+        const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
-    function suggestDimensions() {
-        const orient = document.getElementById('posterOrient').value;
-        const wInput = document.getElementById('wCm');
-        const hInput = document.getElementById('hCm');
-        if (orient === 'l' && parseFloat(wInput.value) < parseFloat(hInput.value)) {
-            [wInput.value, hInput.value] = [hInput.value, wInput.value];
-        } else if (orient === 'p' && parseFloat(wInput.value) > parseFloat(hInput.value)) {
-            [wInput.value, hInput.value] = [hInput.value, wInput.value];
-        }
-        render();
-    }
-
-    function init() {
-        const file = document.getElementById('fileIn').files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imgSource = e.target.result;
-            const img = document.getElementById('orig-img');
-            img.src = imgSource;
-            img.onload = render;
+        window.onload = function() {
+            buildYearlyGrid();
+            loadDate(currentDateStr);
+            updateFinancialHub();
         };
-        reader.readAsDataURL(file);
-    }
 
-    function render() {
-        if (!imgSource) return;
-        
-        const wTarget = parseFloat(document.getElementById('wCm').value) * 10;
-        const hTarget = parseFloat(document.getElementById('hCm').value) * 10;
-        
-        // الطباعة دائماً A4 عمودي
-        const pW = 210; 
-        const pH = 297; 
-        const effW = pW - overlapMm;
-        const effH = pH - overlapMm;
-
-        const cols = Math.ceil(wTarget / effW);
-        const rows = Math.ceil(hTarget / effH);
-
-        const layer = document.getElementById('grid-layer');
-        layer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        layer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-        layer.innerHTML = '';
-        for(let i=1; i<=(rows*cols); i++) {
-            const cell = document.createElement('div');
-            cell.className = 'grid-cell'; cell.innerText = i;
-            layer.appendChild(cell);
+        function switchView(viewId) {
+            document.querySelectorAll('.view-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
         }
 
-        const pagesView = document.getElementById('pages-view');
-        pagesView.innerHTML = '';
-        const scale = 0.25; 
+        function goToDate(dateStr) {
+            currentDateStr = dateStr;
+            loadDate(dateStr);
+            switchView('daily');
+        }
 
-        for (let r = 0; r < rows; r++) {
-            const rowDiv = document.createElement('div');
-            rowDiv.style.display = 'flex'; rowDiv.style.gap = '5px'; rowDiv.style.marginBottom = '5px';
-            for (let c = 0; c < cols; c++) {
-                const tile = document.createElement('div');
-                tile.className = 'page-tile';
-                tile.style.width = pW * scale + 'px';
-                tile.style.height = pH * scale + 'px';
+        function goToMonth(year, monthIdx) {
+            const dateStr = `${year}-${String(monthIdx+1).padStart(2, '0')}-01`;
+            goToDate(dateStr);
+        }
+
+        // بناء التقويم السنوي الشامل بداية البلانر
+        function buildYearlyGrid() {
+            const grid = document.getElementById('yearly-grid');
+            grid.innerHTML = '';
+            
+            // نطاق البلانر: يوليو 2026 إلى يوليو 2027 (13 شهراً)
+            const schedule = [
+                {y: 2026, m: 6}, {y: 2026, m: 7}, {y: 2026, m: 8}, {y: 2026, m: 9}, {y: 2026, m: 10}, {y: 2026, m: 11},
+                {y: 2027, m: 0}, {y: 2027, m: 1}, {y: 2027, m: 2}, {y: 2027, m: 3}, {y: 2027, m: 4}, {y: 2027, m: 5}, {y: 2027, m: 6}
+            ];
+
+            schedule.forEach(item => {
+                let monthBox = document.createElement('div');
+                monthBox.className = "bg-white p-2 rounded border border-stone-200 text-center shadow-sm";
+                monthBox.innerHTML = `<h3 class="text-xs font-bold text-stone-700 border-b pb-1 mb-1">${monthsNames[item.m]} ${item.y}</h3>`;
                 
-                tile.style.backgroundImage = `url(${imgSource})`;
-                tile.style.backgroundSize = `${(wTarget * scale)}px ${(hTarget * scale)}px`;
-                tile.style.backgroundPosition = `-${c * effW * scale}px -${r * effH * scale}px`;
-
-                tile.innerHTML = `<div class="page-label">${r*cols+c+1}</div>`;
-
-                if (c < cols - 1) {
-                    const ov = document.createElement('div'); ov.className = 'overlap-marker';
-                    ov.style.right = '0'; ov.style.top = '0'; ov.style.width = overlapMm * scale + 'px'; ov.style.height = '100%';
-                    tile.appendChild(ov);
-                }
-                if (r < rows - 1) {
-                    const ov = document.createElement('div'); ov.className = 'overlap-marker';
-                    ov.style.bottom = '0'; ov.style.left = '0'; ov.style.width = '100%'; ov.style.height = overlapMm * scale + 'px';
-                    tile.appendChild(ov);
-                }
-                rowDiv.appendChild(tile);
-            }
-            pagesView.appendChild(rowDiv);
-        }
-    }
-
-    async function exportDoc(isPrint) {
-        const { jsPDF } = window.jspdf;
-        const img = document.getElementById('orig-img');
-        if (!img.src) return;
-
-        const wTarget = parseFloat(document.getElementById('wCm').value) * 10;
-        const hTarget = parseFloat(document.getElementById('hCm').value) * 10;
-
-        // وضعية PDF ثابتة عمودية A4
-        const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-        const pW = 210;
-        const pH = 297;
-        const effW = pW - overlapMm;
-        const effH = pH - overlapMm;
-        const cols = Math.ceil(wTarget / effW);
-        const rows = Math.ceil(hTarget / effH);
-
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
-                if (r > 0 || c > 0) pdf.addPage();
-                pdf.addImage(img, 'JPEG', -c * effW, -r * effH, wTarget, hTarget, undefined, 'SLOW');
+                let daysGrid = document.createElement('div');
+                daysGrid.className = "grid grid-cols-7 gap-0.5 text-[9px]";
                 
-                pdf.setFillColor(200, 200, 200);
-                if (c < cols - 1) {
-                    pdf.rect(pW - overlapMm, 0, overlapMm, pH, 'F');
-                    pdf.setTextColor(255, 255, 255); pdf.text("PASTE HERE", pW - (overlapMm/2), pH/2, { angle: 90, align: 'center' });
+                let totalDays = new Date(item.y, item.m + 1, 0).getDate();
+                for(let d=1; d<=totalDays; d++) {
+                    let dStr = `${item.y}-${String(item.m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                    daysGrid.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer hover:bg-amber-100 rounded py-0.5">${d}</span>`;
                 }
-                if (r < rows - 1) {
-                    pdf.rect(0, pH - overlapMm, pW, overlapMm, 'F');
-                    pdf.setTextColor(255, 255, 255); pdf.text("PASTE HERE", pW/2, pH - (overlapMm/2), { align: 'center' });
-                }
-                pdf.setDrawColor(255, 0, 0); pdf.setLineDashPattern([2, 2], 0);
-                if (c < cols - 1) pdf.line(pW - overlapMm, 0, pW - overlapMm, pH);
-                if (r < rows - 1) pdf.line(0, pH - overlapMm, pW, pH - overlapMm);
-
-                pdf.setLineDashPattern([], 0); pdf.setTextColor(0, 0, 0);
-                pdf.text(`P: ${r * cols + c + 1}`, 5, 10);
-            }
+                monthBox.appendChild(daysGrid);
+                grid.appendChild(monthBox);
+            });
         }
-        if (isPrint) { pdf.autoPrint(); window.open(pdf.output('bloburl'), '_blank'); }
-        else { pdf.save("Mihrab_Poster_Vertical_Pages.pdf"); }
-    }
-</script>
 
+        // تحميل وعرض بيانات التواريخ اليومية المستهدفة
+        function loadDate(dateStr) {
+            const dateObj = new Date(dateStr);
+            document.getElementById('daily-date-title').innerText = `${dateObj.getDate()} ${monthsNames[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+            
+            // تحديد حالة التبويب النشط بالشريط الجانبي
+            document.querySelectorAll('.month-tab').forEach(b => b.classList.remove('bg-stone-800', 'text-[#d4af37]'));
+            const activeTab = document.querySelector(`.month-tab[data-m="${dateObj.getFullYear()}-${dateObj.getMonth()}"]`);
+            if(activeTab) activeTab.classList.add('bg-stone-800', 'text-[#d4af37]');
+
+            // بناء الـ 8 حصص المفرغة المخصصة للمعلم
+            const timetable = document.getElementById('timetable-inputs');
+            timetable.innerHTML = '';
+            let savedData = JSON.parse(localStorage.getItem(`MYH_${dateStr}`)) || {};
+            
+            for(let i=1; i<=8; i++) {
+                let val = savedData[`class_${i}`] || '';
+                timetable.innerHTML += `
+                    <div class="flex items-center gap-1">
+                        <span class="text-[10px] font-bold text-stone-400 w-3">${i}</span>
+                        <input type="text" id="class_${i}" value="${val}" class="w-full text-xs border border-stone-200 bg-stone-50 rounded px-1.5 py-1 focus:bg-white" placeholder="اضغط للكتابة...">
+                    </div>`;
+            }
+
+            // بناء البطاقات الفنية الستة المسطرة
+            const cards = document.getElementById('art-cards');
+            cards.innerHTML = '';
+            for(let c=1; c<=6; c++) {
+                let textVal = savedData[`card_${c}`] || '';
+                cards.innerHTML += `
+                    <div class="border border-stone-200 rounded p-1.5 flex flex-col justify-between bg-[#faf9f6]">
+                        <span class="text-[9px] font-bold text-stone-400 block mb-1">بطاقة التحضير والبيانات ${c}</span>
+                        <textarea id="card_${c}" class="w-full flex-1 text-xs bg-transparent resize-none focus:outline-none leading-relaxed border-t border-dashed pt-1" placeholder="تجهيز فكرة الدرس، الخامات الفنية...">${textVal}</textarea>
+                    </div>`;
+            }
+
+            // تحميل مهام العمل والحياة الشخصية
+            document.getElementById('work-tasks').value = savedData['work_tasks'] || '';
+            document.getElementById('personal-tasks').value = savedData['personal_tasks'] || '';
+
+            // تحديث التذييل السفلي الذكي
+            buildFooterCalendar(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+            renderDayExpenses(dateStr);
+        }
+
+        // بناء التذييل التفاعلي الممتد أسفل الصفحات
+        function buildFooterCalendar(year, month, activeDay) {
+            const container = document.getElementById('footer-calendar-container');
+            container.innerHTML = `<span class="font-bold text-[#1e2522] min-w-[70px]">${monthsNames[month]} ${year}:</span>`;
+            
+            let daysDiv = document.createElement('div');
+            daysDiv.className = "flex-1 flex justify-around px-2 gap-0.5";
+            
+            let totalDays = new Date(year, month + 1, 0).getDate();
+            for(let d=1; d<=totalDays; d++) {
+                let dStr = `${year}-${String(month+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                let isActive = (d === activeDay) ? 'bg-[#1e2522] text-[#d4af37] font-bold px-1 rounded' : 'hover:bg-stone-200 rounded px-0.5';
+                daysDiv.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer text-center text-[10px] ${isActive}">${d}</span>`;
+            }
+            container.appendChild(daysDiv);
+        }
+
+        // إدارة وحفظ البيانات اليومية المدخلة
+        function saveDailyData() {
+            let savedData = JSON.parse(localStorage.getItem(`MYH_${currentDateStr}`)) || {};
+            for(let i=1; i<=8; i++) { savedData[`class_${i}`] = document.getElementById(`class_${i}`).value; }
+            for(let c=1; c<=6; c++) { savedData[`card_${c}`] = document.getElementById(`card_${c}`).value; }
+            savedData['work_tasks'] = document.getElementById('work-tasks').value;
+            savedData['personal_tasks'] = document.getElementById('personal-tasks').value;
+            
+            localStorage.setItem(`MYH_${currentDateStr}`, JSON.stringify(savedData));
+            alert('تم حفظ خطتك وبياناتك اليومية بنجاح! ✨');
+        }
+
+        // النظام المالي وتخزين البيانات المالية
+        function saveDayExpense() {
+            const title = document.getElementById('day-expense-title').value.trim();
+            const amount = parseFloat(document.getElementById('day-expense-amount').value);
+            if(!title || isNaN(amount)) return;
+
+            let financials = JSON.parse(localStorage.getItem('MYH_Financials')) || [];
+            financials.push({ date: currentDateStr, title: title, amount: amount });
+            localStorage.setItem('MYH_Financials', JSON.stringify(financials));
+
+            document.getElementById('day-expense-title').value = '';
+            document.getElementById('day-expense-amount').value = '';
+            
+            renderDayExpenses(currentDateStr);
+            updateFinancialHub();
+        }
+
+        function renderDayExpenses(dateStr) {
+            const list = document.getElementById('day-expenses-list');
+            list.innerHTML = '';
+            let financials = JSON.parse(localStorage.getItem('MYH_Financials')) || [];
+            let dayItems = financials.filter(item => item.date === dateStr);
+            
+            dayItems.forEach(item => {
+                list.innerHTML += `<div class="flex justify-between border-b border-stone-100 py-0.5"><span>• ${item.title}</span><span class="font-bold">${item.amount.toFixed(3)}</span></div>`;
+            });
+        }
+
+        function updateFinancialHub() {
+            let financials = JSON.parse(localStorage.getItem('MYH_Financials')) || [];
+            const tbody = document.getElementById('financial-table-body');
+            tbody.innerHTML = '';
+            
+            let artTotal = 0;
+            let generalTotal = 0;
+
+            financials.forEach(item => {
+                if(item.title.includes('ألوان') || item.title.includes('خامات') || item.title.includes('فنون') || item.title.includes('أدوات')) {
+                    artTotal += item.amount;
+                } else {
+                    generalTotal += item.amount;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-stone-50">
+                        <td class="p-2 text-stone-500">${item.date}</td>
+                        <td class="p-2 font-medium">${item.title}</td>
+                        <td class="p-2 font-bold text-stone-700">${item.amount.toFixed(3)}</td>
+                    </tr>`;
+            });
+
+            document.getElementById('fin-art-total').innerText = artTotal.toFixed(3);
+            document.getElementById('fin-general-total').innerText = generalTotal.toFixed(3);
+        }
+    </script>
 </body>
 </html>
