@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MYH Dual-Zone Art & Finance Planner 2026-2027</title>
+    <title>MYH Ultimate Pro Planner 2026-2027</title>
     <!-- Tailwind CSS للتنسيق الهيكلي -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background-color: #d1cfc6; color: #2d2d2d; user-select: none; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #cfcdc4; color: #2d2d2d; user-select: none; }
         
         /* أبعاد شاشة iPad 10.2 الثابتة بنسبة 4:3 لمنع التمرير */
         .ipad-container { width: 1024px; height: 768px; max-width: 1024px; max-height: 768px; background-color: #faf9f5; }
@@ -32,12 +32,12 @@
     <!-- الحاوية الرئيسية للبلانر -->
     <div class="ipad-container shadow-2xl rounded-xl overflow-hidden flex flex-row relative border border-stone-300">
         
-        <!-- ================= شريط التنقل المزدوج (العملي والشخصي) ================= -->
+        <!-- ================= شريط التنقل المزدوج الثابت ================= -->
         <aside class="w-24 bg-[#1b221e] text-stone-300 flex flex-col items-center py-3 justify-between z-10 border-l border-stone-850">
             <div class="w-full flex flex-col items-center gap-2">
                 <span class="text-sm font-black text-[#d4af37] tracking-wider mb-2">MYH</span>
                 
-                <!-- أزرار تبديل الطور الرئيسي للبلانر -->
+                <!-- أزرار تبديل الطور الرئيسي -->
                 <div class="w-full px-1.5 flex flex-col gap-1 border-b border-stone-800 pb-3 mb-2">
                     <button onclick="setMode('work')" id="mode-btn-work" class="w-full py-2 text-[10px] font-bold text-center rounded transition bg-[#2e3b34] text-[#d4af37] border border-stone-700">🎨 الطور العملي</button>
                     <button onclick="setMode('personal')" id="mode-btn-personal" class="w-full py-2 text-[10px] font-bold text-center rounded transition bg-stone-900 text-stone-400 hover:text-white">🍏 الطور الشخصي</button>
@@ -45,7 +45,7 @@
 
                 <button onclick="switchView('yearly')" class="w-full py-1 text-[11px] font-bold text-center hover:bg-stone-800 transition mb-1 text-stone-400">📅 السنوي</button>
                 
-                <!-- أزرار الشهور (يوليو 2026 - يوليو 2027) -->
+                <!-- تصفح الشهور السريع -->
                 <div class="flex flex-col gap-0.5 w-full overflow-y-auto hide-scrollbar max-h-[400px]">
                     <button onclick="goToMonth(2026, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-6">يوليو 26</button>
                     <button onclick="goToMonth(2026, 7)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-7">أغسطس</button>
@@ -65,22 +65,21 @@
             <button onclick="switchView('daily')" class="w-full py-2.5 text-[11px] font-bold text-center bg-[#242d29] text-[#d4af37] hover:bg-stone-700 transition rounded-b border-t border-stone-800">اليوم الحالي</button>
         </aside>
 
-        <!-- ================= مساحة العرض الرئيسية للبلانر ================= -->
+        <!-- ================= مساحة العرض الرئيسية ================= -->
         <main class="flex-1 flex flex-col p-4 justify-between overflow-hidden">
             
             <!-- 1. واجهة التقويم السنوي -->
             <div id="view-yearly" class="view-content flex-1 flex flex-col justify-center">
-                <h1 class="text-base font-bold text-center text-stone-800 mb-3">التقويم السنوي التفاعلي ٢٠٢٦ - ٢٠٢ network٧</h1>
+                <h1 class="text-base font-bold text-center text-stone-800 mb-3">التقويم السنوي التفاعلي ٢٠٢٦ - ٢٠٢٧</h1>
                 <div class="grid grid-cols-4 gap-2 overflow-y-auto max-h-[620px] p-1" id="yearly-grid"></div>
             </div>
 
             <!-- 2. واجهة العرض اليومية التفاعلية -->
             <div id="view-daily" class="view-content flex-1 hidden flex flex-col justify-between">
                 
-                <!-- هيدر الصفحة المشترك: ورقة النتيجة مع لوجو MYH -->
-                <div class="flex flex-row justify-between items-center border-b-2 border-stone-200 pb-2.5 mb-2">
+                <!-- الهيدر المشترك للبلانر -->
+                <div class="flex flex-row justify-between items-center border-b-2 border-stone-200 pb-2 mb-2">
                     <div class="flex items-center gap-3">
-                        <!-- ورقة النتيجة الكلاسيكية -->
                         <div class="w-28 bg-white rounded border border-stone-300 overflow-hidden text-center shadow-xs">
                             <div class="bg-red-700 text-white py-0.5 text-[10px] font-bold" id="calendar-top-month">يوليو ٢٠٢٦</div>
                             <div class="py-1 bg-stone-50">
@@ -89,89 +88,110 @@
                             </div>
                         </div>
                         <div>
-                            <span id="current-mode-badge" class="text-[10px] bg-[#2e3b34] text-[#d4af37] font-bold px-2 py-0.5 rounded-full border border-stone-700 shadow-xs">القسم العملي والأكاديمي</span>
+                            <span id="current-mode-badge" class="text-[10px] bg-[#2e3b34] text-[#d4af37] font-bold px-2 py-0.5 rounded-full border border-stone-700">القسم العملي والأكاديمي</span>
                         </div>
                     </div>
                     <div class="bg-stone-900 text-[#d4af37] text-xs font-black px-3 py-1 rounded shadow tracking-widest">MYH</div>
                 </div>
 
-                <!-- مخرجات طور العمل: تحضير الفنون والـ 8 حصص (يختفي في الويكند) -->
+                <!-- [أ] طور العمل: الفنون والـ 8 حصص وبطاقات الدروس (أيام الأسبوع العادية) -->
                 <div id="sub-view-work" class="daily-sub-view flex-1 flex flex-col justify-between overflow-hidden">
-                    <!-- جدول الحصص الـ 8 المفرغ -->
-                    <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm mb-3">
+                    <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm mb-2">
                         <div class="grid grid-cols-8 gap-1 text-center text-[10px] font-bold text-stone-400 mb-1">
                             <div>١</div><div>٢</div><div>٣</div><div>٤</div><div>٥</div><div>٦</div><div>٧</div><div>٨</div>
                         </div>
                         <div class="grid grid-cols-8 gap-1 border-t border-stone-200 pt-1 h-9">
-                            <div class="border-r border-l border-stone-100/60"></div>
-                            <div class="border-r border-stone-100/60"></div>
-                            <div class="border-r border-stone-100/60"></div>
-                            <div class="border-r border-stone-100/60"></div>
-                            <div class="border-r border-stone-100/60"></div>
-                            <div class="border-r border-stone-100/60"></div>
-                            <div class="border-r border-stone-100/60"></div>
-                            <div class="border-l border-stone-100/60"></div>
+                            <div class="border-r border-l border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-l border-stone-100/60"></div>
                         </div>
                     </div>
-                    <!-- الستة مستطيلات كبطاقات مسطرة تماماً للتجهيز الفني -->
                     <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm flex-1 flex flex-col">
-                        <h3 class="text-[11px] font-bold text-stone-600 mb-1.5">🎨 بطاقات التحضير الفني ومتابعة الفصول والدروس (الكتابة اليدوية)</h3>
-                        <div class="grid grid-cols-3 gap-2 flex-1 items-stretch" id="art-handwriting-cards">
-                            <!-- توليد 6 كروت مسطرة بالكامل -->
-                        </div>
+                        <h3 class="text-[11px] font-bold text-stone-600 mb-1">🎨 بطاقات التحضير الفني ومتابعة الفصول والدروس</h3>
+                        <div class="grid grid-cols-3 gap-2 flex-1 items-stretch" id="art-handwriting-cards"></div>
                     </div>
                 </div>
 
-                <!-- واجهة العطلة الفنية البديلة (تظهر فقط يومي الجمعة والسبت بالطور العملي) -->
-                <div id="sub-view-weekend" class="daily-sub-view flex-1 hidden flex-col justify-center items-center bg-white border border-stone-200 rounded-lg p-6 text-center shadow-sm mb-1">
-                    <div class="text-3xl mb-2">🌿</div>
-                    <h3 class="text-sm font-bold text-stone-700">عطلة نهاية الأسبوع (الجمعة / السبت)</h3>
-                    <p class="text-xs text-stone-400 mt-1 max-w-sm">القسم الأكاديمي مغلق حالياً. خذ قسطاً من الراحة لتجديد شغفك الفني، أو انتقل إلى "الطور الشخصي" بالجانب لمتابعة ميزانيتك ومهامك العائلية.</p>
+                <!-- [ب] واجهة العطلة المحدثة: مسطرة بالكامل ومزودة بقائمة مهام عطلة حرة -->
+                <div id="sub-view-weekend" class="daily-sub-view flex-1 hidden grid grid-cols-12 gap-3 items-stretch overflow-hidden">
+                    <div class="col-span-4 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col">
+                        <h3 class="text-xs font-bold text-red-700 mb-2 border-b pb-1 flex justify-between items-center">
+                            <span>🌿 مهام الإجازة الأسبوعية</span>
+                            <span class="text-[9px] text-stone-400 font-normal">جمعة وسبت</span>
+                        </h3>
+                        <div class="space-y-3.5 mt-2 flex-1">
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                        </div>
+                    </div>
+                    <div class="col-span-8 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col">
+                        <h3 class="text-xs font-bold text-stone-700 mb-2 border-b pb-1">📝 مساحة تدوين حرة ومسطرة لتخطيط وتأملات العطلة الفنية</h3>
+                        <div class="handwriting-lines flex-1 opacity-70" style="background-size: 100% 22px; line-height: 22px;"></div>
+                    </div>
                 </div>
 
-                <!-- مخرجات طور الشخصية والمالية المستقل تماماً (يعمل طوال أيام الأسبوع بلا استثناء) -->
+                <!-- [ج] طور الشخصية والمالية المطور بالكامل بطول وعمق الصفحة -->
                 <div id="sub-view-personal" class="daily-sub-view flex-1 hidden grid grid-cols-12 gap-4 items-stretch overflow-hidden">
-                    <!-- اليمين: قائمة المهام الشخصية المسطرة -->
-                    <div class="col-span-5 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-xs font-bold text-stone-700 mb-2 border-b pb-1">🍏 قائمة المهام والمسؤوليات الشخصية والعائلية</h3>
-                            <div class="space-y-3.5 mt-3">
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                            </div>
-                        </div>
-                        <div class="mt-2 bg-stone-50 border border-dashed border-stone-200 rounded p-2 h-16">
-                            <span class="text-[9px] font-bold text-stone-400 block">✏️ مذكرات شخصية سريعة:</span>
+                    
+                    <!-- قائمة المهام الشخصية بكامل طول الصفحة -->
+                    <div class="col-span-4 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col">
+                        <h3 class="text-xs font-bold text-stone-700 mb-2 border-b pb-1">🍏 قائمة المسؤوليات الشخصية والعائلية</h3>
+                        <div class="space-y-4 mt-2 flex-1 overflow-hidden">
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
                         </div>
                     </div>
 
-                    <!-- اليسار: دفتر الحسابات اليومي المرتبط بالأيام بالكامل للوارد والصادر والمصاريف -->
-                    <div class="col-span-7 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col justify-between">
-                        <div>
+                    <!-- تفاصيل الميزانية الأطول مع الإجمالي والصافي في نهايتها -->
+                    <div class="col-span-8 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col justify-between">
+                        <div class="flex-1 flex flex-col">
                             <h3 class="text-xs font-bold text-stone-700 mb-1.5 pb-1 border-b flex justify-between items-center">
-                                <span>📊 دفتر ميزانية اليوم الحسابي (الوارد والصادر للآيباد)</span>
-                                <span class="text-[9px] text-stone-400 bg-stone-50 px-2 py-0.5 rounded">مرتبط بالتقويم</span>
+                                <span>📊 دفتر الحسابات اليومي الشامل لمراقبة الميزانية</span>
+                                <span class="text-[9px] text-stone-400 bg-stone-50 px-2 py-0.5 rounded">إصدار التصفح الرقمي</span>
                             </h3>
-                            <div class="relative w-full h-80 border border-stone-200 rounded overflow-hidden">
+                            
+                            <!-- جدول دفتر الحسابات ممتد لعمق الصفحة -->
+                            <div class="relative flex-1 border border-stone-200 rounded overflow-hidden mb-2">
                                 <div class="handwriting-lines absolute inset-0 opacity-60" style="background-size: 100% 24px; line-height: 24px; margin-top: 24px;"></div>
-                                <div class="absolute top-0 bottom-0 right-[60%] border-l border-red-200 opacity-60"></div>
-                                <div class="absolute top-0 bottom-0 right-[80%] border-l border-green-200 opacity-60"></div>
+                                <div class="absolute top-0 bottom-0 right-[65%] border-l border-red-200 opacity-60"></div>
+                                <div class="absolute top-0 bottom-0 right-[82%] border-l border-green-200 opacity-60"></div>
                                 <div class="absolute top-0 right-0 left-0 h-6 bg-stone-100 border-b border-stone-200 flex text-[10px] font-bold text-stone-600 text-center items-center">
-                                    <div class="w-[60%]">بيان المصروفات والواردات اليومية</div>
-                                    <div class="w-[20%] border-r border-stone-200">وارد (+)</div>
-                                    <div class="w-[20%] border-r border-stone-200">صادر (-)</div>
+                                    <div class="w-[65%]">بيان ووصف المعاملة المالية اليومية</div>
+                                    <div class="w-[17%] border-r border-stone-200 text-green-700">وارد (+)</div>
+                                    <div class="w-[18%] border-r border-stone-200 text-red-700">صادر (-)</div>
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- شريط الحسابات الختامي المتطور مفرغ وجاهز للكتابة اليدوية أو القراءة -->
+                        <div class="bg-stone-50 border border-stone-300 rounded p-1.5 grid grid-cols-3 gap-2 text-center text-[11px] font-bold">
+                            <div class="bg-green-50/60 p-1 rounded border border-green-200">
+                                <span class="text-green-700 block text-[9px] mb-0.5">💰 إجمالي الوارد</span>
+                                <div class="h-5 bg-white border border-stone-200 rounded"></div>
+                            </div>
+                            <div class="bg-red-50/60 p-1 rounded border border-red-200">
+                                <span class="text-red-700 block text-[9px] mb-0.5">💸 إجمالي الصادر</span>
+                                <div class="h-5 bg-white border border-stone-200 rounded"></div>
+                            </div>
+                            <div class="bg-amber-50/60 p-1 rounded border border-amber-200">
+                                <span class="text-amber-800 block text-[9px] mb-0.5">⚖️ الصافي الختامي</span>
+                                <div class="h-5 bg-white border border-stone-200 rounded"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- ================= التذييل السفلي الثابت للتقويم السنوي التفاعلي بالكامل ================= -->
+                <!-- ================= التذييل السفلي التفاعلي للبلانر ================= -->
                 <footer class="mt-2 bg-white border border-stone-200 rounded-lg p-1.5 shadow-inner">
                     <div id="footer-calendar-container" class="flex flex-row items-center justify-between text-[10px]"></div>
                 </footer>
@@ -180,10 +200,10 @@
         </main>
     </div>
 
-    <!-- ================= الـ ENGINE البرمجي التفاعلي للبلانر ================= -->
+    <!-- ================= الـ ENGINE البرمجي للبلانر ================= -->
     <script>
         let currentDateStr = "2026-07-01";
-        let currentMode = "work"; // الأطوار المتاحة: 'work' أو 'personal'
+        let currentMode = "work"; 
         const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
         window.onload = function() {
@@ -194,7 +214,6 @@
 
         function setMode(mode) {
             currentMode = mode;
-            
             const btnWork = document.getElementById('mode-btn-work');
             const btnPers = document.getElementById('mode-btn-personal');
             const badge = document.getElementById('current-mode-badge');
@@ -245,8 +264,8 @@
             document.querySelectorAll('.daily-sub-view').forEach(el => el.classList.add('hidden'));
             
             const dateObj = new Date(currentDateStr);
-            const dayOfWeek = dateObj.getDay(); // 5 = الجمعة, 6 = السبت
-            const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
+            const dayOfWeek = dateObj.getDay(); 
+            const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6); // 5 = الجمعة, 6 = السبت
 
             if(currentMode === 'work') {
                 if(isWeekend) {
