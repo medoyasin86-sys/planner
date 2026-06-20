@@ -3,176 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MYH Professional Art Planner 2026-2027</title>
-    <!-- Tailwind CSS للتحكم في التنسيق المرن وسرعة الاستجابة -->
+    <title>MYH Professional Handwriting Art Planner 2026-2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background-color: #f7f5f0; color: #333; }
-        /* أبعاد مخصصة ومثالية لشاشة iPad 10.2 بنسبة 4:3 */
-        .ipad-canvas { width: 1024px; height: 768px; max-width: 1024px; max-height: 768px; }
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+        body { font-family: 'Tajawal', sans-serif; background-color: #e2e1da; color: #2d2d2d; user-select: none; }
+        
+        /* الأبعاد المثالية والمثبتة لشاشة iPad 10.2 (نسبة 4:3) لمنع التمرير العشوائي أثناء الكتابة للقلم */
+        .ipad-container { width: 1024px; height: 768px; max-width: 1024px; max-height: 768px; }
+        
+        /* خلفية ورقية مريحة للعين تشبه الدفاتر الحقيقية */
+        .paper-bg { background-color: #fbfbf8; }
+        
+        /* تكنولوجيا التسطير الرقمي للكتابة اليدوية المنتظمة بالقلم */
+        .handwriting-lines {
+            background-image: linear-gradient(#e5e5e0 1px, transparent 1px);
+            background-size: 100% 24px;
+            line-height: 24px;
+        }
+        
         .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen bg-stone-200 p-2">
+<body class="flex items-center justify-center min-h-screen p-2">
 
-    <!-- الحاوية الرئيسية للبلانر بأبعاد الآيباد الثابتة -->
-    <div class="ipad-canvas bg-[#faf9f5] shadow-2xl rounded-xl overflow-hidden flex flex-row relative border border-stone-300">
+    <div class="ipad-container paper-bg shadow-2xl rounded-xl overflow-hidden flex flex-row relative border border-stone-300">
         
-        <!-- ================= الشريط الجانبي الثابت (SIDEBAR) ================= -->
-        <aside class="w-20 bg-[#1e2522] text-stone-300 flex flex-col items-center py-4 justify-between z-10 border-l border-stone-800">
+        <aside class="w-20 bg-[#242b28] text-stone-300 flex flex-col items-center py-4 justify-between z-10 border-l border-stone-800">
             <div class="flex flex-col items-center gap-1 w-full">
-                <span class="text-xs font-bold text-[#d4af37] tracking-wider mb-2">MYH</span>
-                <button onclick="switchView('yearly')" class="w-full py-1 text-[11px] font-medium text-center hover:bg-stone-800 transition mb-2 border-b border-stone-800 pb-2">التقويم</button>
+                <span class="text-sm font-black text-[#d4af37] tracking-wider mb-3">MYH</span>
+                <button onclick="switchView('yearly')" class="w-full py-1.5 text-[11px] font-bold text-center hover:bg-stone-800 transition mb-2 border-b border-stone-800 pb-2">التقويم</button>
                 
-                <!-- أزرار الشهور من يوليو 2026 إلى يوليو 2027 -->
-                <div class="flex flex-col gap-0.5 w-full overflow-y-auto hide-scrollbar max-h-[480px]">
-                    <button onclick="goToMonth(2026, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-6">يوليو 26</button>
-                    <button onclick="goToMonth(2026, 7)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-7">أغسطس</button>
-                    <button onclick="goToMonth(2026, 8)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-8">سبتمبر</button>
-                    <button onclick="goToMonth(2026, 9)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-9">أكتوبر</button>
-                    <button onclick="goToMonth(2026, 10)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-10">نوفمبر</button>
-                    <button onclick="goToMonth(2026, 11)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-11">ديسمبر</button>
-                    <button onclick="goToMonth(2027, 0)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-0">يناير 27</button>
-                    <button onclick="goToMonth(2027, 1)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-1">فبراير</button>
-                    <button onclick="goToMonth(2027, 2)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-2">مارس</button>
-                    <button onclick="goToMonth(2027, 3)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-3">أبريل</button>
-                    <button onclick="goToMonth(2027, 4)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-4">مايو</button>
-                    <button onclick="goToMonth(2027, 5)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-5">يونيو</button>
-                    <button onclick="goToMonth(2027, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-6">يوليو 27</button>
+                <div class="flex flex-col gap-0.5 w-full overflow-y-auto hide-scrollbar max-h-[460px]">
+                    <button onclick="goToMonth(2026, 6)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2026-6">يوليو 26</button>
+                    <button onclick="goToMonth(2026, 7)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2026-7">أغسطس</button>
+                    <button onclick="goToMonth(2026, 8)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2026-8">سبتمبر</button>
+                    <button onclick="goToMonth(2026, 9)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2026-9">أكتوبر</button>
+                    <button onclick="goToMonth(2026, 10)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2026-10">نوفمبر</button>
+                    <button onclick="goToMonth(2026, 11)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2026-11">ديسمبر</button>
+                    <button onclick="goToMonth(2027, 0)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2027-0">يناير 27</button>
+                    <button onclick="goToMonth(2027, 1)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2027-1">فبراير</button>
+                    <button onclick="goToMonth(2027, 2)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2027-2">مارس</button>
+                    <button onclick="goToMonth(2027, 3)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2027-3">أبريل</button>
+                    <button onclick="goToMonth(2027, 4)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2027-4">مايو</button>
+                    <button onclick="goToMonth(2027, 5)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2027-5">يونيو</button>
+                    <button onclick="goToMonth(2027, 6)" class="month-tab w-full py-2 text-[11px] text-center hover:bg-stone-800" data-m="2027-6">يوليو 27</button>
                 </div>
             </div>
-            <button onclick="switchView('financial')" class="w-full py-3 text-[12px] font-bold text-center bg-[#2d3a34] text-[#d4af37] hover:bg-stone-700 transition rounded-b mt-2">المالية 💰</button>
+            <button onclick="switchView('financial')" class="w-full py-3 text-[12px] font-bold text-center bg-[#2f3a35] text-[#d4af37] hover:bg-stone-700 transition rounded-b">المالية 💰</button>
         </aside>
 
-        <!-- ================= مساحة العرض الرئيسية (MAIN CONTAINER) ================= -->
         <main class="flex-1 flex flex-col p-4 justify-between overflow-hidden">
             
-            <!-- 1. واجهة التقويم السنوي -->
             <div id="view-yearly" class="view-content flex-1 flex flex-col justify-center">
-                <h1 class="text-xl font-bold text-center text-stone-800 mb-4">التقويم السنوي ٢٠٢٦ - ٢٠٢٧</h1>
-                <div class="grid grid-cols-4 gap-3 overflow-y-auto max-h-[600px] p-2" id="yearly-grid">
-                    <!-- يتم توليد 13 شهراً تفاعلياً هنا بواسطة الـ JS -->
-                </div>
+                <h1 class="text-lg font-bold text-center text-stone-800 mb-3">التقويم السنوي التفاعلي ٢٠٢٦ - ٢٠٢٧</h1>
+                <div class="grid grid-cols-4 gap-2 overflow-y-auto max-h-[620px] p-1" id="yearly-grid"></div>
             </div>
 
-            <!-- 2. واجهة الصفحة اليومية المخصصة (DAILY PAGE) -->
             <div id="view-daily" class="view-content flex-1 hidden flex flex-col">
-                <!-- الهيدر ولوجو MYH -->
-                <header class="flex justify-between items-center border-b border-stone-200 pb-2 mb-3">
-                    <div class="flex items-center gap-3">
-                        <div class="bg-[#1e2522] text-[#d4af37] font-black px-3 py-1.5 rounded text-sm tracking-wider shadow">MYH</div>
-                        <h2 id="daily-date-title" class="text-base font-bold text-stone-700"></h2>
+                <header class="flex justify-between items-center border-b-2 border-stone-300 pb-2 mb-3">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-[#242b28] text-[#d4af37] text-base font-black px-4 py-1.5 rounded-lg shadow-md tracking-widest border border-stone-700">MYH</div>
+                        <div>
+                            <h2 id="daily-date-title" class="text-lg font-bold text-stone-800"></h2>
+                            <span class="text-xs text-stone-400 font-bold">معلم الفنون التشكيلية</span>
+                        </div>
                     </div>
-                    <span class="text-xs text-stone-400 font-medium">خطتك اليومية لعام الإبداع</span>
+                    <div class="text-left">
+                        <span class="text-[11px] text-stone-500 font-bold block">العام الأكاديمي ٢٠٢٦ / ٢٠٢٧</span>
+                    </div>
                 </header>
 
-                <!-- شبكة التقسيم الثنائي الميكرومتري -->
-                <div class="grid grid-cols-12 gap-4 flex-1 items-stretch">
+                <div class="grid grid-cols-12 gap-4 flex-1 items-stretch overflow-hidden">
                     
-                    <!-- الجانب الأيمن (80% للعمل والفنون التشكيلية) -->
-                    <div class="col-span-7 flex flex-col justify-between">
-                        <!-- جدول الحصص الـ 8 المفرغة -->
-                        <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm mb-3">
-                            <h3 class="text-xs font-bold text-stone-600 mb-2 flex items-center gap-1">📋 جدول الحصص اليومي (التحضير المباشر)</h3>
-                            <div class="grid grid-cols-2 gap-2" id="timetable-inputs">
-                                <!-- سيتم توليد الـ 8 خانات مفرغة ومجهزة برمجياً -->
-                            </div>
+                    <div class="col-span-7 flex flex-col justify-between h-full">
+                        <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm mb-3">
+                            <h3 class="text-xs font-bold text-stone-700 mb-1.5 flex items-center gap-1">📋 جدول الحصص اليومي</h3>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-1" id="handwriting-timetable">
+                                </div>
                         </div>
 
-                        <!-- المستطيلات الستة (التحضير الفني ومتابعة الخامات) -->
-                        <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex-1 flex flex-col">
-                            <h3 class="text-xs font-bold text-stone-600 mb-2">🎨 بطاقات الأفكار الفنية ومتابعة خامات الفنون</h3>
-                            <div class="grid grid-cols-2 gap-2 flex-1 items-stretch" id="art-cards">
-                                <!-- 6 بطاقات مسطرة ومجهزة -->
-                            </div>
+                        <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm flex-1 flex flex-col">
+                            <h3 class="text-xs font-bold text-stone-700 mb-1.5">🎨 فكرة الدرس / خامات وملاحظات الفنون التشكيلية</h3>
+                            <div class="grid grid-cols-2 gap-2 flex-1 items-stretch" id="handwriting-cards">
+                                </div>
                         </div>
                     </div>
 
-                    <!-- الجانب الأيسر (الحياة اليومية والقائمة المالية والمذكرات) -->
-                    <div class="col-span-5 flex flex-col justify-between">
-                        <!-- تدوين المصروفات اليومي السريع -->
-                        <div class="bg-[#fcfaf2] p-3 rounded-lg border border-amber-100 shadow-sm mb-3">
-                            <h3 class="text-xs font-bold text-amber-900 mb-2">💰 متتبع المصروفات اليومي السريع</h3>
-                            <div class="flex gap-2">
-                                <input type="text" id="day-expense-title" placeholder="البيان (ألوان، وقود...)" class="flex-1 text-xs border border-stone-300 rounded px-2 py-1.5 bg-white">
-                                <input type="number" id="day-expense-amount" placeholder="المبلغ" class="w-20 text-xs border border-stone-300 rounded px-2 py-1.5 bg-white text-center">
-                                <button onclick="saveDayExpense()" class="bg-[#2d3a34] text-white text-xs font-bold px-3 rounded hover:bg-stone-800 transition">إضافة</button>
-                            </div>
-                            <div id="day-expenses-list" class="mt-2 text-[11px] text-stone-600 max-h-14 overflow-y-auto"></div>
+                    <div class="col-span-5 flex flex-col justify-between h-full bg-white p-3 rounded-lg border border-stone-200 shadow-sm">
+                        
+                        <div class="mb-4">
+                            <h3 class="text-xs font-bold text-stone-700 mb-1 border-b pb-1 flex justify-between items-center">
+                                <span>💰 متتبع الحياة اليومية والمصروفات</span>
+                                <span class="text-[10px] text-stone-400 font-normal">التاريخ | البيان | المبلغ</span>
+                            </h3>
+                            <div class="handwriting-lines h-36 w-full opacity-90"></div>
                         </div>
 
-                        <!-- قائمة المهام الشخصية والجانبية للعمل -->
-                        <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex-1 flex flex-col justify-between">
+                        <div class="flex-1 flex flex-col justify-between border-t border-stone-200 pt-3">
                             <div>
-                                <h3 class="text-xs font-bold text-stone-600 mb-1.5">📌 مهام العمل والمسؤوليات</h3>
-                                <textarea id="work-tasks" class="w-full h-16 text-xs p-1.5 border border-stone-200 rounded resize-none focus:outline-none focus:ring-1 focus:ring-stone-400 bg-stone-50" placeholder="• تحضير المعرض الخارجي&#10;• فرز لوحات الصف الحادي عشر..."></textarea>
+                                <h3 class="text-xs font-bold text-stone-700 mb-2">📌 قائمة المهام الشخصية والجانبية</h3>
+                                <div class="space-y-3 mt-2">
+                                    <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border-2 border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                                    <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border-2 border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                                    <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border-2 border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                                    <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border-2 border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                                    <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border-2 border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
+                                </div>
                             </div>
-                            <div class="mt-2">
-                                <h3 class="text-xs font-bold text-stone-600 mb-1.5">🍏 مهام ومذكرات الحياة الشخصية</h3>
-                                <textarea id="personal-tasks" class="w-full h-16 text-xs p-1.5 border border-stone-200 rounded resize-none focus:outline-none focus:ring-1 focus:ring-stone-400 bg-stone-50" placeholder="• مصاريف المنزل والتبضع&#10;• تمرين الأولاد ومتابعة الاختبارات..."></textarea>
+                            
+                            <div class="mt-3 bg-stone-50 border border-dashed border-stone-200 rounded p-1.5 h-20">
+                                <span class="text-[9px] font-bold text-stone-400 block mb-1">✏️ مساحة حرة (اسكتش سريع / فكرة لوحة)</span>
                             </div>
-                            <button onclick="saveDailyData()" class="w-full mt-2 bg-stone-700 text-white text-xs py-1 rounded font-medium hover:bg-stone-800 transition">حفظ التغييرات اليومية 💾</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- ================= التذييل السفلي الثابت (FOOTER MINI-CALENDAR) ================= -->
-                <footer class="mt-3 bg-white border border-stone-200 rounded-lg p-2 shadow-inner">
-                    <div id="footer-calendar-container" class="flex flex-row items-center justify-between text-[11px]">
-                        <!-- يتم بناء تقويم تفاعلي للشهر الحالي هنا بالكامل -->
-                    </div>
+                <footer class="mt-2.5 bg-white border border-stone-200 rounded-lg p-1.5 shadow-inner">
+                    <div id="footer-calendar-container" class="flex flex-row items-center justify-between text-[10px]">
+                        </div>
                 </footer>
             </div>
 
-            <!-- 3. لوحة التحكم المالية الاحترافية (FINANCIAL HUB) -->
-            <div id="view-financial" class="view-content flex-1 hidden flex flex-col overflow-y-auto max-h-[700px] p-2">
-                <h1 class="text-xl font-bold text-stone-800 mb-4 border-b pb-2">📊 السجل المالي الاحترافي الشامل (٢٠٢٦ - ٢٠٢٧)</h1>
+            <div id="view-financial" class="view-content flex-1 hidden flex flex-col bg-white p-4 rounded-lg border shadow-sm overflow-y-auto max-h-[660px]">
+                <h1 class="text-base font-bold text-stone-800 mb-3 border-b pb-2">📊 جدول الميزانية والتدفقات المالية الاحترافية السنوية</h1>
+                <p class="text-xs text-stone-500 mb-4">هذه اللوحة مسطرة وجاهزة للكتابة اليدوية لجدولة الميزانية، الدخل، ومصروفات شراء أدوات الفنون التشكيلية بالتفصيل خلال العام.</p>
                 
-                <div class="grid grid-cols-3 gap-4 mb-4">
-                    <div class="bg-white p-3 rounded-lg border shadow-sm text-center">
-                        <span class="text-xs text-stone-500 block">إجمالي الدخل المتوقع</span>
-                        <span class="text-lg font-bold text-green-700">المعاش والمدخولات الأساسية</span>
-                    </div>
-                    <div class="bg-white p-3 rounded-lg border shadow-sm text-center">
-                        <span class="text-xs text-stone-500 block">إجمالي مصروفات أدوات الفنون</span>
-                        <span id="fin-art-total" class="text-lg font-bold text-amber-700">0.000</span>
-                    </div>
-                    <div class="bg-white p-3 rounded-lg border shadow-sm text-center">
-                        <span class="text-xs text-stone-500 block">المصروفات العامة والشخصية</span>
-                        <span id="fin-general-total" class="text-lg font-bold text-stone-700">0.000</span>
-                    </div>
-                </div>
-
-                <div class="bg-white p-4 rounded-lg border shadow-sm flex-1">
-                    <h3 class="text-sm font-bold text-stone-700 mb-3">📝 سجل التدفقات المالية لجميع التواريخ</h3>
-                    <table class="w-full text-right text-xs">
-                        <thead>
-                            <tr class="bg-stone-100 border-b">
-                                <th class="p-2">التاريخ</th>
-                                <th class="p-2">البيان / الوصف</th>
-                                <th class="p-2">المبلغ المالي</th>
-                            </tr>
-                        </thead>
-                        <tbody id="financial-table-body">
-                            <!-- التحديث ديناميكي بالـ JS -->
-                        </tbody>
-                    </table>
-                </div>
+                <div class="handwriting-lines flex-1 min-h-[480px] opacity-80" style="background-size: 100% 28px; line-height: 28px;"></div>
             </div>
 
         </main>
     </div>
 
-    <!-- ================= الـ ENGINE البرمجي الذكي للبلانر (JAVASCRIPT) ================= -->
     <script>
-        let currentDateStr = "2026-07-01"; // بداية النطاق الزمني المطلوب
+        let currentDateStr = "2026-07-01"; // بداية جدول البلانر المطلوب
         const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
         window.onload = function() {
             buildYearlyGrid();
+            renderHandwritingLayouts();
             loadDate(currentDateStr);
-            updateFinancialHub();
         };
 
         function switchView(viewId) {
@@ -191,12 +161,35 @@
             goToDate(dateStr);
         }
 
-        // بناء التقويم السنوي الشامل بداية البلانر
+        // توليد الأسطر والبطاقات المفتوحة للكتابة يدوياً لمنع استخدام لوحة المفاتيح
+        function renderHandwritingLayouts() {
+            // 1. توليد الـ 8 حصص المفتوحة كلياً للكتابة المباشرة بالقلم
+            const timetable = document.getElementById('handwriting-timetable');
+            timetable.innerHTML = '';
+            for (let i = 1; i <= 8; i++) {
+                timetable.innerHTML += `
+                    <div class="flex items-center gap-2 border-b border-stone-200 py-1.5">
+                        <span class="text-[11px] font-bold text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">${i}</span>
+                        <div class="flex-1 h-5"></div> </div>`;
+            }
+
+            // 2. توليد 6 بطاقات مسطرة وموزعة على 3 صفوف متجاورة بدقة متناهية
+            const cards = document.getElementById('handwriting-cards');
+            cards.innerHTML = '';
+            for (let c = 1; c <= 6; c++) {
+                cards.innerHTML += `
+                    <div class="border border-stone-200 rounded-md p-1.5 flex flex-col bg-stone-50/50">
+                        <span class="text-[9px] font-bold text-stone-400 block border-b pb-0.5 mb-1">بطاقة متابعة / تحضير فني ${c}</span>
+                        <div class="handwriting-lines flex-1 opacity-70" style="background-size: 100% 18px; line-height: 18px;"></div>
+                    </div>`;
+            }
+        }
+
+        // بناء التقويم السنوي التفاعلي الشامل للبلانر (يوليو 2026 - يوليو 2027)
         function buildYearlyGrid() {
             const grid = document.getElementById('yearly-grid');
             grid.innerHTML = '';
             
-            // نطاق البلانر: يوليو 2026 إلى يوليو 2027 (13 شهراً)
             const schedule = [
                 {y: 2026, m: 6}, {y: 2026, m: 7}, {y: 2026, m: 8}, {y: 2026, m: 9}, {y: 2026, m: 10}, {y: 2026, m: 11},
                 {y: 2027, m: 0}, {y: 2027, m: 1}, {y: 2027, m: 2}, {y: 2027, m: 3}, {y: 2027, m: 4}, {y: 2027, m: 5}, {y: 2027, m: 6}
@@ -204,149 +197,50 @@
 
             schedule.forEach(item => {
                 let monthBox = document.createElement('div');
-                monthBox.className = "bg-white p-2 rounded border border-stone-200 text-center shadow-sm";
-                monthBox.innerHTML = `<h3 class="text-xs font-bold text-stone-700 border-b pb-1 mb-1">${monthsNames[item.m]} ${item.y}</h3>`;
+                monthBox.className = "bg-white p-1.5 rounded border border-stone-200 text-center shadow-xs";
+                monthBox.innerHTML = `<h3 class="text-[11px] font-bold text-stone-700 border-b pb-0.5 mb-1 bg-stone-50">${monthsNames[item.m]} ${item.y}</h3>`;
                 
                 let daysGrid = document.createElement('div');
-                daysGrid.className = "grid grid-cols-7 gap-0.5 text-[9px]";
+                daysGrid.className = "grid grid-cols-7 gap-0.5 text-[9px] font-medium";
                 
                 let totalDays = new Date(item.y, item.m + 1, 0).getDate();
-                for(let d=1; d<=totalDays; d++) {
+                for (let d = 1; d <= totalDays; d++) {
                     let dStr = `${item.y}-${String(item.m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    daysGrid.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer hover:bg-amber-100 rounded py-0.5">${d}</span>`;
+                    daysGrid.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer hover:bg-amber-100 rounded text-stone-600 py-0.5">${d}</span>`;
                 }
                 monthBox.appendChild(daysGrid);
                 grid.appendChild(monthBox);
             });
         }
 
-        // تحميل وعرض بيانات التواريخ اليومية المستهدفة
+        // تحديث وتحميل الصفحة اليومية والتبويب النشط
         function loadDate(dateStr) {
             const dateObj = new Date(dateStr);
-            document.getElementById('daily-date-title').innerText = `${dateObj.getDate()} ${monthsNames[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+            const dayName = dateObj.toLocaleDateString('ar-EG', { weekday: 'long' });
+            document.getElementById('daily-date-title').innerText = `${dayName}، ${dateObj.getDate()} ${monthsNames[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
             
-            // تحديد حالة التبويب النشط بالشريط الجانبي
-            document.querySelectorAll('.month-tab').forEach(b => b.classList.remove('bg-stone-800', 'text-[#d4af37]'));
+            document.querySelectorAll('.month-tab').forEach(b => b.classList.remove('bg-stone-800', 'text-[#d4af37]', 'font-bold'));
             const activeTab = document.querySelector(`.month-tab[data-m="${dateObj.getFullYear()}-${dateObj.getMonth()}"]`);
-            if(activeTab) activeTab.classList.add('bg-stone-800', 'text-[#d4af37]');
+            if (activeTab) activeTab.classList.add('bg-stone-800', 'text-[#d4af37]', 'font-bold');
 
-            // بناء الـ 8 حصص المفرغة المخصصة للمعلم
-            const timetable = document.getElementById('timetable-inputs');
-            timetable.innerHTML = '';
-            let savedData = JSON.parse(localStorage.getItem(`MYH_${dateStr}`)) || {};
-            
-            for(let i=1; i<=8; i++) {
-                let val = savedData[`class_${i}`] || '';
-                timetable.innerHTML += `
-                    <div class="flex items-center gap-1">
-                        <span class="text-[10px] font-bold text-stone-400 w-3">${i}</span>
-                        <input type="text" id="class_${i}" value="${val}" class="w-full text-xs border border-stone-200 bg-stone-50 rounded px-1.5 py-1 focus:bg-white" placeholder="اضغط للكتابة...">
-                    </div>`;
-            }
-
-            // بناء البطاقات الفنية الستة المسطرة
-            const cards = document.getElementById('art-cards');
-            cards.innerHTML = '';
-            for(let c=1; c<=6; c++) {
-                let textVal = savedData[`card_${c}`] || '';
-                cards.innerHTML += `
-                    <div class="border border-stone-200 rounded p-1.5 flex flex-col justify-between bg-[#faf9f6]">
-                        <span class="text-[9px] font-bold text-stone-400 block mb-1">بطاقة التحضير والبيانات ${c}</span>
-                        <textarea id="card_${c}" class="w-full flex-1 text-xs bg-transparent resize-none focus:outline-none leading-relaxed border-t border-dashed pt-1" placeholder="تجهيز فكرة الدرس، الخامات الفنية...">${textVal}</textarea>
-                    </div>`;
-            }
-
-            // تحميل مهام العمل والحياة الشخصية
-            document.getElementById('work-tasks').value = savedData['work_tasks'] || '';
-            document.getElementById('personal-tasks').value = savedData['personal_tasks'] || '';
-
-            // تحديث التذييل السفلي الذكي
             buildFooterCalendar(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
-            renderDayExpenses(dateStr);
         }
 
-        // بناء التذييل التفاعلي الممتد أسفل الصفحات
+        // بناء تقويم التذييل السفلي التفاعلي الممتد لربط جميع الأيام
         function buildFooterCalendar(year, month, activeDay) {
             const container = document.getElementById('footer-calendar-container');
-            container.innerHTML = `<span class="font-bold text-[#1e2522] min-w-[70px]">${monthsNames[month]} ${year}:</span>`;
+            container.innerHTML = `<span class="font-bold text-[#242b28] bg-stone-100 px-1.5 py-0.5 rounded">${monthsNames[month]} ${year}:</span>`;
             
             let daysDiv = document.createElement('div');
-            daysDiv.className = "flex-1 flex justify-around px-2 gap-0.5";
+            daysDiv.className = "flex-1 flex justify-around px-1";
             
             let totalDays = new Date(year, month + 1, 0).getDate();
-            for(let d=1; d<=totalDays; d++) {
+            for (let d = 1; d <= totalDays; d++) {
                 let dStr = `${year}-${String(month+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                let isActive = (d === activeDay) ? 'bg-[#1e2522] text-[#d4af37] font-bold px-1 rounded' : 'hover:bg-stone-200 rounded px-0.5';
-                daysDiv.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer text-center text-[10px] ${isActive}">${d}</span>`;
+                let isActive = (d === activeDay) ? 'bg-[#242b28] text-[#d4af37] font-black px-1.5 rounded-sm' : 'hover:bg-stone-200 rounded px-0.5 text-stone-600';
+                daysDiv.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer text-center font-medium ${isActive}">${d}</span>`;
             }
             container.appendChild(daysDiv);
-        }
-
-        // إدارة وحفظ البيانات اليومية المدخلة
-        function saveDailyData() {
-            let savedData = JSON.parse(localStorage.getItem(`MYH_${currentDateStr}`)) || {};
-            for(let i=1; i<=8; i++) { savedData[`class_${i}`] = document.getElementById(`class_${i}`).value; }
-            for(let c=1; c<=6; c++) { savedData[`card_${c}`] = document.getElementById(`card_${c}`).value; }
-            savedData['work_tasks'] = document.getElementById('work-tasks').value;
-            savedData['personal_tasks'] = document.getElementById('personal-tasks').value;
-            
-            localStorage.setItem(`MYH_${currentDateStr}`, JSON.stringify(savedData));
-            alert('تم حفظ خطتك وبياناتك اليومية بنجاح! ✨');
-        }
-
-        // النظام المالي وتخزين البيانات المالية
-        function saveDayExpense() {
-            const title = document.getElementById('day-expense-title').value.trim();
-            const amount = parseFloat(document.getElementById('day-expense-amount').value);
-            if(!title || isNaN(amount)) return;
-
-            let financials = JSON.parse(localStorage.getItem('MYH_Financials')) || [];
-            financials.push({ date: currentDateStr, title: title, amount: amount });
-            localStorage.setItem('MYH_Financials', JSON.stringify(financials));
-
-            document.getElementById('day-expense-title').value = '';
-            document.getElementById('day-expense-amount').value = '';
-            
-            renderDayExpenses(currentDateStr);
-            updateFinancialHub();
-        }
-
-        function renderDayExpenses(dateStr) {
-            const list = document.getElementById('day-expenses-list');
-            list.innerHTML = '';
-            let financials = JSON.parse(localStorage.getItem('MYH_Financials')) || [];
-            let dayItems = financials.filter(item => item.date === dateStr);
-            
-            dayItems.forEach(item => {
-                list.innerHTML += `<div class="flex justify-between border-b border-stone-100 py-0.5"><span>• ${item.title}</span><span class="font-bold">${item.amount.toFixed(3)}</span></div>`;
-            });
-        }
-
-        function updateFinancialHub() {
-            let financials = JSON.parse(localStorage.getItem('MYH_Financials')) || [];
-            const tbody = document.getElementById('financial-table-body');
-            tbody.innerHTML = '';
-            
-            let artTotal = 0;
-            let generalTotal = 0;
-
-            financials.forEach(item => {
-                if(item.title.includes('ألوان') || item.title.includes('خامات') || item.title.includes('فنون') || item.title.includes('أدوات')) {
-                    artTotal += item.amount;
-                } else {
-                    generalTotal += item.amount;
-                }
-
-                tbody.innerHTML += `
-                    <tr class="border-b hover:bg-stone-50">
-                        <td class="p-2 text-stone-500">${item.date}</td>
-                        <td class="p-2 font-medium">${item.title}</td>
-                        <td class="p-2 font-bold text-stone-700">${item.amount.toFixed(3)}</td>
-                    </tr>`;
-            });
-
-            document.getElementById('fin-art-total').innerText = artTotal.toFixed(3);
-            document.getElementById('fin-general-total').innerText = generalTotal.toFixed(3);
         }
     </script>
 </body>
