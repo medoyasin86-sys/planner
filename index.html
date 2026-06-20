@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MYH Simple Paper Planner 2026-2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2pdf.js for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
 
@@ -15,7 +17,7 @@
 
         body { 
             font-family: 'Tajawal', sans-serif; 
-            background: #d0ccc0;
+            background: #c0bca8;
             color: #1a1a1a; 
             user-select: none;
             overflow: hidden;
@@ -26,7 +28,7 @@
             justify-content: center;
         }
 
-        /* iPad 10.2" Dimensions 4:3 - Clean white paper */
+        /* iPad 10.2" Dimensions 4:3 */
         .ipad-container { 
             width: 1024px; 
             height: 768px; 
@@ -37,7 +39,7 @@
             overflow: hidden;
         }
 
-        /* Very subtle paper texture - almost invisible */
+        /* Very subtle paper texture */
         .paper-texture::before {
             content: '';
             position: absolute;
@@ -48,57 +50,43 @@
         }
 
         /* ============================================ */
-        /* CLEAN NOTEBOOK LINES - Ultra subtle          */
+        /* ULTRA-THIN REAL NOTEBOOK LINES               */
         /* ============================================ */
 
-        /* Standard ruled - very light blue */
         .ruled-light {
             background-color: #ffffff;
             background-image: 
                 linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
-            background-size: 100% 24px;
-            background-position: 0 12px;
+            background-size: 100% 22px;
+            background-position: 0 11px;
         }
 
-        /* Wide ruled - for Arabic */
         .ruled-wide {
             background-color: #ffffff;
             background-image: 
                 linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
-            background-size: 100% 28px;
-            background-position: 0 14px;
+            background-size: 100% 26px;
+            background-position: 0 13px;
         }
 
-        /* Dot grid - tiny dots */
-        .dot-light {
+        .dot-ultra {
             background-color: #ffffff;
             background-image: 
-                radial-gradient(circle, rgba(150, 150, 150, 0.15) 0.6px, transparent 0.6px);
+                radial-gradient(circle, rgba(140, 140, 140, 0.2) 0.8px, transparent 0.8px);
             background-size: 20px 20px;
             background-position: 10px 10px;
         }
 
-        /* Graph paper - very light */
-        .graph-light {
-            background-color: #ffffff;
-            background-image: 
-                linear-gradient(rgba(150, 150, 150, 0.08) 0.5px, transparent 0.5px),
-                linear-gradient(90deg, rgba(150, 150, 150, 0.08) 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
-        }
-
-        /* Cornell - with red margin line */
         .cornell-clean {
             background-color: #ffffff;
             background-image: 
                 linear-gradient(90deg, transparent calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 31px), transparent calc(100% - 31px)),
                 linear-gradient(90deg, transparent 30%, rgba(100, 149, 237, 0.08) 30%, rgba(100, 149, 237, 0.08) calc(30% + 0.5px), transparent calc(30% + 0.5px)),
                 linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
-            background-size: 100% 100%, 100% 100%, 100% 24px;
-            background-position: 0 0, 0 0, 0 12px;
+            background-size: 100% 100%, 100% 100%, 100% 22px;
+            background-position: 0 0, 0 0, 0 11px;
         }
 
-        /* Ledger - account book */
         .ledger-clean {
             background-color: #ffffff;
             background-image: 
@@ -106,11 +94,10 @@
                 linear-gradient(90deg, transparent 65%, rgba(100, 149, 237, 0.08) 65%, rgba(100, 149, 237, 0.08) calc(65% + 0.5px), transparent calc(65% + 0.5px)),
                 linear-gradient(90deg, transparent 82%, rgba(100, 149, 237, 0.08) 82%, rgba(100, 149, 237, 0.08) calc(82% + 0.5px), transparent calc(82% + 0.5px)),
                 linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 24px;
-            background-position: 0 0, 0 0, 0 0, 0 24px;
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 22px;
+            background-position: 0 0, 0 0, 0 0, 0 22px;
         }
 
-        /* Blank with red margin only */
         .blank-margin {
             background-color: #ffffff;
             background-image: 
@@ -118,12 +105,13 @@
         }
 
         /* ============================================ */
-        /* SIMPLE SIDEBAR - Clean dark                  */
+        /* SIDEBAR - Simple dark                          */
         /* ============================================ */
 
         .sidebar-tab {
             transition: all 0.15s ease;
             border-radius: 0 4px 4px 0;
+            position: relative;
         }
 
         .sidebar-tab:hover {
@@ -149,7 +137,7 @@
         }
 
         /* ============================================ */
-        /* MINI CALENDAR - Simple                       */
+        /* MINI CALENDAR                                  */
         /* ============================================ */
 
         .mini-day {
@@ -174,7 +162,7 @@
         .mini-day.weekend { color: #c05c46; font-weight: 600; }
 
         /* ============================================ */
-        /* SIMPLE BORDERS - Thin gray                   */
+        /* SIMPLE BORDERS                                 */
         /* ============================================ */
 
         .simple-border {
@@ -188,7 +176,7 @@
         }
 
         /* ============================================ */
-        /* SIMPLE CHECKBOX - Small square               */
+        /* SIMPLE CHECKBOX                                */
         /* ============================================ */
 
         .simple-checkbox {
@@ -203,7 +191,7 @@
         }
 
         /* ============================================ */
-        /* SIMPLE TYPOGRAPHY - Clean                    */
+        /* SIMPLE TYPOGRAPHY                              */
         /* ============================================ */
 
         .simple-title {
@@ -221,7 +209,7 @@
         }
 
         /* ============================================ */
-        /* VIEW TRANSITIONS                             */
+        /* VIEW TRANSITIONS                               */
         /* ============================================ */
 
         .view-content {
@@ -233,7 +221,7 @@
         }
 
         /* ============================================ */
-        /* SCROLLBAR                                    */
+        /* SCROLLBAR                                      */
         /* ============================================ */
 
         .custom-scroll::-webkit-scrollbar { width: 2px; }
@@ -241,7 +229,7 @@
         .custom-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
 
         /* ============================================ */
-        /* YEARLY MONTH BOX - Simple white              */
+        /* YEARLY MONTH BOX                               */
         /* ============================================ */
 
         .month-box-simple {
@@ -258,7 +246,7 @@
         }
 
         /* ============================================ */
-        /* LEDGER HEADER - Simple                       */
+        /* LEDGER HEADER                                  */
         /* ============================================ */
 
         .ledger-header-simple {
@@ -274,7 +262,7 @@
         .ledger-col-out { width: 18%; padding: 4px 3px; border-right: 1px solid #ddd; text-align: center; color: #5a2a2a; }
 
         /* ============================================ */
-        /* TASK LINE - Simple                           */
+        /* TASK LINE                                      */
         /* ============================================ */
 
         .task-line {
@@ -283,7 +271,7 @@
             gap: 8px;
             padding: 2px 0;
             border-bottom: 0.5px solid rgba(100, 149, 237, 0.08);
-            min-height: 24px;
+            min-height: 22px;
         }
 
         .task-line:last-child {
@@ -291,7 +279,7 @@
         }
 
         /* ============================================ */
-        /* DATE BADGE - Simple                          */
+        /* DATE BADGE                                     */
         /* ============================================ */
 
         .date-badge-simple {
@@ -302,7 +290,7 @@
         }
 
         /* ============================================ */
-        /* INK COLOR DOTS - Simple                      */
+        /* INK COLOR DOTS                                 */
         /* ============================================ */
 
         .ink-dot {
@@ -312,16 +300,18 @@
             border: 1.5px solid transparent;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.12);
         }
 
-        .ink-dot:hover { transform: scale(1.1); }
+        .ink-dot:hover { transform: scale(1.15); }
         .ink-dot.active { 
             border-color: #333; 
             box-shadow: 0 0 0 2px white, 0 0 0 3px #ccc;
         }
 
         /* ============================================ */
-        /* PAGE NUMBER                                  */
+        /* PAGE NUMBER                                    */
         /* ============================================ */
 
         .page-num {
@@ -333,14 +323,121 @@
             color: #bbb;
             font-weight: 400;
         }
+
+        /* ============================================ */
+        /* PRINT BUTTON                                   */
+        /* ============================================ */
+
+        .print-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 50;
+            background: #1b2b26;
+            color: #e5ad35;
+            border: 1px solid #2d4a43;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Tajawal', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .print-btn:hover {
+            background: #2d4a43;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .print-btn:active {
+            transform: translateY(0);
+        }
+
+        .print-btn.generating {
+            background: #c05c46;
+            color: white;
+            pointer-events: none;
+        }
+
+        /* Print progress overlay */
+        .print-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.9);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .print-overlay.active {
+            display: flex;
+        }
+
+        .print-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #2d4a43;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .print-status {
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                background: white;
+                height: auto;
+                overflow: visible;
+            }
+            .ipad-container {
+                box-shadow: none;
+                border-radius: 0;
+                width: 100%;
+                height: auto;
+            }
+            .print-btn, .print-overlay {
+                display: none !important;
+            }
+        }
     </style>
 <base target="_blank">
 </head>
 <body>
 
-    <div class="ipad-container paper-texture">
+    <div class="ipad-container paper-texture" id="planner-container">
 
-        <!-- LEFT SIDEBAR - Simple dark -->
+        <!-- Print Button -->
+        <button class="print-btn" id="print-btn" onclick="generatePDF()">
+            <span>🖨️</span>
+            <span>تصدير PDF للطباعة</span>
+        </button>
+
+        <!-- Print Progress Overlay -->
+        <div class="print-overlay" id="print-overlay">
+            <div class="print-spinner"></div>
+            <div class="print-status" id="print-status">جاري توليد ملف PDF...</div>
+        </div>
+
+        <!-- LEFT SIDEBAR -->
         <aside class="absolute right-0 top-0 bottom-0 w-24 bg-[#1b2b26] text-stone-300 flex flex-col items-center py-4 z-20">
 
             <!-- Brand -->
@@ -367,19 +464,19 @@
             <!-- Months -->
             <div class="flex-1 w-full overflow-y-auto custom-scroll px-1">
                 <div class="flex flex-col gap-0.5">
-                    <button onclick="goToMonth(2026, 6)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-6">يوليو 26</button>
-                    <button onclick="goToMonth(2026, 7)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-7">أغسطس</button>
-                    <button onclick="goToMonth(2026, 8)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-8">سبتمبر</button>
-                    <button onclick="goToMonth(2026, 9)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-9">أكتوبر</button>
-                    <button onclick="goToMonth(2026, 10)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-10">نوفمبر</button>
-                    <button onclick="goToMonth(2026, 11)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-11">ديسمبر</button>
-                    <button onclick="goToMonth(2027, 0)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-0">يناير 27</button>
-                    <button onclick="goToMonth(2027, 1)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-1">فبراير</button>
-                    <button onclick="goToMonth(2027, 2)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-2">مارس</button>
-                    <button onclick="goToMonth(2027, 3)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-3">أبريل</button>
-                    <button onclick="goToMonth(2027, 4)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-4">مايو</button>
-                    <button onclick="goToMonth(2027, 5)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-5">يونيو</button>
-                    <button onclick="goToMonth(2027, 6)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-6">يوليو 27</button>
+                    <button onclick="goToMonth(2026, 6)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2026-6">يوليو 26</button>
+                    <button onclick="goToMonth(2026, 7)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2026-7">أغسطس</button>
+                    <button onclick="goToMonth(2026, 8)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2026-8">سبتمبر</button>
+                    <button onclick="goToMonth(2026, 9)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2026-9">أكتوبر</button>
+                    <button onclick="goToMonth(2026, 10)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2026-10">نوفمبر</button>
+                    <button onclick="goToMonth(2026, 11)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2026-11">ديسمبر</button>
+                    <button onclick="goToMonth(2027, 0)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2027-0">يناير 27</button>
+                    <button onclick="goToMonth(2027, 1)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2027-1">فبراير</button>
+                    <button onclick="goToMonth(2027, 2)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2027-2">مارس</button>
+                    <button onclick="goToMonth(2027, 3)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2027-3">أبريل</button>
+                    <button onclick="goToMonth(2027, 4)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2027-4">مايو</button>
+                    <button onclick="goToMonth(2027, 5)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2027-5">يونيو</button>
+                    <button onclick="goToMonth(2027, 6)" class="sidebar-tab w-full py-1.5 text-[10px] text-center" data-m="2027-6">يوليو 27</button>
                 </div>
             </div>
 
@@ -430,7 +527,7 @@
                     </div>
 
                     <div class="flex flex-col items-end gap-1">
-                        <div class="bg-stone-900 text-[#e5ad35] text-[10px] font-bold px-3 py-1 rounded tracking-widest">MYH</div>
+                        <div class="bg-stone-900 text-[#e5ad35] text-[10px] font-bold px-3 py-1 rounded border border-stone-700 tracking-widest">MYH</div>
                     </div>
                 </div>
 
@@ -448,35 +545,35 @@
                         <div class="grid grid-cols-8 gap-1">
                             <div class="text-center">
                                 <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">١</div>
-                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                                <div class="dot-ultra border border-[#eee] rounded" style="height: 44px;"></div>
                             </div>
                             <div class="text-center">
                                 <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٢</div>
-                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                                <div class="dot-ultra border border-[#eee] rounded" style="height: 44px;"></div>
                             </div>
                             <div class="text-center">
                                 <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٣</div>
-                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                                <div class="dot-ultra border border-[#eee] rounded" style="height: 44px;"></div>
                             </div>
                             <div class="text-center">
                                 <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٤</div>
-                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                                <div class="dot-ultra border border-[#eee] rounded" style="height: 44px;"></div>
                             </div>
                             <div class="text-center">
                                 <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٥</div>
-                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                                <div class="dot-ultra border border-[#eee] rounded" style="height: 44px;"></div>
                             </div>
                             <div class="text-center">
                                 <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٦</div>
-                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                                <div class="dot-ultra border border-[#eee] rounded" style="height: 44px;"></div>
                             </div>
                             <div class="text-center">
                                 <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٧</div>
-                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                                <div class="dot-ultra border border-[#eee] rounded" style="height: 44px;"></div>
                             </div>
                             <div class="text-center">
                                 <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٨</div>
-                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                                <div class="dot-ultra border border-[#eee] rounded" style="height: 44px;"></div>
                             </div>
                         </div>
                     </div>
@@ -489,9 +586,7 @@
                             </h3>
                             <span class="text-[8px] text-[#999]">خطوط واسعة</span>
                         </div>
-                        <div class="grid grid-cols-3 gap-2 flex-1" id="art-handwriting-cards">
-                            <!-- Generated by JS -->
-                        </div>
+                        <div class="grid grid-cols-3 gap-2 flex-1" id="art-handwriting-cards"></div>
                     </div>
                 </div>
 
@@ -509,43 +604,43 @@
                             <div class="space-y-0">
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                                 <div class="task-line">
                                     <div class="simple-checkbox"></div>
-                                    <div class="flex-1" style="height: 24px;"></div>
+                                    <div class="flex-1" style="height: 22px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -572,39 +667,39 @@
                             <h3 class="simple-label text-[#1f4e5b] mb-1 pb-1 border-b border-[#eee] flex items-center gap-1">
                                 <span>🍏</span> مسؤوليات اليوم
                             </h3>
-                            <div class="ruled-light rounded border border-[#f0f0f0] p-1" style="background-position: 0 0, 0 12px;">
+                            <div class="ruled-light rounded border border-[#f0f0f0] p-1" style="background-position: 0 0, 0 11px;">
                                 <div class="space-y-0">
                                     <div class="task-line">
                                         <div class="simple-checkbox"></div>
-                                        <div class="flex-1" style="height: 24px;"></div>
+                                        <div class="flex-1" style="height: 22px;"></div>
                                     </div>
                                     <div class="task-line">
                                         <div class="simple-checkbox"></div>
-                                        <div class="flex-1" style="height: 24px;"></div>
+                                        <div class="flex-1" style="height: 22px;"></div>
                                     </div>
                                     <div class="task-line">
                                         <div class="simple-checkbox"></div>
-                                        <div class="flex-1" style="height: 24px;"></div>
+                                        <div class="flex-1" style="height: 22px;"></div>
                                     </div>
                                     <div class="task-line">
                                         <div class="simple-checkbox"></div>
-                                        <div class="flex-1" style="height: 24px;"></div>
+                                        <div class="flex-1" style="height: 22px;"></div>
                                     </div>
                                     <div class="task-line">
                                         <div class="simple-checkbox"></div>
-                                        <div class="flex-1" style="height: 24px;"></div>
+                                        <div class="flex-1" style="height: 22px;"></div>
                                     </div>
                                     <div class="task-line">
                                         <div class="simple-checkbox"></div>
-                                        <div class="flex-1" style="height: 24px;"></div>
+                                        <div class="flex-1" style="height: 22px;"></div>
                                     </div>
                                     <div class="task-line">
                                         <div class="simple-checkbox"></div>
-                                        <div class="flex-1" style="height: 24px;"></div>
+                                        <div class="flex-1" style="height: 22px;"></div>
                                     </div>
                                     <div class="task-line">
                                         <div class="simple-checkbox"></div>
-                                        <div class="flex-1" style="height: 24px;"></div>
+                                        <div class="flex-1" style="height: 22px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -613,7 +708,7 @@
                         <!-- Free Notes - Ruled Light -->
                         <div class="simple-border bg-white rounded p-2 flex-1">
                             <h3 class="simple-label text-[#333] mb-1 pb-1 border-b border-[#eee]">📝 ملاحظات حرة</h3>
-                            <div class="ruled-light rounded border border-[#f0f0f0] flex-1" style="min-height: 70px; background-position: 0 0, 0 12px;"></div>
+                            <div class="ruled-light rounded border border-[#f0f0f0] flex-1" style="min-height: 70px; background-position: 0 0, 0 11px;"></div>
                         </div>
                     </div>
 
@@ -632,8 +727,8 @@
                         </div>
 
                         <!-- Ledger Lines -->
-                        <div class="ledger-clean flex-1 rounded-b border border-t-0 border-[#eee]" style="background-position: 0 0, 0 0, 0 0, 0 24px;">
-                            <div style="height: 240px;"></div>
+                        <div class="ledger-clean flex-1 rounded-b border border-t-0 border-[#eee]" style="background-position: 0 0, 0 0, 0 0, 0 22px;">
+                            <div style="height: 264px;"></div>
                         </div>
 
                         <!-- Totals -->
@@ -700,6 +795,175 @@
             "🍏 الأيام التي ترتب فيها أولوياتك الشخصية بدقة هي الأيام الأكثر إنتاجية."
         ];
 
+        // ============================================
+        // PDF GENERATION FUNCTION
+        // ============================================
+        function generatePDF() {
+            const btn = document.getElementById('print-btn');
+            const overlay = document.getElementById('print-overlay');
+            const status = document.getElementById('print-status');
+            const element = document.getElementById('planner-container');
+
+            // Show loading state
+            btn.classList.add('generating');
+            btn.innerHTML = '<span>⏳</span><span>جاري التصدير...</span>';
+            overlay.classList.add('active');
+            status.innerText = 'جاري توليد ملف PDF بجودة عالية...';
+
+            // Get current view info for filename
+            const dateObj = new Date(currentDateStr);
+            const monthName = monthsNames[dateObj.getMonth()];
+            const year = dateObj.getFullYear();
+            const day = dateObj.getDate();
+            const modeName = currentMode === 'work' ? 'عملي' : 'شخصي';
+
+            // PDF options optimized for print quality
+            const opt = {
+                margin: 0,
+                filename: `MYH_Planner_${year}_${monthName}_${day}_${modeName}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,              // High resolution
+                    dpi: 300,              // Print quality DPI
+                    letterRendering: true, // Better text rendering
+                    useCORS: true,         // Handle cross-origin images
+                    backgroundColor: '#ffffff',
+                    logging: false
+                },
+                jsPDF: { 
+                    unit: 'px', 
+                    format: [1024, 768],   // Exact iPad dimensions
+                    orientation: 'landscape',
+                    compress: false         // Better quality
+                },
+                pagebreak: { 
+                    mode: ['css', 'legacy'],
+                    avoid: ['.task-line', '.simple-checkbox']
+                }
+            };
+
+            // Generate PDF
+            html2pdf()
+                .set(opt)
+                .from(element)
+                .save()
+                .then(() => {
+                    status.innerText = 'تم التصدير بنجاح! ✅';
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                        btn.classList.remove('generating');
+                        btn.innerHTML = '<span>🖨️</span><span>تصدير PDF للطباعة</span>';
+                    }, 1500);
+                })
+                .catch((err) => {
+                    console.error('PDF generation error:', err);
+                    status.innerText = 'حدث خطأ! جاري المحاولة بطريقة بديلة...';
+
+                    // Fallback: try window.print()
+                    setTimeout(() => {
+                        window.print();
+                        overlay.classList.remove('active');
+                        btn.classList.remove('generating');
+                        btn.innerHTML = '<span>🖨️</span><span>تصدير PDF للطباعة</span>';
+                    }, 1000);
+                });
+        }
+
+        // Alternative: Generate all pages PDF (Yearly + Daily)
+        function generateFullPDF() {
+            const overlay = document.getElementById('print-overlay');
+            const status = document.getElementById('print-status');
+
+            overlay.classList.add('active');
+            status.innerText = 'جاري توليد PDF شامل (جميع الصفحات)...';
+
+            // Save current state
+            const savedView = document.querySelector('.view-content:not(.hidden)').id;
+            const savedDate = currentDateStr;
+            const savedMode = currentMode;
+
+            // Generate Yearly view first
+            switchView('yearly');
+
+            const opt = {
+                margin: 0,
+                filename: `MYH_Planner_2026_2027_Full.pdf`,
+                image: { type: 'jpeg', quality: 0.95 },
+                html2canvas: { 
+                    scale: 2,
+                    dpi: 300,
+                    useCORS: true,
+                    backgroundColor: '#ffffff'
+                },
+                jsPDF: { 
+                    unit: 'px', 
+                    format: [1024, 768],
+                    orientation: 'landscape'
+                }
+            };
+
+            // Generate Yearly page
+            html2pdf()
+                .set(opt)
+                .from(document.getElementById('planner-container'))
+                .toPdf()
+                .get('pdf')
+                .then((pdf) => {
+                    // Add daily pages for each month
+                    const months = [
+                        {y: 2026, m: 6}, {y: 2026, m: 7}, {y: 2026, m: 8}, 
+                        {y: 2026, m: 9}, {y: 2026, m: 10}, {y: 2026, m: 11},
+                        {y: 2027, m: 0}, {y: 2027, m: 1}, {y: 2027, m: 2}, 
+                        {y: 2027, m: 3}, {y: 2027, m: 4}, {y: 2027, m: 5}, {y: 2027, m: 6}
+                    ];
+
+                    let promise = Promise.resolve(pdf);
+
+                    months.forEach((item) => {
+                        promise = promise.then(() => {
+                            const dateStr = `${item.y}-${String(item.m+1).padStart(2, '0')}-01`;
+                            loadDate(dateStr);
+                            switchView('daily');
+                            status.innerText = `جاري إضافة صفحة: ${monthsNames[item.m]} ${item.y}...`;
+
+                            return html2pdf()
+                                .set(opt)
+                                .from(document.getElementById('planner-container'))
+                                .toContainer()
+                                .toCanvas()
+                                .toPdf()
+                                .get('pdf')
+                                .then((newPdf) => {
+                                    pdf.addPage();
+                                    return newPdf;
+                                });
+                        });
+                    });
+
+                    return promise;
+                })
+                .then((pdf) => {
+                    pdf.save(`MYH_Planner_2026_2027_Full.pdf`);
+
+                    // Restore state
+                    loadDate(savedDate);
+                    setMode(savedMode);
+                    switchView(savedView.replace('view-', ''));
+
+                    status.innerText = 'تم التصدير بنجاح! ✅';
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                    }, 1500);
+                })
+                .catch((err) => {
+                    console.error('Full PDF error:', err);
+                    status.innerText = 'حدث خطأ في التصدير الشامل';
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                    }, 2000);
+                });
+        }
+
         // Init
         window.onload = function() {
             buildYearlyGrid();
@@ -757,7 +1021,7 @@
             el.classList.add('active');
         }
 
-        // Render Art Cards - Ruled Wide
+        // Render Art Cards
         function renderArtCards() {
             const container = document.getElementById('art-handwriting-cards');
             container.innerHTML = '';
