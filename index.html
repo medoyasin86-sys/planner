@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MYH Ultimate Pro Planner 2026-2027</title>
+    <title>MYH Creative Palette Planner 2026-2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background-color: #d6d3c9; color: #2d2d2d; user-select: none; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #d2ceb8; color: #2a2d2b; user-select: none; }
         
         /* أبعاد شاشة iPad 10.2 الثابتة بنسبة 4:3 لمنع التمرير */
-        .ipad-container { width: 1024px; height: 768px; max-width: 1024px; max-height: 768px; background-color: #faf9f5; }
+        .ipad-container { width: 1024px; height: 768px; max-width: 1024px; max-height: 768px; background-color: #faf8f2; }
         
-        /* أسطر الدفاتر الرقمية بلون رمادي دافئ مريح للعين */
+        /* أسطر الدفاتر الرقمية بلون ترابي ناعم جداً مريح للعين */
         .handwriting-lines {
-            background-image: linear-gradient(#e2e0d5 1px, transparent 1px);
+            background-image: linear-gradient(#e4e1d1 1px, transparent 1px);
             background-size: 100% 24px;
             line-height: 24px;
         }
         .card-lines {
-            background-image: linear-gradient(#e4e2d7 1px, transparent 1px);
+            background-image: linear-gradient(#e7e4d5 1px, transparent 1px);
             background-size: 100% 20px;
             line-height: 20px;
         }
@@ -30,37 +30,37 @@
 
     <div class="ipad-container shadow-2xl rounded-xl overflow-hidden flex flex-row relative border border-stone-300">
         
-        <aside class="w-24 bg-[#16201a] text-stone-300 flex flex-col items-center py-3 justify-between z-10 border-l border-stone-800">
+        <aside class="w-24 bg-[#1b2b26] text-stone-300 flex flex-col items-center py-3 justify-between z-10 border-l border-stone-800">
             <div class="w-full flex flex-col items-center gap-2">
-                <span class="text-sm font-black text-[#d4af37] tracking-wider mb-2">MYH</span>
+                <span class="text-sm font-black text-[#e5ad35] tracking-wider mb-2">MYH</span>
                 
-                <div class="w-full px-1.5 flex flex-col gap-1 border-b border-stone-800 pb-3 mb-2">
-                    <button onclick="setMode('work')" id="mode-btn-work" class="w-full py-2 text-[10px] font-bold text-center rounded transition bg-[#25352c] text-[#d4af37] border border-[#34493d]">🎨 الطور العملي</button>
+                <div class="w-full px-1.5 flex flex-col gap-1 border-b border-[#253c35] pb-3 mb-2">
+                    <button onclick="setMode('work')" id="mode-btn-work" class="w-full py-2 text-[10px] font-bold text-center rounded transition bg-[#2d4a43] text-[#e5ad35] border border-[#3e665d]">🎨 الطور العملي</button>
                     <button onclick="setMode('personal')" id="mode-btn-personal" class="w-full py-2 text-[10px] font-bold text-center rounded transition bg-stone-900 text-stone-400 hover:text-white">🍏 الطور الشخصي</button>
                 </div>
 
-                <button onclick="switchView('yearly')" class="w-full py-1 text-[11px] font-bold text-center hover:bg-stone-800 transition mb-1 text-stone-400">📅 السنوي</button>
+                <button onclick="switchView('yearly')" class="w-full py-1 text-[11px] font-bold text-center hover:bg-[#253c35] transition mb-1 text-stone-400">📅 السنوي</button>
                 
                 <div class="flex flex-col gap-0.5 w-full overflow-y-auto hide-scrollbar max-h-[400px]">
-                    <button onclick="goToMonth(2026, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-6">يوليو 26</button>
-                    <button onclick="goToMonth(2026, 7)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-7">أغسطس</button>
-                    <button onclick="goToMonth(2026, 8)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-8">سبتمبر</button>
-                    <button onclick="goToMonth(2026, 9)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-9">أكتوبر</button>
-                    <button onclick="goToMonth(2026, 10)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-10">نوفمبر</button>
-                    <button onclick="goToMonth(2026, 11)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2026-11">ديسمبر</button>
-                    <button onclick="goToMonth(2027, 0)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-0">يناير 27</button>
-                    <button onclick="goToMonth(2027, 1)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-1">فبراير</button>
-                    <button onclick="goToMonth(2027, 2)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-2">مارس</button>
-                    <button onclick="goToMonth(2027, 3)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-3">أبريل</button>
-                    <button onclick="goToMonth(2027, 4)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-4">مايو</button>
-                    <button onclick="goToMonth(2027, 5)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-5">يونيو</button>
-                    <button onclick="goToMonth(2027, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-stone-800" data-m="2027-6">يوليو 27</button>
+                    <button onclick="goToMonth(2026, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2026-6">يوليو 26</button>
+                    <button onclick="goToMonth(2026, 7)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2026-7">أغسطس</button>
+                    <button onclick="goToMonth(2026, 8)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2026-8">سبتمبر</button>
+                    <button onclick="goToMonth(2026, 9)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2026-9">أكتوبر</button>
+                    <button onclick="goToMonth(2026, 10)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2026-10">نوفمبر</button>
+                    <button onclick="goToMonth(2026, 11)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2026-11">ديسمبر</button>
+                    <button onclick="goToMonth(2027, 0)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2027-0">يناير 27</button>
+                    <button onclick="goToMonth(2027, 1)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2027-1">فبراير</button>
+                    <button onclick="goToMonth(2027, 2)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2027-2">مارس</button>
+                    <button onclick="goToMonth(2027, 3)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2027-3">أبريل</button>
+                    <button onclick="goToMonth(2027, 4)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2027-4">مايو</button>
+                    <button onclick="goToMonth(2027, 5)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2027-5">يونيو</button>
+                    <button onclick="goToMonth(2027, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#253c35]" data-m="2027-6">يوليو 27</button>
                 </div>
             </div>
-            <button onclick="switchView('daily')" class="w-full py-2.5 text-[11px] font-bold text-center bg-[#1d2922] text-[#d4af37] hover:bg-stone-700 transition rounded-b border-t border-stone-800">اليوم الحالي</button>
+            <button onclick="switchView('daily')" class="w-full py-2.5 text-[11px] font-bold text-center bg-[#14201c] text-[#e5ad35] hover:bg-stone-700 transition rounded-b border-t border-stone-800">اليوم الحالي</button>
         </aside>
 
-        <main class="flex-1 flex flex-col p-4 justify-between overflow-hidden bg-[#faf8f2]">
+        <main class="flex-1 flex flex-col p-4 justify-between overflow-hidden bg-[#fbfaf5]">
             
             <div id="view-yearly" class="view-content flex-1 flex flex-col justify-center">
                 <h1 class="text-base font-bold text-center text-stone-800 mb-3">التقويم السنوي التفاعلي ٢٠٢٦ - ٢٠٢٧</h1>
@@ -72,17 +72,18 @@
                 <div class="flex flex-row justify-between items-center border-b-2 border-stone-200 pb-2 mb-2">
                     <div class="flex items-center gap-3">
                         <div class="w-28 bg-white rounded border border-stone-300 overflow-hidden text-center shadow-xs">
-                            <div class="bg-[#b84a39] text-white py-0.5 text-[10px] font-bold" id="calendar-top-month">يوليو ٢٠٢٦</div>
+                            <div class="bg-[#c05c46] text-white py-0.5 text-[10px] font-bold" id="calendar-top-month">يوليو ٢٠٢٦</div>
                             <div class="py-1 bg-stone-50">
                                 <div class="text-2xl font-black text-stone-800 leading-none" id="calendar-main-day">١٥</div>
                                 <div class="text-[10px] font-bold text-stone-500 mt-0.5" id="calendar-day-name">الأربعاء</div>
                             </div>
                         </div>
-                        <div>
-                            <span id="current-mode-badge" class="text-[10px] bg-[#25352c] text-[#d4af37] font-bold px-2 py-0.5 rounded-full border border-[#34493d]">القسم العملي والأكاديمي</span>
+                        <div class="flex flex-col gap-1">
+                            <span id="current-mode-badge" class="w-fit text-[10px] bg-[#2d4a43] text-[#e5ad35] font-bold px-2 py-0.5 rounded-full border border-[#3e665d]">القسم العملي والأكاديمي</span>
+                            <span id="dynamic-quote-bar" class="text-[10.5px] text-[#4d5e53] italic font-medium max-w-lg truncate"></span>
                         </div>
                     </div>
-                    <div class="bg-stone-900 text-[#d4af37] text-xs font-black px-3 py-1 rounded shadow tracking-widest">MYH</div>
+                    <div class="bg-stone-900 text-[#e5ad35] text-xs font-black px-3 py-1 rounded shadow tracking-widest">MYH</div>
                 </div>
 
                 <div id="sub-view-work" class="daily-sub-view flex-1 flex flex-col justify-between overflow-hidden">
@@ -95,24 +96,24 @@
                         </div>
                     </div>
                     <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm flex-1 flex flex-col">
-                        <h3 class="text-[11px] font-bold text-stone-600 mb-1 flex items-center gap-1">🎨 <span class="text-[#25352c]">بطاقات التحضير الفني ومتابعة الفصول والدروس</span></h3>
+                        <h3 class="text-[11px] font-bold text-stone-600 mb-1 flex items-center gap-1">🎨 <span class="text-[#2d4a43]">بطاقات التحضير الفني ومتابعة الفصول والدروس</span></h3>
                         <div class="grid grid-cols-3 gap-2 flex-1 items-stretch" id="art-handwriting-cards"></div>
                     </div>
                 </div>
 
                 <div id="sub-view-weekend" class="daily-sub-view flex-1 hidden grid grid-cols-12 gap-3 items-stretch overflow-hidden">
                     <div class="col-span-4 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col">
-                        <h3 class="text-xs font-bold text-[#b84a39] mb-2 border-b pb-1 flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-[#5c46c0] mb-2 border-b pb-1 flex justify-between items-center">
                             <span>🌿 مهام الإجازة الأسبوعية</span>
                             <span class="text-[9px] text-stone-400 font-normal">جمعة وسبت</span>
                         </h3>
                         <div class="space-y-3.5 mt-2 flex-1">
-                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-200 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-200 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-red-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-200 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-200 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-200 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-200 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-200 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
+                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-200 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
                         </div>
                     </div>
                     <div class="col-span-8 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col">
@@ -125,7 +126,7 @@
                     
                     <div class="col-span-4 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col justify-between">
                         <div class="flex flex-col">
-                            <h3 class="text-xs font-bold text-stone-700 mb-2 border-b pb-1 flex items-center gap-1">🍏 <span class="text-[#3b5944]">قائمة المسؤوليات العائلية</span></h3>
+                            <h3 class="text-xs font-bold text-stone-700 mb-2 border-b pb-1 flex items-center gap-1">🍏 <span class="text-[#1f4e5b]">قائمة المسؤوليات العائلية واليومية</span></h3>
                             <div class="space-y-3.5 mt-2">
                                 <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
                                 <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
@@ -136,7 +137,7 @@
                         </div>
                         
                         <div class="flex-1 mt-4 border-t-2 border-dashed border-stone-200 pt-2 flex flex-col">
-                            <span class="text-[10px] font-bold text-stone-400 block mb-1">📝 مفكرة حرة (مسطرة مثل الكراسات التقليدية):</span>
+                            <span class="text-[10px] font-bold text-stone-400 block mb-1">📝 مفكرة حرة (مسطرة كالكراسات التقليدية):</span>
                             <div class="handwriting-lines flex-1 opacity-70" style="background-size: 100% 20px; line-height: 20px;"></div>
                         </div>
                     </div>
@@ -145,14 +146,14 @@
                         <div class="flex-1 flex flex-col">
                             <h3 class="text-xs font-bold text-stone-700 mb-1.5 pb-1 border-b flex justify-between items-center">
                                 <span>📊 دفتر الحسابات اليومي الشامل لمراقبة الميزانية</span>
-                                <span class="text-[9px] text-stone-400 bg-stone-50 px-2 py-0.5 rounded">إصدار التصفح الرقمي</span>
+                                <span class="text-[9px] text-[#1f4e5b] bg-sky-50 font-bold px-2 py-0.5 rounded">إصدار التصفح الرقمي</span>
                             </h3>
                             
                             <div class="relative flex-1 border border-stone-200 rounded overflow-hidden mb-2">
                                 <div class="handwriting-lines absolute inset-0 opacity-60" style="background-size: 100% 24px; line-height: 24px; margin-top: 24px;"></div>
                                 <div class="absolute top-0 bottom-0 right-[65%] border-l border-red-100 opacity-60"></div>
                                 <div class="absolute top-0 bottom-0 right-[82%] border-l border-green-100 opacity-60"></div>
-                                <div class="absolute top-0 right-0 left-0 h-6 bg-[#f4f2ea] border-b border-stone-200 flex text-[10px] font-bold text-stone-600 text-center items-center">
+                                <div class="absolute top-0 right-0 left-0 h-6 bg-[#f0eff5] border-b border-stone-200 flex text-[10px] font-bold text-stone-600 text-center items-center">
                                     <div class="w-[65%]">بيان ووصف المعاملة المالية اليومية</div>
                                     <div class="w-[17%] border-r border-stone-200 text-green-700">وارد (+)</div>
                                     <div class="w-[18%] border-r border-stone-200 text-red-700">صادر (-)</div>
@@ -160,7 +161,7 @@
                             </div>
                         </div>
                         
-                        <div class="bg-[#f4f2ea] border border-stone-300 rounded p-1.5 grid grid-cols-3 gap-2 text-center text-[11px] font-bold">
+                        <div class="bg-[#f0eff5] border border-stone-300 rounded p-1.5 grid grid-cols-3 gap-2 text-center text-[11px] font-bold">
                             <div class="bg-green-50/70 p-1 rounded border border-green-200">
                                 <span class="text-green-700 block text-[9px] mb-0.5">💰 إجمالي الوارد</span>
                                 <div class="h-5 bg-white border border-stone-200 rounded"></div>
@@ -190,6 +191,33 @@
         let currentMode = "work"; 
         const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
+        // بنك الحكم المتغيرة حسب طبيعة ونوع اليوم والطور
+        const workQuotes = [
+            "🎨 الفن يمسح عن الروح غبار الحياة اليومية. - بابلو بيكاسو",
+            "🎨 التدريس هو أرقى أشكال الفنون، لأن المشكل هو عقول البشر.",
+            "🎨 اللون هو لوحة المفاتيح، العين هي المطرقة، والروح هي الأوتار.",
+            "🎨 الخط الخارجي هو فكرة تم إنقاذها من الفوضى الكونية.",
+            "🎨 العمل الفني الحقيقي ما هو إلا ظلال للكمال الإلهي.",
+            "🎨 لكي تبدع، يجب أن تتخلى أولاً عن الخوف من الخطأ.",
+            "🎨 الفنون التشكيلية هي لغة عالمية صامتة تخاطب القلوب بلا ترجمة."
+        ];
+
+        const weekendQuotes = [
+            "🌿 الراحة هي التربة الخصبة التي تنبت فيها أفكار الإبداع القادمة.",
+            "🌿 تأمل الطبيعة، ففي صمتها تكمن أروع الألوان والخطوط التشكيلية.",
+            "🌿 الإجازة ليست توقفاً عن الحركة، بل هي إعادة ضبط لبوصلة الشغف.",
+            "🌿 خذ نفساً عميقاً، اترك ريشة العمل، ودع روحك تتأمل جمال الكون الصامت.",
+            "🌿 عطلة سعيدة! التوازن يبدأ بحق جسدك وعقلك في الاسترخاء الكامل."
+        ];
+
+        const personalQuotes = [
+            "🍏 تنظيم ميزانيتك اليومية يمنح عائلتك الأمان والحرية الفكرية لتستمر في الإبداع.",
+            "🍏 التوازن المالي ليس شحاً، بل هو هندسة ذكية لإدارة موارد الحياة بثقة.",
+            "🍏 لكي تبدع في مرسمك، يجب أولاً أن تطمئن في بيتك وتدير مسؤولياتك بانتظام.",
+            "🍏 الصافي الحقيقي ليس في دفتر الحسابات فحسب، بل في راحة بالك وضميرك.",
+            "🍏 الأيام التي ترتب فيها أولوياتك الشخصية بدقة هي الأيام الأكثر إنتاجية."
+        ];
+
         window.onload = function() {
             buildYearlyGrid();
             renderHandwritingCards();
@@ -203,15 +231,15 @@
             const badge = document.getElementById('current-mode-badge');
 
             if(mode === 'work') {
-                btnWork.className = "w-full py-2 text-[10px] font-bold text-center rounded transition bg-[#25352c] text-[#d4af37] border border-[#34493d]";
+                btnWork.className = "w-full py-2 text-[10px] font-bold text-center rounded transition bg-[#2d4a43] text-[#e5ad35] border border-[#3e665d]";
                 btnPers.className = "w-full py-2 text-[10px] font-bold text-center rounded transition bg-stone-900 text-stone-400 hover:text-white";
                 badge.innerText = "القسم العملي والأكاديمي";
-                badge.className = "text-[10px] bg-[#25352c] text-[#d4af37] font-bold px-2 py-0.5 rounded-full border border-[#34493d]";
+                badge.className = "text-[10px] bg-[#2d4a43] text-[#e5ad35] font-bold px-2 py-0.5 rounded-full border border-[#3e665d]";
             } else {
-                btnPers.className = "w-full py-2 text-[10px] font-bold text-center rounded transition bg-[#334639] text-[#d4af37] border border-[#435c4b]";
+                btnPers.className = "w-full py-2 text-[10px] font-bold text-center rounded transition bg-[#1f4e5b] text-[#e5ad35] border border-[#2a6a7c]";
                 btnWork.className = "w-full py-2 text-[10px] font-bold text-center rounded transition bg-stone-900 text-stone-400 hover:text-white";
                 badge.innerText = "قسم الحياة الشخصية والمالية";
-                badge.className = "text-[10px] bg-[#1a2530] text-sky-400 font-bold px-2 py-0.5 rounded-full border border-sky-900";
+                badge.className = "text-[10px] bg-[#1f4e5b] text-sky-200 font-bold px-2 py-0.5 rounded-full border border-[#2a6a7c]";
             }
             updateDailySubViews();
         }
@@ -250,15 +278,26 @@
             const dateObj = new Date(currentDateStr);
             const dayOfWeek = dateObj.getDay(); 
             const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6); // 5 = الجمعة, 6 = السبت
+            
+            // محرك اختيار الحكمة الذكي بناءً على اليوم والتاريخ الحالي
+            const dayNum = dateObj.getDate();
+            const quoteBar = document.getElementById('dynamic-quote-bar');
+            const topHeader = document.getElementById('calendar-top-month').parentElement.firstElementChild;
 
             if(currentMode === 'work') {
                 if(isWeekend) {
                     document.getElementById('sub-view-weekend').classList.remove('hidden');
+                    quoteBar.innerText = weekendQuotes[dayNum % weekendQuotes.length];
+                    topHeader.className = "bg-[#5c46c0] text-white py-0.5 text-[10px] font-bold"; // لون خزامى في الويكند للنتيجة
                 } else {
                     document.getElementById('sub-view-work').classList.remove('hidden');
+                    quoteBar.innerText = workQuotes[dayNum % workQuotes.length];
+                    topHeader.className = "bg-[#c05c46] text-white py-0.5 text-[10px] font-bold"; // تيراكوتا في أيام العمل
                 }
             } else {
                 document.getElementById('sub-view-personal').classList.remove('hidden');
+                quoteBar.innerText = personalQuotes[dayNum % personalQuotes.length];
+                topHeader.className = "bg-[#1f4e5b] text-white py-0.5 text-[10px] font-bold"; // فيروز مالي في القسم الشخصي
             }
         }
 
@@ -286,7 +325,7 @@
                     let textClass = isWe ? "text-red-500 font-bold" : "text-stone-600";
                     
                     let dStr = `${item.y}-${String(item.m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    daysGrid.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer hover:bg-amber-100 rounded py-0.5 ${textClass}">${d}</span>`;
+                    daysGrid.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer hover:bg-[#e4e1d1] rounded py-0.5 ${textClass}">${d}</span>`;
                 }
                 monthBox.appendChild(daysGrid);
                 grid.appendChild(monthBox);
@@ -301,9 +340,9 @@
             document.getElementById('calendar-main-day').innerText = dateObj.getDate();
             document.getElementById('calendar-day-name').innerText = dayName;
             
-            document.querySelectorAll('.month-tab').forEach(b => b.classList.remove('bg-stone-800', 'text-[#d4af37]', 'font-bold'));
+            document.querySelectorAll('.month-tab').forEach(b => b.classList.remove('bg-[#2d4a43]', 'text-[#e5ad35]', 'font-bold'));
             const activeTab = document.querySelector(`.month-tab[data-m="${dateObj.getFullYear()}-${dateObj.getMonth()}"]`);
-            if (activeTab) activeTab.classList.add('bg-stone-800', 'text-[#d4af37]', 'font-bold');
+            if (activeTab) activeTab.classList.add('bg-[#2d4a43]', 'text-[#e5ad35]', 'font-bold');
 
             updateDailySubViews();
             buildFooterCalendar(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
@@ -311,7 +350,7 @@
 
         function buildFooterCalendar(year, month, activeDay) {
             const container = document.getElementById('footer-calendar-container');
-            container.innerHTML = `<span class="font-bold text-[#1e2421] bg-stone-100 px-1.5 py-0.5 rounded">${monthsNames[month]} ${year}:</span>`;
+            container.innerHTML = `<span class="font-bold text-[#1b2b26] bg-stone-100 px-1.5 py-0.5 rounded">${monthsNames[month]} ${year}:</span>`;
             
             let daysDiv = document.createElement('div');
             daysDiv.className = "flex-1 flex justify-around px-1";
@@ -323,7 +362,7 @@
                 let isWe = (testDate.getDay() === 5 || testDate.getDay() === 6);
                 
                 let baseColor = isWe ? 'text-red-500 font-bold' : 'text-stone-600';
-                let isActive = (d === activeDay) ? 'bg-[#1e2421] text-[#d4af37] font-black px-1.5 rounded-sm' : `hover:bg-stone-200 rounded px-0.5 ${baseColor}`;
+                let isActive = (d === activeDay) ? 'bg-[#1b2b26] text-[#e5ad35] font-black px-1.5 rounded-sm' : `hover:bg-stone-200 rounded px-0.5 ${baseColor}`;
                 
                 daysDiv.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer text-center font-medium ${isActive}">${d}</span>`;
             }
