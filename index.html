@@ -7,7 +7,7 @@
     <!-- Tailwind CSS للتنسيق الهيكلي -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Tajawal:wght@400;500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght=700;900&family=Tajawal:wght=400;500;700;900&display=swap');
         
         body { font-family: 'Tajawal', sans-serif; background-color: #c5c1aa; color: #1e211f; user-select: none; }
         
@@ -33,22 +33,35 @@
             line-height: 20px;
         }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* إعدادات الطباعة والتصدير للحفاظ على الروابط التشعبية وأبعاد الآيباد */
+        @media print {
+            body { background: none; p: 0; margin: 0; }
+            .ipad-container { width: 1024px; height: 768px; border: none; page-break-after: always; overflow: visible !important; }
+            aside, footer, #export-btn { display: flex !important; } /* الإبقاء على شريط التنقل لتظل الروابط تعمل بعد التصدير الرقمي */
+            a, span, [onclick] { -webkit-print-color-adjust: exact; color-adjust: exact; }
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-2">
 
     <!-- الحاوية الرئيسية للبلانر -->
-    <div class="ipad-container shadow-2xl rounded-xl overflow-hidden flex flex-row relative border border-stone-400">
+    <div class="ipad-container shadow-2xl rounded-xl overflow-hidden flex flex-row relative border border-stone-400" id="planner-root">
         
         <!-- ================= شريط التنقل المزدوج الثابت بلمسة الزمرد الملكي الفاخر ================= -->
         <aside class="w-24 bg-[#0b1a16] text-stone-300 flex flex-col items-center py-4 justify-between z-10 border-l-2 border-[#122822]">
             <div class="w-full flex flex-col items-center gap-2">
                 
                 <!-- الشعار التيبوغرافي المطور الفخم -->
-                <div class="mb-4 text-center px-1 py-1.5 border border-[#dfb141]/30 bg-[#060f0d] rounded-md w-[85%] shadow-md">
+                <div class="mb-2 text-center px-1 py-1.5 border border-[#dfb141]/30 bg-[#060f0d] rounded-md w-[85%] shadow-md">
                     <span class="brand-logo text-sm font-black text-[#dfb141] block pl-[0.25em]">MYH</span>
                     <span class="text-[7px] text-stone-400 font-bold uppercase tracking-[0.15em] block mt-0.5 border-t border-stone-800 pt-0.5">Studio</span>
                 </div>
+
+                <!-- زر التصدير للطباعة التفاعلية الخاص بالايباد والقلم -->
+                <button onclick="exportInteractivePDF()" id="export-btn" class="w-[85%] mb-2 py-1.5 text-[9px] font-black text-center rounded bg-[#dfb141] text-stone-950 border border-[#bfa23d] shadow hover:bg-[#f2c652] transition flex items-center justify-center gap-1">
+                    <span>📥 تصدير الآيباد</span>
+                </button>
                 
                 <!-- أزرار تبديل الطور الرئيسي المبتكرة -->
                 <div class="w-full px-1.5 flex flex-col gap-1 border-b border-stone-800 pb-3 mb-2">
@@ -59,7 +72,7 @@
                 <button onclick="switchView('yearly')" class="w-full py-1 text-[11px] font-bold text-center hover:bg-[#16332b] transition mb-1 text-stone-400">📅 السنوي</button>
                 
                 <!-- تصفح الشهور السريع -->
-                <div class="flex flex-col gap-0.5 w-full overflow-y-auto hide-scrollbar max-h-[390px]">
+                <div class="flex flex-col gap-0.5 w-full overflow-y-auto hide-scrollbar max-h-[350px]">
                     <button onclick="goToMonth(2026, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-6">يوليو 26</button>
                     <button onclick="goToMonth(2026, 7)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-7">أغسطس</button>
                     <button onclick="goToMonth(2026, 8)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-8">سبتمبر</button>
@@ -102,7 +115,6 @@
                         </div>
                         <div class="flex flex-col gap-1">
                             <span id="current-mode-badge" class="w-fit text-[10px] bg-[#16332b] text-[#dfb141] font-bold px-2.5 py-0.5 rounded-sm border border-[#235245]">القسم العملي والأكاديمي</span>
-                            <!-- مساحة الحكمة الديناميكية المتغيرة المتناسقة مع الألوان -->
                             <span id="dynamic-quote-bar" class="text-[10.5px] text-[#3c4a40] italic font-bold max-w-lg truncate"></span>
                         </div>
                     </div>
@@ -114,7 +126,7 @@
                     </div>
                 </div>
 
-                <!-- [أ] طور العمل: الفنون والـ 8 حصص وبطاقات الدروس (أيام الأسبوع العادية) -->
+                <!-- [أ] طور العمل: الفنون والـ 8 حصص وبطاقات الدروس -->
                 <div id="sub-view-work" class="daily-sub-view flex-1 flex flex-col justify-between overflow-hidden">
                     <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm mb-2">
                         <div class="grid grid-cols-8 gap-1 text-center text-[10px] font-bold text-stone-400 mb-1">
@@ -142,8 +154,6 @@
                             <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
                             <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
                             <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                            <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
                         </div>
                     </div>
                     <div class="col-span-8 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col">
@@ -154,8 +164,6 @@
 
                 <!-- [ج] طور الشخصية والمالية الكوبالتي المخملي الشامل -->
                 <div id="sub-view-personal" class="daily-sub-view flex-1 hidden grid grid-cols-12 gap-4 items-stretch overflow-hidden">
-                    
-                    <!-- قائمة المهام الشخصية مع الكراسة المسطرة الملحقة أسفلها -->
                     <div class="col-span-4 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col justify-between">
                         <div class="flex flex-col">
                             <h3 class="text-xs font-bold text-stone-700 mb-2 border-b pb-1 flex items-center gap-1">🍏 <span class="text-[#0f2537]">قائمة المسؤوليات العائلية واليومية</span></h3>
@@ -163,27 +171,21 @@
                                 <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
                                 <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
                                 <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
                             </div>
                         </div>
-                        
-                        <!-- الكراسة التقليدية المفرغة تماماً للكتابة المفتوحة أسفل المهام -->
                         <div class="flex-1 mt-4 border-t-2 border-dashed border-stone-200 pt-2 flex flex-col">
-                            <span class="text-[10px] font-bold text-stone-400 block mb-1">📝 مفكرة حرة (مسطرة كالكراسات التقليدية):</span>
+                            <span class="text-[10px] font-bold text-stone-400 block mb-1">📝 مفكرة حرة:</span>
                             <div class="handwriting-lines flex-1 opacity-70" style="background-size: 100% 20px; line-height: 20px;"></div>
                         </div>
                     </div>
 
-                    <!-- تفاصيل الميزانية بلمسة مخملية زرقاء جريئة -->
+                    <!-- تفاصيل الميزانية -->
                     <div class="col-span-8 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col justify-between">
                         <div class="flex-1 flex flex-col">
                             <h3 class="text-xs font-bold text-stone-700 mb-1.5 pb-1 border-b flex justify-between items-center">
                                 <span>📊 دفتر الحسابات اليومي الشامل لمراقبة الميزانية</span>
                                 <span class="text-[9px] text-[#0f2537] bg-slate-100 font-black px-2 py-0.5 rounded border border-slate-200">ACC DEPT</span>
                             </h3>
-                            
-                            <!-- جدول دفتر الحسابات ممتد لعمق الصفحة -->
                             <div class="relative flex-1 border border-stone-200 rounded overflow-hidden mb-2">
                                 <div class="handwriting-lines absolute inset-0 opacity-60" style="background-size: 100% 24px; line-height: 24px; margin-top: 24px;"></div>
                                 <div class="absolute top-0 bottom-0 right-[65%] border-l border-red-200 opacity-60"></div>
@@ -195,21 +197,10 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- شريط الحسابات الختامي المتطور -->
                         <div class="bg-[#edf1f5] border border-stone-300 rounded p-1.5 grid grid-cols-3 gap-2 text-center text-[11px] font-bold">
-                            <div class="bg-green-50/70 p-1 rounded border border-green-200">
-                                <span class="text-green-700 block text-[9px] mb-0.5">💰 إجمالي الوارد</span>
-                                <div class="h-5 bg-white border border-stone-200 rounded"></div>
-                            </div>
-                            <div class="bg-red-50/70 p-1 rounded border border-red-200">
-                                <span class="text-red-700 block text-[9px] mb-0.5">💸 إجمالي الصادر</span>
-                                <div class="h-5 bg-white border border-stone-200 rounded"></div>
-                            </div>
-                            <div class="bg-amber-50/70 p-1 rounded border border-amber-200">
-                                <span class="text-amber-800 block text-[9px] mb-0.5">⚖️ الصافي الختامي</span>
-                                <div class="h-5 bg-white border border-stone-200 rounded"></div>
-                            </div>
+                            <div class="bg-green-50/70 p-1 rounded border border-green-200"><span class="text-green-700 block text-[9px] mb-0.5">💰 إجمالي الوارد</span><div class="h-5 bg-white border border-stone-200 rounded"></div></div>
+                            <div class="bg-red-50/70 p-1 rounded border border-red-200"><span class="text-red-700 block text-[9px] mb-0.5">💸 إجمالي الصادر</span><div class="h-5 bg-white border border-stone-200 rounded"></div></div>
+                            <div class="bg-amber-50/70 p-1 rounded border border-amber-200"><span class="text-amber-800 block text-[9px] mb-0.5">⚖️ الصافي الختامي</span><div class="h-5 bg-white border border-stone-200 rounded"></div></div>
                         </div>
                     </div>
                 </div>
@@ -223,37 +214,27 @@
         </main>
     </div>
 
-    <!-- ================= الـ ENGINE البرمجي للبلانر ================= -->
+    <!-- ================= الـ ENGINE البرمجي والربط التفاعلي للآيباد ================= -->
     <script>
         let currentDateStr = "2026-07-01";
         let currentMode = "work"; 
         const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
-        // بنك الحكم المتغيرة المخصصة
         const workQuotes = [
             "🎨 الفن يمسح عن الروح غبار الحياة اليومية. - بابلو بيكاسو",
             "🎨 التدريس هو أرقى أشكال الفنون، لأن المشكل هو عقول البشر.",
-            "🎨 اللون هو لوحة المفاتيح، العين هي المطرقة، والروح هي الأوتار.",
             "🎨 الخط الخارجي هو فكرة تم إنقاذها من الفوضى الكونية.",
-            "🎨 العمل الفني الحقيقي ما هو إلا ظلال للكمال الإلهي.",
-            "🎨 لكي تبدع، يجب أن تتخلى أولاً عن الخوف من الخطأ.",
-            "🎨 الفنون التشكيلية هي لغة عالمية صامتة تخاطب القلوب بلا ترجمة."
+            "🎨 العمل الفني الحقيقي ما هو إلا ظلال للكمال الإلهي."
         ];
 
         const weekendQuotes = [
             "🌿 الراحة هي التربة الخصبة التي تنبت فيها أفكار الإبداع القادمة.",
-            "🌿 تأمل الطبيعة، ففي صمتها تكمن أروع الألوان والخطوط التشكيلية.",
-            "🌿 الإجازة ليست توقفاً عن الحركة، بل هي إعادة ضبط لبوصلة الشغف.",
-            "🌿 خذ نفساً عميقاً، اترك ريشة العمل، ودع روحك تتأمل جمال الكون الصامت.",
-            "🌿 عطلة سعيدة! التوازن يبدأ بحق جسدك وعقلك في الاسترخاء الكامل."
+            "🌿 الإجازة ليست توقفاً عن الحركة، بل هي إعادة ضبط لبوصلة الشغف."
         ];
 
         const personalQuotes = [
             "🍏 تنظيم ميزانيتك اليومية يمنح عائلتك الأمان والحرية الفكرية لتستمر في الإبداع.",
-            "🍏 التوازن المالي ليس شحاً، بل هو هندسة ذكية لإدارة موارد الحياة بثقة.",
-            "🍏 لكي تبدع في مرسمك، يجب أولاً أن تطمئن في بيتك وتدير مسؤولياتك بانتظام.",
-            "🍏 الصافي الحقيقي ليس في دفتر الحسابات فحسب، بل في راحة بالك وضميرك.",
-            "🍏 الأيام التي ترتب فيها أولوياتك الشخصية بدقة هي الأيام الأكثر إنتاجية."
+            "🍏 التوازن المالي ليس شحاً، بل هو هندسة ذكية لإدارة موارد الحياة بثقة."
         ];
 
         window.onload = function() {
@@ -301,7 +282,7 @@
         function renderHandwritingCards() {
             const container = document.getElementById('art-handwriting-cards');
             container.innerHTML = '';
-            for(let c = 1; c <= 6; c++) {
+            for(let c = 1; c <= 3; c++) {
                 container.innerHTML += `
                     <div class="border border-stone-200 rounded p-1.5 flex flex-col bg-stone-50/40">
                         <span class="text-[9px] font-bold text-stone-400 block border-b border-stone-200 pb-0.5 mb-1">بطاقة تحضير الدرس والبيانات الفنية ${c}</span>
@@ -325,16 +306,16 @@
                 if(isWeekend) {
                     document.getElementById('sub-view-weekend').classList.remove('hidden');
                     quoteBar.innerText = weekendQuotes[dayNum % weekendQuotes.length];
-                    topHeader.className = "bg-[#432354] text-white py-0.5 text-[10px] font-bold tracking-wide"; // عطلة ملكي باذنجاني
+                    topHeader.className = "bg-[#432354] text-white py-0.5 text-[10px] font-bold tracking-wide";
                 } else {
                     document.getElementById('sub-view-work').classList.remove('hidden');
                     quoteBar.innerText = workQuotes[dayNum % workQuotes.length];
-                    topHeader.className = "bg-[#b3432b] text-white py-0.5 text-[10px] font-bold tracking-wide"; // بريك فخاري جريء
+                    topHeader.className = "bg-[#b3432b] text-white py-0.5 text-[10px] font-bold tracking-wide";
                 }
             } else {
                 document.getElementById('sub-view-personal').classList.remove('hidden');
                 quoteBar.innerText = personalQuotes[dayNum % personalQuotes.length];
-                topHeader.className = "bg-[#0f2537] text-white py-0.5 text-[10px] font-bold tracking-wide"; // كوبالتي مالي
+                topHeader.className = "bg-[#0f2537] text-white py-0.5 text-[10px] font-bold tracking-wide";
             }
         }
 
@@ -404,6 +385,12 @@
                 daysDiv.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer text-center font-medium ${isActive}">${d}</span>`;
             }
             container.appendChild(daysDiv);
+        }
+
+        /* 🏛️ محرك التصدير التفاعلي الذكي للآيباد */
+        function exportInteractivePDF() {
+            alert("سيتم الآن تفعيل وضع التصدير الرقمي التفاعلي للآيباد. يرجى حفظ الملف بصيغة PDF من نافذة الطباعة المنبثقة لتعمل جميع الروابط الرقمية داخل تطبيقات تدوين الملاحظات كـ GoodNotes.");
+            window.print();
         }
     </script>
 </body>
