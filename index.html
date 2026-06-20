@@ -1,414 +1,496 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MYH Premium Interactive Planner 2026-2027</title>
-    <!-- Tailwind CSS للتنسيق الهيكلي -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- مكتبة تجميع وتحويل الصفحات التفاعلية إلى PDF مخصص للآيباد -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+from reportlab.pdfgen import canvas
+from reportlab.lib.colors import HexColor, white
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+import calendar
+from datetime import date
+
+# تسجيل الخطوط العربية
+pdfmetrics.registerFont(TTFont('NotoSansArabic', '/usr/share/fonts/truetype/noto/NotoSansArabicUI-Regular.ttf'))
+pdfmetrics.registerFont(TTFont('NotoSansArabic-Bold', '/usr/share/fonts/truetype/noto/NotoSansArabic-SemiCondensedSemiBold.ttf'))
+pdfmetrics.registerFont(TTFont('NotoKufiArabic', '/usr/share/fonts/truetype/noto/NotoKufiArabic-Black.ttf'))
+
+# أبعاد iPad الجيل العاشر
+PAGE_WIDTH = 1640
+PAGE_HEIGHT = 2360
+
+# الألوان
+COLOR_BG = HexColor('#fbfaf4')
+COLOR_SIDEBAR = HexColor('#0b1a16')
+COLOR_GOLD = HexColor('#dfb141')
+COLOR_DARK_GREEN = HexColor('#16332b')
+COLOR_ACCENT_RED = HexColor('#b3432b')
+COLOR_STONE_200 = HexColor('#e8e6da')
+COLOR_STONE_300 = HexColor('#d6d3c4')
+COLOR_STONE_400 = HexColor('#a8a5a0')
+COLOR_STONE_700 = HexColor('#57534e')
+COLOR_STONE_800 = HexColor('#292524')
+COLOR_STONE_900 = HexColor('#1c1917')
+
+MONTHS_AR = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", 
+             "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
+DAYS_AR = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"]
+
+# الجدول الزمني: يوليو 2026 - يوليو 2027
+SCHEDULE = []
+for m in range(6, 12):  
+    SCHEDULE.append((2026, m))
+for m in range(0, 7):   
+    SCHEDULE.append((2027, m))
+
+output_path = 'MYH_Premium_GoodNotes_Planner_2026-2027.pdf'
+
+class DigitalPlannerPDF:
+    def __init__(self, filename):
+        self.c = canvas.Canvas(filename, pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
+        self.page_map = {}  # (year, month, day) -> page_number
+        self.page_counter = 0
+        
+    def add_page_bookmark(self, name):
+        """إنشاء bookmark للصفحة الحالية"""
+        self.c.bookmarkPage(name, fit="Fit")
+        
+    def draw_cover(self):
+        c = self.c
+        c.setFillColor(COLOR_BG)
+        c.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, fill=1, stroke=0)
+        
+        # العنوان الرئيسي
+        c.setFillColor(COLOR_STONE_900)
+        c.setFont('NotoKufiArabic', 42)
+        c.drawCentredString(PAGE_WIDTH/2, PAGE_HEIGHT - 150, 'MYH PREMIUM PLANNER')
+        c.setFont('NotoSansArabic', 20)
+        c.drawCentredString(PAGE_WIDTH/2, PAGE_HEIGHT - 200, '2026 - 2027')
+        
+        # خط ذهبي
+        c.setStrokeColor(COLOR_GOLD)
+        c.setLineWidth(3)
+        c.line(PAGE_WIDTH/2 - 200, PAGE_HEIGHT - 185, PAGE_WIDTH/2 + 200, PAGE_HEIGHT - 185)
+        
+        # شبكة السنة
+        self.draw_yearly_grid()
+        
+        # Bookmark للغلاف
+        self.add_page_bookmark("cover")
+        
+        c.showPage()
+        self.page_counter += 1
+        
+    def draw_yearly_grid(self):
+        c = self.c
+        grid_start_y = PAGE_HEIGHT - 280
+        month_box_w = 340
+        month_box_h = 280
+        cols = 4
+        
+        for idx, (y, m) in enumerate(SCHEDULE):
+            col = idx % cols
+            row = idx // cols
+            
+            box_x = 60 + col * (month_box_w + 20)
+            box_y = grid_start_y - row * (month_box_h + 20)
+            
+            # صندوق الشهر
+            c.setFillColor(white)
+            c.roundRect(box_x, box_y, month_box_w, month_box_h, 6, fill=1, stroke=0)
+            c.setStrokeColor(COLOR_STONE_300)
+            c.roundRect(box_x, box_y, month_box_w, month_box_h, 6, fill=0, stroke=1)
+            
+            # عنوان الشهر
+            c.setFillColor(COLOR_SIDEBAR)
+            c.roundRect(box_x, box_y + month_box_h - 30, month_box_w, 30, 6, fill=1, stroke=0)
+            c.setFillColor(COLOR_GOLD)
+            c.setFont('NotoSansArabic-Bold', 12)
+            c.drawCentredString(box_x + month_box_w/2, box_y + month_box_h - 20, f"{MONTHS_AR[m]} {y}")
+            
+            # رابط للشهر (سيتم إضافته بعد بناء page_map)
+            
+            # أيام الشهر
+            total_days = calendar.monthrange(y, m + 1)[1]
+            first_weekday = calendar.monthrange(y, m + 1)[0]
+            
+            day_size = 32
+            grid_start_x = box_x + 15
+            grid_start_y_inner = box_y + month_box_h - 70
+            
+            # عرض الأيام
+            day_counter = 0
+            for week in range(6):
+                for day_in_week in range(7):
+                    if week == 0 and day_in_week < first_weekday:
+                        continue
+                    day_counter += 1
+                    if day_counter > total_days:
+                        break
+                    
+                    day_x = grid_start_x + day_in_week * day_size
+                    day_y = grid_start_y_inner - week * day_size
+                    
+                    test_date = date(y, m + 1, day_counter)
+                    is_weekend = test_date.weekday() in [4, 5]
+                    
+                    c.setFillColor(HexColor('#dc2626') if is_weekend else COLOR_STONE_700)
+                    c.setFont('NotoSansArabic', 9)
+                    c.drawCentredString(day_x + day_size/2, day_y + 8, str(day_counter))
+                
+                if day_counter > total_days:
+                    break
     
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght=700;900&family=Tajawal:wght=400;500;700;900&display=swap');
+    def draw_sidebar(self, current_year, current_month, current_day):
+        c = self.c
+        sidebar_w = 140
         
-        body { font-family: 'Tajawal', sans-serif; background-color: #c5c1aa; color: #1e211f; user-select: none; }
+        # خلفية الشريط الجانبي
+        c.setFillColor(COLOR_SIDEBAR)
+        c.rect(0, 0, sidebar_w, PAGE_HEIGHT, fill=1, stroke=0)
+        c.setStrokeColor(HexColor('#122822'))
+        c.setLineWidth(2)
+        c.line(sidebar_w, 0, sidebar_w, PAGE_HEIGHT)
         
-        .brand-logo {
-            font-family: 'Cinzel', serif;
-            letter-spacing: 0.25em;
-            text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
-        }
-
-        /* أبعاد شاشة آيباد 10.2 الثابتة بنسبة 4:3 المثالية لمنع التمرير */
-        .ipad-container { width: 1024px; height: 768px; max-width: 1024px; max-height: 768px; background-color: #fbfaf4; }
+        # الشعار
+        logo_y = PAGE_HEIGHT - 80
+        c.setFillColor(HexColor('#060f0d'))
+        c.roundRect(15, logo_y - 50, sidebar_w - 30, 60, 4, fill=1, stroke=0)
+        c.setStrokeColor(HexColor('#dfb141'))
+        c.setLineWidth(0.5)
+        c.roundRect(15, logo_y - 50, sidebar_w - 30, 60, 4, fill=0, stroke=1)
         
-        /* أسطر الدفاتر الرقمية الناعمة والمريحة للكتابة بالقلم */
-        .handwriting-lines {
-            background-image: linear-gradient(#e4e1cf 1px, transparent 1px);
-            background-size: 100% 24px;
-            line-height: 24px;
-        }
-        .card-lines {
-            background-image: linear-gradient(#e6e3d2 1px, transparent 1px);
-            background-size: 100% 20px;
-            line-height: 20px;
-        }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* هيكلة صفحات الـ PDF التفاعلية أثناء التوليد */
-        .pdf-page {
-            width: 1024px;
-            height: 768px;
-            page-break-after: always;
-            position: relative;
-            background-color: #fbfaf4;
-            display: flex;
-            flex-direction: row;
-        }
-    </style>
-</head>
-<body class="flex items-center justify-center min-h-screen p-2">
-
-    <!-- الواجهة الحية التفاعلية المعروضة للمستخدم -->
-    <div class="ipad-container shadow-2xl rounded-xl overflow-hidden flex flex-row relative border border-stone-400" id="planner-root">
+        c.setFillColor(COLOR_GOLD)
+        c.setFont('NotoKufiArabic', 18)
+        c.drawCentredString(sidebar_w/2, logo_y - 25, 'MYH')
         
-        <!-- ================= شريط التنقل المزدوج الثابت بالزمرد الملكي ================= -->
-        <aside class="w-24 bg-[#0b1a16] text-stone-300 flex flex-col items-center py-4 justify-between z-10 border-l-2 border-[#122822]">
-            <div class="w-full flex flex-col items-center gap-2">
-                
-                <!-- الشعار التيبوغرافي الفخم -->
-                <div class="mb-2 text-center px-1 py-1.5 border border-[#dfb141]/30 bg-[#060f0d] rounded-md w-[85%] shadow-md">
-                    <span class="brand-logo text-sm font-black text-[#dfb141] block pl-[0.25em]">MYH</span>
-                    <span class="text-[7px] text-stone-400 font-bold uppercase tracking-[0.15em] block mt-0.5 border-t border-stone-800 pt-0.5">Studio</span>
-                </div>
-
-                <!-- زر التوليد الرقمي الشامل لـ GoodNotes -->
-                <button onclick="generateGoodNotesPDF()" id="export-btn" class="w-[85%] mb-2 py-2 text-[9px] font-black text-center rounded bg-[#dfb141] text-stone-950 border border-[#bfa23d] shadow-md hover:bg-[#f2c652] transition flex flex-col items-center justify-center gap-0.5">
-                    <span id="btn-text-main">📥 تصدير كامل</span>
-                    <span id="btn-text-sub" class="text-[7px] opacity-75">لـ GoodNotes</span>
-                </button>
-                
-                <!-- أزرار تبديل الأطوار -->
-                <div class="w-full px-1.5 flex flex-col gap-1 border-b border-stone-800 pb-3 mb-2">
-                    <button onclick="setMode('work')" id="mode-btn-work" class="w-full py-2 text-[10px] font-black text-center rounded transition bg-[#16332b] text-[#dfb141] border border-[#235245] shadow">🎨 العملي</button>
-                    <button onclick="setMode('personal')" id="mode-btn-personal" class="w-full py-2 text-[10px] font-bold text-center rounded transition bg-stone-900 text-stone-400 hover:text-white">🍏 الشخصي</button>
-                </div>
-
-                <button onclick="switchView('yearly')" class="w-full py-1 text-[11px] font-bold text-center hover:bg-[#16332b] transition mb-1 text-stone-400">📅 السنوي</button>
-                
-                <!-- القائمة الذكية للتنقل بين الشهور -->
-                <div class="flex flex-col gap-0.5 w-full overflow-y-auto hide-scrollbar max-h-[350px]">
-                    <button onclick="goToMonth(2026, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-6">يوليو 26</button>
-                    <button onclick="goToMonth(2026, 7)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-7">أغسطس</button>
-                    <button onclick="goToMonth(2026, 8)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-8">سبتمبر</button>
-                    <button onclick="goToMonth(2026, 9)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-9">أكتوبر</button>
-                    <button onclick="goToMonth(2026, 10)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-10">نوفمبر</button>
-                    <button onclick="goToMonth(2026, 11)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2026-11">ديسمبر</button>
-                    <button onclick="goToMonth(2027, 0)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2027-0">يناير 27</button>
-                    <button onclick="goToMonth(2027, 1)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2027-1">فبراير</button>
-                    <button onclick="goToMonth(2027, 2)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2027-2">مارس</button>
-                    <button onclick="goToMonth(2027, 3)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2027-3">أبريل</button>
-                    <button onclick="goToMonth(2027, 4)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2027-4">مايو</button>
-                    <button onclick="goToMonth(2027, 5)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2027-5">يونيو</button>
-                    <button onclick="goToMonth(2027, 6)" class="month-tab w-full py-1.5 text-[11px] text-center hover:bg-[#16332b]" data-m="2027-6">يوليو 27</button>
-                </div>
-            </div>
-            <button onclick="switchView('daily')" class="w-full py-2.5 text-[11px] font-bold text-center bg-[#060f0d] text-[#dfb141] hover:bg-stone-800 transition rounded-b border-t border-stone-800">اليوم الحالي</button>
-        </aside>
-
-        <!-- ================= مساحة العرض والعمل الرئيسية ================= -->
-        <main class="flex-1 flex flex-col justify-between overflow-hidden bg-[#faf9f2]">
-            
-            <!-- محتوى العرض الرئيسي الداخلي (مبطن من الداخل للحفاظ على الهوامش) -->
-            <div class="flex-1 flex flex-col p-4 justify-between overflow-hidden">
-                <!-- 1. واجهة التقويم السنوي الشامل -->
-                <div id="view-yearly" class="view-content flex-1 flex flex-col justify-center">
-                    <h1 class="text-base font-bold text-center text-stone-800 mb-3 brand-logo tracking-wider">ANNUAL TIMELINE 2026 - 2027</h1>
-                    <div class="grid grid-cols-4 gap-2 overflow-y-auto max-h-[580px] p-1" id="yearly-grid"></div>
-                </div>
-
-                <!-- 2. واجهة العرض اليومية -->
-                <div id="view-daily" class="view-content flex-1 hidden flex flex-col justify-between">
-                    <!-- هيدر البلانر المشترك -->
-                    <div class="flex flex-row justify-between items-center border-b-2 border-stone-200 pb-2 mb-2">
-                        <div class="flex items-center gap-4">
-                            <div class="w-28 bg-white rounded border border-stone-300 overflow-hidden text-center shadow-md">
-                                <div class="bg-[#b3432b] text-white py-0.5 text-[10px] font-bold tracking-wide" id="calendar-top-month">يوليو ٢٠٢٦</div>
-                                <div class="py-1 bg-stone-50">
-                                    <div class="text-2xl font-black text-stone-900 leading-none" id="calendar-main-day">١</div>
-                                    <div class="text-[10px] font-bold text-stone-500 mt-0.5" id="calendar-day-name">الأربعاء</div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <span id="current-mode-badge" class="w-fit text-[10px] bg-[#16332b] text-[#dfb141] font-bold px-2.5 py-0.5 rounded-sm border border-[#235245]">القسم العملي والأكاديمي</span>
-                                <span id="dynamic-quote-bar" class="text-[10.5px] text-[#3c4a40] italic font-bold max-w-lg truncate"></span>
-                            </div>
-                        </div>
-                        <div class="text-right border-r-2 border-[#dfb141] pr-2">
-                            <span class="brand-logo text-base font-black text-stone-900 block tracking-widest">MYH</span>
-                            <span class="text-[8px] text-stone-400 font-bold block -mt-1">PREMIUM</span>
-                        </div>
-                    </div>
-
-                    <!-- [أ] طور العمل الفني: الـ 8 حصص وبطاقات التدوين -->
-                    <div id="sub-view-work" class="daily-sub-view flex-1 flex flex-col justify-between overflow-hidden">
-                        <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm mb-2">
-                            <div class="grid grid-cols-8 gap-1 text-center text-[10px] font-bold text-stone-400 mb-1">
-                                <div>١</div><div>٢</div><div>٣</div><div>٤</div><div>٥</div><div>٦</div><div>٧</div><div>٨</div>
-                            </div>
-                            <div class="grid grid-cols-8 gap-1 border-t border-stone-200 pt-1 h-9">
-                                <div class="border-r border-l border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-r border-stone-100/60"></div><div class="border-l border-stone-100/60"></div>
-                            </div>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-stone-200 shadow-sm flex-1 flex flex-col">
-                            <h3 class="text-[11px] font-bold text-stone-600 mb-1 flex items-center gap-1">🎨 <span class="text-[#16332b]">بطاقات التحضير الفني ومتابعة الفصول والدروس</span></h3>
-                            <div class="grid grid-cols-3 gap-2 flex-1 items-stretch" id="art-handwriting-cards"></div>
-                        </div>
-                    </div>
-
-                    <!-- [Ref: واجهة العطلة] -->
-                    <div id="sub-view-weekend" class="daily-sub-view flex-1 hidden grid grid-cols-12 gap-3 items-stretch overflow-hidden">
-                        <div class="col-span-4 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col">
-                            <h3 class="text-xs font-bold text-[#432354] mb-2 border-b pb-1">🌿 مهام الإجازة الأسبوعية</h3>
-                            <div class="space-y-3.5 mt-2 flex-1">
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-purple-300 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-100 h-4"></div></div>
-                            </div>
-                        </div>
-                        <div class="col-span-8 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col">
-                            <div class="handwriting-lines flex-1 opacity-70" style="background-size: 100% 22px; line-height: 22px;"></div>
-                        </div>
-                    </div>
-
-                    <!-- [ج] طور الحياة الشخصية والمالية -->
-                    <div id="sub-view-personal" class="daily-sub-view flex-1 hidden grid grid-cols-12 gap-4 items-stretch overflow-hidden">
-                        <div class="col-span-4 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col justify-between">
-                            <div class="flex flex-col">
-                                <h3 class="text-xs font-bold text-stone-700 mb-2 border-b pb-1">🍏 قائمة المسؤوليات العائلية</h3>
-                                <div class="space-y-3.5 mt-2">
-                                    <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm bg-stone-50"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-span-8 bg-white p-3 rounded-lg border border-stone-200 shadow-sm flex flex-col justify-between">
-                            <div class="relative flex-1 border border-stone-200 rounded overflow-hidden">
-                                <div class="handwriting-lines absolute inset-0 opacity-60" style="background-size: 100% 24px; line-height: 24px; margin-top: 24px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= 📌 شريط الأيام السفلي المطور الممتد بكامل العرض ================= -->
-            <footer class="w-full bg-[#e8e6da] border-t border-stone-300 px-2 py-2 flex items-center shadow-inner z-10" id="global-footer-bar">
-                <div id="footer-calendar-container" class="w-full flex flex-row items-center justify-between text-[11px] font-bold">
-                    <!-- يتم بناؤه تفاعلياً بعرض الصفحة كاملاً عبر الـ Engine -->
-                </div>
-            </footer>
-
-        </main>
-    </div>
-
-    <!-- مسرح التجميع الخلفي المخفي لتوليد الصفحات المجمعة للـ PDF -->
-    <div id="pdf-compiler-stage" class="hidden"></div>
-
-    <!-- ================= الـ ENGINE البرمجي الذكي للربط والإنتاج ================= -->
-    <script>
-        let currentDateStr = "2026-07-01";
-        let currentMode = "work"; 
-        const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+        c.setFillColor(HexColor('#a8a5a0'))
+        c.setFont('NotoSansArabic', 8)
+        c.drawCentredString(sidebar_w/2, logo_y - 45, 'PREMIUM STUDIO')
         
-        const schedule = [
-            {y: 2026, m: 6}, {y: 2026, m: 7}, {y: 2026, m: 8}, {y: 2026, m: 9}, {y: 2026, m: 10}, {y: 2026, m: 11},
-            {y: 2027, m: 0}, {y: 2027, m: 1}, {y: 2027, m: 2}, {y: 2027, m: 3}, {y: 2027, m: 4}, {y: 2027, m: 5}, {y: 2027, m: 6}
-        ];
-
-        window.onload = function() {
-            buildYearlyGrid();
-            renderHandwritingCards();
-            loadDate(currentDateStr);
-        };
-
-        function setMode(mode) {
-            currentMode = mode;
-            updateDailySubViews();
-        }
-
-        function switchView(viewId) {
-            document.querySelectorAll('.view-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`view-${viewId}`).classList.remove('hidden');
-        }
-
-        function goToDate(dateStr) {
-            currentDateStr = dateStr;
-            loadDate(dateStr);
-            switchView('daily');
-        }
-
-        function goToMonth(year, monthIdx) {
-            goToDate(`${year}-${String(monthIdx+1).padStart(2, '0')}-01`);
-        }
-
-        function renderHandwritingCards() {
-            const container = document.getElementById('art-handwriting-cards');
-            container.innerHTML = '';
-            for(let c = 1; c <= 3; c++) {
-                container.innerHTML += `
-                    <div class="border border-stone-200 rounded p-1.5 flex flex-col bg-stone-50/40">
-                        <span class="text-[9px] font-bold text-stone-400 block border-b border-stone-200 pb-0.5 mb-1">بطاقة تحضير الدرس ${c}</span>
-                        <div class="card-lines flex-1 opacity-70"></div>
-                    </div>`;
-            }
-        }
-
-        function updateDailySubViews() {
-            document.querySelectorAll('.daily-sub-view').forEach(el => el.classList.add('hidden'));
-            const isWeekend = (new Date(currentDateStr).getDay() === 5 || new Date(currentDateStr).getDay() === 6);
-            if(currentMode === 'work') {
-                document.getElementById(isWeekend ? 'sub-view-weekend' : 'sub-view-work').classList.remove('hidden');
-            } else {
-                document.getElementById('sub-view-personal').classList.remove('hidden');
-            }
-        }
-
-        function buildYearlyGrid() {
-            const grid = document.getElementById('yearly-grid');
-            grid.innerHTML = '';
-            schedule.forEach(item => {
-                let monthBox = document.createElement('div');
-                monthBox.className = "bg-white p-1.5 rounded border border-stone-200 text-center text-[9px]";
-                monthBox.innerHTML = `<h3 class="font-bold border-b mb-1">${monthsNames[item.m]} ${item.y}</h3>`;
-                let daysGrid = document.createElement('div');
-                daysGrid.className = "grid grid-cols-7 gap-0.5";
-                let totalDays = new Date(item.y, item.m + 1, 0).getDate();
-                for (let d = 1; d <= totalDays; d++) {
-                    let dStr = `${item.y}-${String(item.m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    daysGrid.innerHTML += `<span onclick="goToDate('${dStr}')" class="cursor-pointer hover:bg-stone-200 rounded">${d}</span>`;
-                }
-                monthBox.appendChild(daysGrid);
-                grid.appendChild(monthBox);
-            });
-        }
-
-        function loadDate(dateStr) {
-            const dateObj = new Date(dateStr);
-            document.getElementById('calendar-top-month').innerText = `${monthsNames[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
-            document.getElementById('calendar-main-day').innerText = dateObj.getDate();
-            updateDailySubViews();
-            buildFooterCalendar(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
-        }
-
-        /* 🛠️ هندسة بناء شريط الأيام السفلي ليمتد بكامل عرض الصفحة التفاعلية */
-        function buildFooterCalendar(year, month, activeDay) {
-            const container = document.getElementById('footer-calendar-container');
-            container.innerHTML = '';
+        # أزرار الوضع
+        mode_y = logo_y - 90
+        
+        # وضع العمل
+        c.setFillColor(COLOR_DARK_GREEN)
+        c.roundRect(15, mode_y - 35, sidebar_w - 30, 30, 4, fill=1, stroke=0)
+        c.setStrokeColor(HexColor('#235245'))
+        c.setLineWidth(1)
+        c.roundRect(15, mode_y - 35, sidebar_w - 30, 30, 4, fill=0, stroke=1)
+        c.setFillColor(COLOR_GOLD)
+        c.setFont('NotoSansArabic-Bold', 11)
+        c.drawCentredString(sidebar_w/2, mode_y - 22, 'العملي')
+        
+        # وضع شخصي
+        c.setFillColor(HexColor('#1c1917'))
+        c.roundRect(15, mode_y - 70, sidebar_w - 30, 30, 4, fill=1, stroke=0)
+        c.setStrokeColor(HexColor('#292524'))
+        c.roundRect(15, mode_y - 70, sidebar_w - 30, 30, 4, fill=0, stroke=1)
+        c.setFillColor(HexColor('#a8a5a0'))
+        c.setFont('NotoSansArabic', 11)
+        c.drawCentredString(sidebar_w/2, mode_y - 57, 'الشخصي')
+        
+        # فاصل
+        c.setStrokeColor(HexColor('#292524'))
+        c.setLineWidth(1)
+        c.line(15, mode_y - 85, sidebar_w - 15, mode_y - 85)
+        
+        # رابط السنوي
+        yearly_y = mode_y - 110
+        c.setFillColor(HexColor('#a8a5a0'))
+        c.setFont('NotoSansArabic-Bold', 12)
+        c.drawCentredString(sidebar_w/2, yearly_y, 'السنوي')
+        
+        # رابط العودة للغلاف
+        c.linkAbsolute("السنوي", "cover", 
+                      (10, yearly_y - 10, sidebar_w - 10, yearly_y + 20),
+                      Border='[0 0 0]')
+        
+        # قائمة الأشهر
+        month_start_y = yearly_y - 40
+        c.setFont('NotoSansArabic', 10)
+        
+        for idx, (y, m) in enumerate(SCHEDULE):
+            btn_y = month_start_y - (idx * 32)
+            is_current = (y == current_year and m == current_month)
             
-            // عنوان الشهر الحالي جانبي بالشريط
-            let labelSpan = document.createElement('span');
-            labelSpan.className = "text-[#0b1a16] bg-stone-300/60 px-2 py-1 rounded text-[10px] shrink-0 font-black ml-2";
-            labelSpan.innerText = `${monthsNames[month]} :`;
-            container.appendChild(labelSpan);
+            if is_current:
+                c.setFillColor(COLOR_DARK_GREEN)
+                c.rect(10, btn_y - 8, sidebar_w - 20, 26, fill=1, stroke=0)
+                c.setFillColor(COLOR_GOLD)
+            else:
+                c.setFillColor(HexColor('#a8a5a0'))
             
-            // حاوية الأيام المرنة الممتدة
-            let daysWrapper = document.createElement('div');
-            daysWrapper.className = "flex-1 flex flex-row justify-between items-center gap-0.5 h-full";
+            month_label = f"{MONTHS_AR[m]}"
+            if m == 6 or m == 0:
+                month_label += f" {str(y)[-2:]}"
             
-            let totalDays = new Date(year, month + 1, 0).getDate();
-            for (let d = 1; d <= totalDays; d++) {
-                let dStr = `${year}-${String(month+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                let testDate = new Date(year, month, d);
-                let isWe = (testDate.getDay() === 5 || testDate.getDay() === 6);
-                
-                let dayBtn = document.createElement('span');
-                dayBtn.setAttribute('onclick', `goToDate('${dStr}')`);
-                
-                // تنسيقات مخصصة لتكبير مساحة الضغط بقلم الآيباد
-                let baseStyle = "flex-1 text-center py-1 rounded cursor-pointer transition-all duration-150 text-[11px] ";
-                if (d === activeDay) {
-                    dayBtn.className = baseStyle + "bg-[#0b1a16] text-[#dfb141] font-black scale-110 shadow-sm border border-[#dfb141]/30";
-                } else {
-                    dayBtn.className = baseStyle + (isWe ? "text-red-600 hover:bg-stone-300" : "text-stone-700 hover:bg-stone-300");
-                }
-                
-                dayBtn.innerText = d;
-                daysWrapper.appendChild(dayBtn);
-            }
-            container.appendChild(daysWrapper);
-        }
-
-        /* 🏛️ محرك تصدير ملف الكود المخصص لتطبيق GoodNotes */
-        async function generateGoodNotesPDF() {
-            const btnTextMain = document.getElementById('btn-text-main');
-            const btnTextSub = document.getElementById('btn-text-sub');
+            c.drawCentredString(sidebar_w/2, btn_y, month_label)
             
-            btnTextMain.innerText = "⏳ جاري التجميع...";
-            btnTextSub.innerText = "برجاء الانتظار ثوانٍ";
-
-            const stage = document.getElementById('pdf-compiler-stage');
-            stage.innerHTML = ''; 
-            stage.classList.remove('hidden');
-
-            // 1. صفحة خط الجدول الزمني السنوي التفاعلي كغلاف أول للملف
-            let yearlyClone = document.getElementById('view-yearly').cloneNode(true);
-            let pageYearly = document.createElement('div');
-            pageYearly.className = "pdf-page p-6 flex flex-col justify-center";
-            pageYearly.appendChild(yearlyClone);
-            stage.appendChild(pageYearly);
-
-            // 2. توليد وحقن كافة الصفحات اليومية برمجياً مع تمديد شريط الأيام
-            for (let i = 0; i < schedule.length; i++) {
-                let currentItem = schedule[i];
-                let totalDays = new Date(currentItem.y, currentItem.m + 1, 0).getDate();
+            # إضافة روابط التنقل بين الأشهر
+            target_page = self.page_map.get((y, m, 1))
+            if target_page is not None:
+                c.linkAbsolute(month_label, f"month_{y}_{m}", 
+                              (10, btn_y - 10, sidebar_w - 10, btn_y + 15),
+                              Border='[0 0 0]')
+        
+        # زر اليوم الحالي
+        c.setFillColor(HexColor('#060f0d'))
+        c.rect(0, 0, sidebar_w, 50, fill=1, stroke=0)
+        c.setStrokeColor(HexColor('#292524'))
+        c.setLineWidth(1)
+        c.line(0, 50, sidebar_w, 50)
+        
+        c.setFillColor(COLOR_GOLD)
+        c.setFont('NotoSansArabic-Bold', 12)
+        c.drawCentredString(sidebar_w/2, 18, 'اليوم الحالي')
+    
+    def draw_daily_pages(self):
+        for idx, (y, m) in enumerate(SCHEDULE):
+            total_days = calendar.monthrange(y, m + 1)[1]
+            
+            for day in range(1, total_days + 1):
+                self.page_map[(y, m, day)] = self.page_counter
                 
-                for (let day = 1; day <= totalDays; day++) {
-                    let simulatedDateStr = `${currentItem.y}-${String(currentItem.m+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    
-                    let dayPage = document.createElement('div');
-                    dayPage.className = "pdf-page";
-                    
-                    let mainClone = document.getElementById('planner-root').cloneNode(true);
-                    
-                    let targetBtn = mainClone.querySelector('#export-btn');
-                    if(targetBtn) targetBtn.remove();
-                    
-                    // تحديث محتوى الهيدر في الصفحة المستنسخة
-                    mainClone.querySelector('#calendar-top-month').innerText = `${monthsNames[currentItem.m]} ${currentItem.y}`;
-                    mainClone.querySelector('#calendar-main-day').innerText = day;
-                    
-                    // إعادة بناء شريط الأيام السفلي الممتد داخل صفحة الـ PDF المستنسخة لضمان ثبات التنسيق التفاعلي
-                    let footerTarget = mainClone.querySelector('#footer-calendar-container');
-                    footerTarget.innerHTML = '';
-                    
-                    let labelSpan = document.createElement('span');
-                    labelSpan.className = "text-[#0b1a16] bg-stone-300/60 px-2 py-1 rounded text-[10px] shrink-0 font-black ml-2";
-                    labelSpan.innerText = `${monthsNames[currentItem.m]} :`;
-                    footerTarget.appendChild(labelSpan);
-                    
-                    let daysWrapper = document.createElement('div');
-                    daysWrapper.className = "flex-1 flex flex-row justify-between items-center gap-0.5 h-full";
-                    
-                    for (let d = 1; d <= totalDays; d++) {
-                        let innerDateStr = `${currentItem.y}-${String(currentItem.m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                        let testDate = new Date(currentItem.y, currentItem.m, d);
-                        let isWe = (testDate.getDay() === 5 || testDate.getDay() === 6);
-                        
-                        let dayBtn = document.createElement('span');
-                        let baseStyle = "flex-1 text-center py-1 rounded text-[11px] ";
-                        if (d === day) {
-                            dayBtn.className = baseStyle + "bg-[#0b1a16] text-[#dfb141] font-black scale-110 shadow-sm";
-                        } else {
-                            dayBtn.className = baseStyle + (isWe ? "text-red-600" : "text-stone-700");
-                        }
-                        dayBtn.innerText = d;
-                        daysWrapper.appendChild(dayBtn);
-                    }
-                    footerTarget.appendChild(daysWrapper);
-                    
-                    dayPage.appendChild(mainClone);
-                    stage.appendChild(dayPage);
-                }
-            }
+                c = self.c
+                
+                # خلفية
+                c.setFillColor(COLOR_BG)
+                c.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, fill=1, stroke=0)
+                
+                # الشريط الجانبي
+                self.draw_sidebar(y, m, day)
+                
+                # المحتوى الرئيسي
+                main_x = 160
+                main_w = PAGE_WIDTH - 180
+                main_y = PAGE_HEIGHT - 40
+                
+                # الهيدر
+                self.draw_daily_header(main_x, main_y - 120, y, m, day)
+                
+                # المحتوى
+                content_y = 80
+                content_h = main_y - 120 - 80 - 60
+                
+                date_obj = date(y, m + 1, day)
+                is_weekend = date_obj.weekday() in [4, 5]
+                
+                self.draw_work_content(main_x, content_y, main_w, content_h, is_weekend)
+                
+                # شريط الأيام السفلي
+                self.draw_footer_with_links(main_x, 20, main_w, 50, y, m, day)
+                
+                # Bookmark للصفحة
+                self.add_page_bookmark(f"day_{y}_{m}_{day}")
+                
+                c.showPage()
+                self.page_counter += 1
+                
+                if self.page_counter % 100 == 0:
+                    print(f"تم إنشاء {self.page_counter} صفحة...")
+    
+    def draw_daily_header(self, x, y, year, month, day):
+        box_w = 160
+        box_h = 90
+        
+        # شريط الشهر
+        c = self.c
+        c.setFillColor(COLOR_ACCENT_RED)
+        c.roundRect(x, y + box_h - 25, box_w, 25, 4, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont('NotoSansArabic-Bold', 10)
+        c.drawCentredString(x + box_w/2, y + box_h - 18, f"{MONTHS_AR[month]} {year}")
+        
+        # صندوق اليوم
+        c.setFillColor(HexColor('#f5f5f4'))
+        c.roundRect(x, y, box_w, box_h - 25, 4, fill=1, stroke=0)
+        c.setStrokeColor(COLOR_STONE_300)
+        c.roundRect(x, y, box_w, box_h, 4, fill=0, stroke=1)
+        
+        c.setFillColor(COLOR_STONE_900)
+        c.setFont('NotoKufiArabic', 32)
+        c.drawCentredString(x + box_w/2, y + 35, str(day))
+        
+        date_obj = date(year, month + 1, day)
+        day_name = DAYS_AR[date_obj.weekday()]
+        c.setFillColor(COLOR_STONE_400)
+        c.setFont('NotoSansArabic', 9)
+        c.drawCentredString(x + box_w/2, y + 12, day_name)
+        
+        # الشعار
+        logo_x = PAGE_WIDTH - 180
+        c.setFillColor(COLOR_STONE_900)
+        c.setFont('NotoKufiArabic', 24)
+        c.drawString(logo_x, y + 45, 'MYH')
+        
+        c.setFillColor(COLOR_STONE_400)
+        c.setFont('NotoSansArabic', 8)
+        c.drawString(logo_x, y + 25, 'PREMIUM')
+        
+        c.setStrokeColor(COLOR_GOLD)
+        c.setLineWidth(2)
+        c.line(logo_x - 10, y + 20, logo_x - 10, y + 75)
+    
+    def draw_work_content(self, x, y, w, h, is_weekend):
+        c = self.c
+        
+        if is_weekend:
+            # تخطيط الإجازة
+            col_w = w * 0.35
+            
+            # عموم المهام
+            c.setFillColor(white)
+            c.roundRect(x, y, col_w, h, 6, fill=1, stroke=0)
+            c.setStrokeColor(COLOR_STONE_300)
+            c.roundRect(x, y, col_w, h, 6, fill=0, stroke=1)
+            
+            c.setFillColor(COLOR_PURPLE)
+            c.setFont('NotoSansArabic-Bold', 12)
+            c.drawString(x + 15, y + h - 25, 'مهام الإجازة الأسبوعية')
+            
+            for i in range(5):
+                cb_y = y + h - 60 - (i * 35)
+                c.setStrokeColor(HexColor('#c4b5fd'))
+                c.setLineWidth(1)
+                c.rect(x + 15, cb_y, 18, 18, fill=0, stroke=1)
+                c.setStrokeColor(COLOR_STONE_200)
+                c.line(x + 40, cb_y + 2, x + col_w - 15, cb_y + 2)
+            
+            # منطقة الملاحظات
+            notes_x = x + col_w + 15
+            notes_w = w - col_w - 15
+            c.setFillColor(white)
+            c.roundRect(notes_x, y, notes_w, h, 6, fill=1, stroke=0)
+            c.setStrokeColor(COLOR_STONE_300)
+            c.roundRect(notes_x, y, notes_w, h, 6, fill=0, stroke=1)
+            
+            # خطوط الكتابة
+            c.setStrokeColor(HexColor('#e4e1cf'))
+            c.setLineWidth(0.5)
+            for i in range(int(h // 22)):
+                line_y = y + h - 40 - (i * 22)
+                if line_y > y + 10:
+                    c.line(notes_x + 15, line_y, notes_x + notes_w - 15, line_y)
+        else:
+            # تخطيط أيام العمل
+            grid_h = 70
+            
+            # شبكة الحصص
+            c.setFillColor(white)
+            c.roundRect(x, y + h - grid_h - 10, w, grid_h, 6, fill=1, stroke=0)
+            c.setStrokeColor(COLOR_STONE_300)
+            c.roundRect(x, y + h - grid_h - 10, w, grid_h, 6, fill=0, stroke=1)
+            
+            period_w = w / 8
+            c.setFillColor(COLOR_STONE_400)
+            c.setFont('NotoSansArabic', 10)
+            for i in range(8):
+                c.drawCentredString(x + period_w * i + period_w/2, y + h - 25, str(i + 1))
+            
+            c.setStrokeColor(COLOR_STONE_200)
+            c.setLineWidth(0.5)
+            for i in range(8):
+                c.line(x + period_w * i, y + h - grid_h - 10, x + period_w * i, y + h - 10)
+            
+            # بطاقات التحضير
+            cards_y = y
+            cards_h = h - grid_h - 25
+            
+            c.setFillColor(white)
+            c.roundRect(x, cards_y, w, cards_h, 6, fill=1, stroke=0)
+            c.setStrokeColor(COLOR_STONE_300)
+            c.roundRect(x, cards_y, w, cards_h, 6, fill=0, stroke=1)
+            
+            c.setFillColor(COLOR_STONE_700)
+            c.setFont('NotoSansArabic-Bold', 12)
+            c.drawString(x + 15, cards_y + cards_h - 25, 'بطاقات التحضير الفني ومتابعة الفصول والدروس')
+            
+            card_w = (w - 40) / 3
+            card_h = cards_h - 50
+            for i in range(3):
+                card_x = x + 15 + i * (card_w + 5)
+                c.setFillColor(HexColor('#fafaf9'))
+                c.roundRect(card_x, cards_y + 10, card_w, card_h, 4, fill=1, stroke=0)
+                c.setStrokeColor(COLOR_STONE_200)
+                c.roundRect(card_x, cards_y + 10, card_w, card_h, 4, fill=0, stroke=1)
+                
+                c.setFillColor(COLOR_STONE_400)
+                c.setFont('NotoSansArabic', 9)
+                c.drawString(card_x + 8, cards_y + card_h + 5, f'بطاقة تحضير الدرس {i+1}')
+                
+                # خطوط الكتابة
+                c.setStrokeColor(HexColor('#e6e3d2'))
+                c.setLineWidth(0.5)
+                for j in range(int(card_h // 20)):
+                    line_y = cards_y + 15 + (j * 20)
+                    if line_y < cards_y + card_h - 5:
+                        c.line(card_x + 8, line_y, card_x + card_w - 8, line_y)
+    
+    def draw_footer_with_links(self, x, y, w, h, year, month, active_day):
+        c = self.c
+        
+        c.setFillColor(COLOR_STONE_200)
+        c.rect(x, y, w, h, fill=1, stroke=0)
+        c.setStrokeColor(COLOR_STONE_300)
+        c.setLineWidth(1)
+        c.line(x, y + h, x + w, y + h)
+        
+        c.setFillColor(COLOR_STONE_800)
+        c.setFont('NotoSansArabic-Bold', 11)
+        c.drawString(x + 15, y + 12, f"{MONTHS_AR[month]} :")
+        
+        total_days = calendar.monthrange(year, month + 1)[1]
+        days_start_x = x + 100
+        days_w = w - 120
+        day_w = days_w / total_days
+        
+        for d in range(1, total_days + 1):
+            day_x = days_start_x + (d - 1) * day_w
+            test_date = date(year, month + 1, d)
+            is_weekend = test_date.weekday() in [4, 5]
+            
+            if d == active_day:
+                c.setFillColor(COLOR_SIDEBAR)
+                c.roundRect(day_x + 2, y + 5, day_w - 4, h - 10, 3, fill=1, stroke=0)
+                c.setFillColor(COLOR_GOLD)
+            else:
+                c.setFillColor(HexColor('#dc2626') if is_weekend else COLOR_STONE_700)
+            
+            c.setFont('NotoSansArabic-Bold' if d == active_day else 'NotoSansArabic', 10)
+            c.drawCentredString(day_x + day_w/2, y + 10, str(d))
+            
+            # إضافة رابط لكل يوم
+            target_page = self.page_map.get((year, month, d))
+            if target_page is not None:
+                c.linkAbsolute(str(d), f"day_{year}_{month}_{d}", 
+                              (day_x + 2, y + 5, day_x + day_w - 2, y + h - 5),
+                              Border='[0 0 0]')
+    
+    def add_cover_links(self):
+        """إضافة روابط للغلاف بعد بناء page_map"""
+        # هذه الدالة تُستخدم لإضافة روابط التنقل من الغلاف
+        pass
+    
+    def save(self):
+        # إضافة Outline للتنقل السريع
+        c = self.c
+        c.addOutlineEntry("الغلاف", "cover", level=0)
+        
+        for (y, m, d), page_num in sorted(self.page_map.items()):
+            c.addOutlineEntry(f"{MONTHS_AR[m]} {d}, {y}", f"day_{y}_{m}_{d}", level=1)
+        
+        c.save()
+        print(f"✅ تم حفظ ملف PDF!")
+        print(f"📁 الملف: {output_path}")
+        print(f"📄 إجمالي الصفحات: {self.page_counter}")
+        print(f"📱 الأمثل لـ: iPad الجيل العاشر (1640×2360)")
+        print(f"📝 متوافق مع: GoodNotes")
 
-            const options = {
-                margin:       0,
-                filename:     'MYH_Premium_GoodNotes_Planner_2026-2027.pdf',
-                image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false },
-                jsPDF:        { unit: 'px', format: [1024, 768], orientation: 'landscape' }
-            };
+# ============ التشغيل ============
+print("🚀 جاري إنشاء Digital Planner التفاعلي...")
+nplanner = DigitalPlannerPDF(output_path)
 
-            try {
-                await html2pdf().set(options).from(stage).save();
-            } catch (error) {
-                console.error("خطأ في التصدير التفاعلي:", error);
-            } {
-                stage.classList.add('hidden');
-                stage.innerHTML = '';
-                btnTextMain.innerText = "📥 تصدير كامل";
-                btnTextSub.innerText = "لـ GoodNotes";
-            }
-        }
-    </script>
-</body>
-</html>
+print("📋 رسم صفحة الغلاف...")
+nplanner.draw_cover()
+
+print("📅 رسم الصفحات اليومية مع روابط التنقل...")
+nplanner.draw_daily_pages()
+
+print("💾 حفظ الملف...")
+nplanner.save()
