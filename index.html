@@ -2,195 +2,899 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MYH Creative Palette Planner Generator 2026-2027</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MYH Simple Paper Planner 2026-2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- تضمين مكتبة jsPDF الرسمية لتوليد ملفات PDF تفاعلية بالروابط -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background-color: #111827; color: #f3f4f6; }
-        .ipad-page { width: 1024px; height: 768px; min-width: 1024px; min-height: 768px; background-color: #faf8f2; color: #2a2d2b; position: relative; }
-        .handwriting-lines { background-image: linear-gradient(#e4e1d1 1px, transparent 1px); background-size: 100% 24px; line-height: 24px; }
-        .card-lines { background-image: linear-gradient(#e7e4d5 1px, transparent 1px); background-size: 100% 20px; line-height: 20px; }
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: #d0ccc0;
+            color: #1a1a1a; 
+            user-select: none;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* iPad 10.2" Dimensions 4:3 - Clean white paper */
+        .ipad-container { 
+            width: 1024px; 
+            height: 768px; 
+            background: #ffffff;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Very subtle paper texture - almost invisible */
+        .paper-texture::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ============================================ */
+        /* CLEAN NOTEBOOK LINES - Ultra subtle          */
+        /* ============================================ */
+
+        /* Standard ruled - very light blue */
+        .ruled-light {
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
+            background-size: 100% 24px;
+            background-position: 0 12px;
+        }
+
+        /* Wide ruled - for Arabic */
+        .ruled-wide {
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
+            background-size: 100% 28px;
+            background-position: 0 14px;
+        }
+
+        /* Dot grid - tiny dots */
+        .dot-light {
+            background-color: #ffffff;
+            background-image: 
+                radial-gradient(circle, rgba(150, 150, 150, 0.15) 0.6px, transparent 0.6px);
+            background-size: 20px 20px;
+            background-position: 10px 10px;
+        }
+
+        /* Graph paper - very light */
+        .graph-light {
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(rgba(150, 150, 150, 0.08) 0.5px, transparent 0.5px),
+                linear-gradient(90deg, rgba(150, 150, 150, 0.08) 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+
+        /* Cornell - with red margin line */
+        .cornell-clean {
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(90deg, transparent calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 31px), transparent calc(100% - 31px)),
+                linear-gradient(90deg, transparent 30%, rgba(100, 149, 237, 0.08) 30%, rgba(100, 149, 237, 0.08) calc(30% + 0.5px), transparent calc(30% + 0.5px)),
+                linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
+            background-size: 100% 100%, 100% 100%, 100% 24px;
+            background-position: 0 0, 0 0, 0 12px;
+        }
+
+        /* Ledger - account book */
+        .ledger-clean {
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(90deg, transparent calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 31px), transparent calc(100% - 31px)),
+                linear-gradient(90deg, transparent 65%, rgba(100, 149, 237, 0.08) 65%, rgba(100, 149, 237, 0.08) calc(65% + 0.5px), transparent calc(65% + 0.5px)),
+                linear-gradient(90deg, transparent 82%, rgba(100, 149, 237, 0.08) 82%, rgba(100, 149, 237, 0.08) calc(82% + 0.5px), transparent calc(82% + 0.5px)),
+                linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 24px;
+            background-position: 0 0, 0 0, 0 0, 0 24px;
+        }
+
+        /* Blank with red margin only */
+        .blank-margin {
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(90deg, transparent calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 31px), transparent calc(100% - 31px));
+        }
+
+        /* ============================================ */
+        /* SIMPLE SIDEBAR - Clean dark                  */
+        /* ============================================ */
+
+        .sidebar-tab {
+            transition: all 0.15s ease;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .sidebar-tab:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .sidebar-tab.active {
+            background: #2d4a43;
+            color: #e5ad35;
+            font-weight: 700;
+        }
+
+        .sidebar-tab.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            background: #e5ad35;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* ============================================ */
+        /* MINI CALENDAR - Simple                       */
+        /* ============================================ */
+
+        .mini-day {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-weight: 500;
+        }
+
+        .mini-day:hover { background: #f0f0f0; }
+        .mini-day.active { 
+            background: #1b2b26; 
+            color: #e5ad35; 
+            font-weight: 700;
+        }
+        .mini-day.weekend { color: #c05c46; font-weight: 600; }
+
+        /* ============================================ */
+        /* SIMPLE BORDERS - Thin gray                   */
+        /* ============================================ */
+
+        .simple-border {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .simple-border-dashed {
+            border: 1px dashed #d0d0d0;
+            border-radius: 4px;
+        }
+
+        /* ============================================ */
+        /* SIMPLE CHECKBOX - Small square               */
+        /* ============================================ */
+
+        .simple-checkbox {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #aaa;
+            border-radius: 2px;
+            display: inline-block;
+            position: relative;
+            flex-shrink: 0;
+            background: transparent;
+        }
+
+        /* ============================================ */
+        /* SIMPLE TYPOGRAPHY - Clean                    */
+        /* ============================================ */
+
+        .simple-title {
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            color: #1a1a1a;
+            font-size: 14px;
+        }
+
+        .simple-label {
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 10px;
+            color: #555;
+        }
+
+        /* ============================================ */
+        /* VIEW TRANSITIONS                             */
+        /* ============================================ */
+
+        .view-content {
+            transition: opacity 0.2s ease;
+        }
+
+        .view-content.hidden {
+            display: none !important;
+        }
+
+        /* ============================================ */
+        /* SCROLLBAR                                    */
+        /* ============================================ */
+
+        .custom-scroll::-webkit-scrollbar { width: 2px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+        /* ============================================ */
+        /* YEARLY MONTH BOX - Simple white              */
+        /* ============================================ */
+
+        .month-box-simple {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 8px;
+            transition: all 0.15s;
+        }
+
+        .month-box-simple:hover {
+            border-color: #ccc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* ============================================ */
+        /* LEDGER HEADER - Simple                       */
+        /* ============================================ */
+
+        .ledger-header-simple {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ccc;
+            font-size: 9px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .ledger-col-desc { width: 65%; padding: 4px 6px; }
+        .ledger-col-in { width: 17%; padding: 4px 3px; border-right: 1px solid #ddd; text-align: center; color: #2a5a2a; }
+        .ledger-col-out { width: 18%; padding: 4px 3px; border-right: 1px solid #ddd; text-align: center; color: #5a2a2a; }
+
+        /* ============================================ */
+        /* TASK LINE - Simple                           */
+        /* ============================================ */
+
+        .task-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 2px 0;
+            border-bottom: 0.5px solid rgba(100, 149, 237, 0.08);
+            min-height: 24px;
+        }
+
+        .task-line:last-child {
+            border-bottom: none;
+        }
+
+        /* ============================================ */
+        /* DATE BADGE - Simple                          */
+        /* ============================================ */
+
+        .date-badge-simple {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* ============================================ */
+        /* INK COLOR DOTS - Simple                      */
+        /* ============================================ */
+
+        .ink-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ink-dot:hover { transform: scale(1.1); }
+        .ink-dot.active { 
+            border-color: #333; 
+            box-shadow: 0 0 0 2px white, 0 0 0 3px #ccc;
+        }
+
+        /* ============================================ */
+        /* PAGE NUMBER                                  */
+        /* ============================================ */
+
+        .page-num {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            color: #bbb;
+            font-weight: 400;
+        }
     </style>
+<base target="_blank">
 </head>
-<body class="p-8 flex flex-col items-center justify-center min-h-screen">
+<body>
 
-    <div class="text-center mb-8 max-w-xl">
-        <h1 class="text-2xl font-black text-amber-400 mb-2">🛠️ مُولِّد المفكرة الرقمية التفاعلية لـ GoodNotes</h1>
-        <p class="text-sm text-gray-400">يقوم هذا السكريبت ببناء جميع الصفحات المقسمة (السنوي، والشهور، واليوم الذكي) وربطها بروابط PDF تفاعلية داخلية وتصديرها بملف واحد جاهز للاستيراد الفوري داخل الآيباد.</p>
-        <button onclick="generateDigitalPlanner()" class="mt-4 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-3 px-6 rounded-lg shadow-lg transition transform hover:scale-105">
-            🚀 توليد وتصدير المفكرة لـ GoodNotes (PDF)
-        </button>
-        <div id="status-log" class="mt-4 text-xs text-amber-300 font-mono hidden">جاري معالجة الصفحات...</div>
-    </div>
+    <div class="ipad-container paper-texture">
 
-    <!-- حاوية بناء الصفحات المخفية (يتم قراءتها بواسطة المحرك لتوليد الـ PDF) -->
-    <div id="planner-render-engine" class="hidden">
-        
-        <!-- ================= صفحة 1: التقويم السنوي الشامل ================= -->
-        <div id="render-page-yearly" class="ipad-page flex flex-row border border-stone-300">
-            <aside class="w-24 bg-[#1b2b26] flex flex-col items-center py-3 justify-between border-l border-stone-800">
-                <span class="text-sm font-black text-[#e5ad35]">MYH</span>
-                <div class="w-full flex flex-col gap-1 px-1.5 text-[10px] text-stone-400 font-bold text-center">
-                    <span class="text-[#e5ad35] border-b border-[#253c35] pb-2 mb-2">📋 الفهرس</span>
-                    <div class="text-stone-500">اختر الشهر للتنقل الفوري للقالب التفاعلي</div>
+        <!-- LEFT SIDEBAR - Simple dark -->
+        <aside class="absolute right-0 top-0 bottom-0 w-24 bg-[#1b2b26] text-stone-300 flex flex-col items-center py-4 z-20">
+
+            <!-- Brand -->
+            <div class="text-center mb-3">
+                <span class="text-lg font-bold text-[#e5ad35] tracking-wider block">MYH</span>
+                <span class="text-[7px] text-stone-500 tracking-widest uppercase mt-1 block">2026-2027</span>
+            </div>
+
+            <!-- Mode Tabs -->
+            <div class="w-full px-2 flex flex-col gap-1.5 mb-2">
+                <button onclick="setMode('work')" id="mode-btn-work" class="w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#2d4a43] text-[#e5ad35] border border-[#3e665d]">
+                    🎨 العملي
+                </button>
+                <button onclick="setMode('personal')" id="mode-btn-personal" class="w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#14201c] text-stone-400 hover:text-white border border-transparent hover:border-[#2a6a7c]">
+                    🍏 الشخصي
+                </button>
+            </div>
+
+            <!-- View Switcher -->
+            <button onclick="switchView('yearly')" class="w-full py-1.5 text-[10px] font-bold text-center hover:bg-[#253c35] transition rounded mb-1 text-stone-400">
+                📅 السنوي
+            </button>
+
+            <!-- Months -->
+            <div class="flex-1 w-full overflow-y-auto custom-scroll px-1">
+                <div class="flex flex-col gap-0.5">
+                    <button onclick="goToMonth(2026, 6)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-6">يوليو 26</button>
+                    <button onclick="goToMonth(2026, 7)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-7">أغسطس</button>
+                    <button onclick="goToMonth(2026, 8)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-8">سبتمبر</button>
+                    <button onclick="goToMonth(2026, 9)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-9">أكتوبر</button>
+                    <button onclick="goToMonth(2026, 10)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-10">نوفمبر</button>
+                    <button onclick="goToMonth(2026, 11)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-11">ديسمبر</button>
+                    <button onclick="goToMonth(2027, 0)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-0">يناير 27</button>
+                    <button onclick="goToMonth(2027, 1)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-1">فبراير</button>
+                    <button onclick="goToMonth(2027, 2)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-2">مارس</button>
+                    <button onclick="goToMonth(2027, 3)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-3">أبريل</button>
+                    <button onclick="goToMonth(2027, 4)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-4">مايو</button>
+                    <button onclick="goToMonth(2027, 5)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-5">يونيو</button>
+                    <button onclick="goToMonth(2027, 6)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-6">يوليو 27</button>
                 </div>
-                <div class="text-[9px] text-stone-500">2026-2027</div>
-            </aside>
-            <main class="flex-1 flex flex-col p-6 justify-center">
-                <h1 class="text-lg font-bold text-center text-stone-800 mb-4">التقويم السنوي التفاعلي ٢٠٢٦ - ٢٠٢٧ 🗓️</h1>
-                <div class="grid grid-cols-4 gap-3" id="yearly-grid-container">
-                    <!-- سيتم بناؤه تلقائياً بروابط نشطة -->
+            </div>
+
+            <!-- Bottom: Ink Colors & Today -->
+            <div class="w-full px-2 pb-2">
+                <div class="flex justify-center gap-2 mb-2">
+                    <div class="ink-dot active" style="background:#2a2d2b" onclick="setInk(this, '#2a2d2b')"></div>
+                    <div class="ink-dot" style="background:#c05c46" onclick="setInk(this, '#c05c46')"></div>
+                    <div class="ink-dot" style="background:#2d4a43" onclick="setInk(this, '#2d4a43')"></div>
+                    <div class="ink-dot" style="background:#e5ad35" onclick="setInk(this, '#e5ad35')"></div>
                 </div>
-            </main>
-        </div>
+                <button onclick="switchView('daily')" class="w-full py-2.5 text-[10px] font-bold text-center bg-[#14201c] text-[#e5ad35] hover:bg-[#1a3028] transition rounded border border-[#253c35]">
+                    📖 اليوم
+                </button>
+            </div>
+        </aside>
 
-        <!-- Dynamic Pages Container (Months & Days) will be injected here via JavaScript -->
-        <div id="dynamic-pages-container"></div>
+        <!-- MAIN CONTENT -->
+        <main class="absolute left-0 top-0 bottom-0 right-24 flex flex-col p-4 overflow-hidden">
 
+            <!-- ===== YEARLY VIEW ===== -->
+            <div id="view-yearly" class="view-content flex-1 flex flex-col z-10">
+                <div class="flex items-center justify-between mb-3">
+                    <h1 class="simple-title">التقويم السنوي ٢٠٢٦ - ٢٠٢٧</h1>
+                </div>
+                <div class="grid grid-cols-4 gap-2 overflow-y-auto max-h-[640px] custom-scroll p-1" id="yearly-grid"></div>
+            </div>
+
+            <!-- ===== DAILY VIEW ===== -->
+            <div id="view-daily" class="view-content hidden flex-1 flex flex-col z-10">
+
+                <!-- Header -->
+                <div class="flex flex-row justify-between items-start mb-2 pb-2 border-b border-[#ddd]">
+                    <div class="flex items-center gap-3">
+                        <!-- Date Badge -->
+                        <div class="date-badge-simple w-24">
+                            <div class="py-0.5 text-[10px] font-bold text-center" id="calendar-top-month" style="background:#c05c46; color:white;">يوليو ٢٠٢٦</div>
+                            <div class="py-1.5 text-center bg-[#fafafa]">
+                                <div class="text-2xl font-bold text-[#1a1a1a] leading-none" id="calendar-main-day">١</div>
+                                <div class="text-[10px] font-bold text-[#888] mt-0.5" id="calendar-day-name">الأربعاء</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <span id="current-mode-badge" class="w-fit text-[9px] bg-[#2d4a43] text-[#e5ad35] font-bold px-2 py-0.5 rounded border border-[#1b2b26]">القسم العملي والأكاديمي</span>
+                            <span id="dynamic-quote-bar" class="text-[10px] text-[#666] italic font-medium max-w-md leading-relaxed"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-end gap-1">
+                        <div class="bg-stone-900 text-[#e5ad35] text-[10px] font-bold px-3 py-1 rounded tracking-widest">MYH</div>
+                    </div>
+                </div>
+
+                <!-- === WORK MODE - WEEKDAY === -->
+                <div id="sub-view-work" class="daily-sub-view flex-1 flex flex-col gap-2 overflow-hidden">
+
+                    <!-- 8-Class Schedule - Dot Grid -->
+                    <div class="simple-border bg-white rounded p-2 flex-shrink-0">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="simple-label flex items-center gap-1">
+                                <span style="color:#c05c46;">📋</span> الجدول اليومي - ٨ حصص
+                            </h3>
+                            <span class="text-[8px] text-[#999]">شبكة منقطة</span>
+                        </div>
+                        <div class="grid grid-cols-8 gap-1">
+                            <div class="text-center">
+                                <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">١</div>
+                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٢</div>
+                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٣</div>
+                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٤</div>
+                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٥</div>
+                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٦</div>
+                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٧</div>
+                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">٨</div>
+                                <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Art Cards - Ruled Wide -->
+                    <div class="simple-border bg-white rounded p-2 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="simple-label flex items-center gap-1">
+                                <span style="color:#2d4a43;">🎨</span> بطاقات التحضير الفني (٦ بطاقات)
+                            </h3>
+                            <span class="text-[8px] text-[#999]">خطوط واسعة</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 flex-1" id="art-handwriting-cards">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- === WORK MODE - WEEKEND === -->
+                <div id="sub-view-weekend" class="daily-sub-view hidden grid grid-cols-12 gap-2 items-stretch overflow-hidden">
+
+                    <!-- Weekend Tasks - Cornell -->
+                    <div class="col-span-4 simple-border bg-white rounded p-2 flex flex-col">
+                        <h3 class="simple-label text-[#5c46c0] mb-1 pb-1 border-b border-[#eee] flex justify-between items-center">
+                            <span>🌿 مهام الإجازة</span>
+                            <span class="text-[8px] text-[#999] font-normal">جمعة / سبت</span>
+                        </h3>
+
+                        <div class="flex-1 cornell-clean rounded border border-[#eee] p-1">
+                            <div class="space-y-0">
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                                <div class="task-line">
+                                    <div class="simple-checkbox"></div>
+                                    <div class="flex-1" style="height: 24px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Free Notes - Ruled Wide -->
+                    <div class="col-span-8 simple-border bg-white rounded p-2 flex flex-col">
+                        <h3 class="simple-label text-[#333] mb-1 pb-1 border-b border-[#eee] flex justify-between items-center">
+                            <span>📝 تأملات وخطط العطلة</span>
+                            <span class="text-[8px] text-[#999]">اكتب بحرية</span>
+                        </h3>
+                        <div class="ruled-wide flex-1 rounded border border-[#f0f0f0]" style="background-position: 0 0, 0 14px;"></div>
+                    </div>
+                </div>
+
+                <!-- === PERSONAL MODE === -->
+                <div id="sub-view-personal" class="daily-sub-view hidden grid grid-cols-12 gap-2 items-stretch overflow-hidden">
+
+                    <!-- Left: Tasks & Free Notes -->
+                    <div class="col-span-4 flex flex-col gap-2">
+
+                        <!-- Tasks - Ruled Light -->
+                        <div class="simple-border bg-white rounded p-2 flex-1">
+                            <h3 class="simple-label text-[#1f4e5b] mb-1 pb-1 border-b border-[#eee] flex items-center gap-1">
+                                <span>🍏</span> مسؤوليات اليوم
+                            </h3>
+                            <div class="ruled-light rounded border border-[#f0f0f0] p-1" style="background-position: 0 0, 0 12px;">
+                                <div class="space-y-0">
+                                    <div class="task-line">
+                                        <div class="simple-checkbox"></div>
+                                        <div class="flex-1" style="height: 24px;"></div>
+                                    </div>
+                                    <div class="task-line">
+                                        <div class="simple-checkbox"></div>
+                                        <div class="flex-1" style="height: 24px;"></div>
+                                    </div>
+                                    <div class="task-line">
+                                        <div class="simple-checkbox"></div>
+                                        <div class="flex-1" style="height: 24px;"></div>
+                                    </div>
+                                    <div class="task-line">
+                                        <div class="simple-checkbox"></div>
+                                        <div class="flex-1" style="height: 24px;"></div>
+                                    </div>
+                                    <div class="task-line">
+                                        <div class="simple-checkbox"></div>
+                                        <div class="flex-1" style="height: 24px;"></div>
+                                    </div>
+                                    <div class="task-line">
+                                        <div class="simple-checkbox"></div>
+                                        <div class="flex-1" style="height: 24px;"></div>
+                                    </div>
+                                    <div class="task-line">
+                                        <div class="simple-checkbox"></div>
+                                        <div class="flex-1" style="height: 24px;"></div>
+                                    </div>
+                                    <div class="task-line">
+                                        <div class="simple-checkbox"></div>
+                                        <div class="flex-1" style="height: 24px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Free Notes - Ruled Light -->
+                        <div class="simple-border bg-white rounded p-2 flex-1">
+                            <h3 class="simple-label text-[#333] mb-1 pb-1 border-b border-[#eee]">📝 ملاحظات حرة</h3>
+                            <div class="ruled-light rounded border border-[#f0f0f0] flex-1" style="min-height: 70px; background-position: 0 0, 0 12px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Account Book - Ledger -->
+                    <div class="col-span-8 simple-border bg-white rounded p-2 flex flex-col">
+                        <h3 class="simple-label text-[#333] mb-1 pb-1 border-b border-[#ccc] flex justify-between items-center">
+                            <span>📊 دفتر الحسابات اليومي</span>
+                            <span class="text-[8px] text-[#999]">دفتر محاسبة</span>
+                        </h3>
+
+                        <!-- Ledger Header -->
+                        <div class="ledger-header-simple flex text-center rounded-t mb-0">
+                            <div class="ledger-col-desc">بيان المعاملة المالية</div>
+                            <div class="ledger-col-in">وارد (+)</div>
+                            <div class="ledger-col-out">صادر (-)</div>
+                        </div>
+
+                        <!-- Ledger Lines -->
+                        <div class="ledger-clean flex-1 rounded-b border border-t-0 border-[#eee]" style="background-position: 0 0, 0 0, 0 0, 0 24px;">
+                            <div style="height: 240px;"></div>
+                        </div>
+
+                        <!-- Totals -->
+                        <div class="mt-2 grid grid-cols-3 gap-2">
+                            <div class="simple-border-dashed bg-[#f8faf8] p-1.5 rounded text-center">
+                                <span class="text-[#2a5a2a] block text-[8px] mb-0.5 font-bold">💰 إجمالي الوارد</span>
+                                <div class="ruled-light border border-[#eee] rounded bg-white" style="height: 24px; background-position: 0 0, 0 4px;"></div>
+                            </div>
+                            <div class="simple-border-dashed bg-[#faf8f8] p-1.5 rounded text-center">
+                                <span class="text-[#5a2a2a] block text-[8px] mb-0.5 font-bold">💸 إجمالي الصادر</span>
+                                <div class="ruled-light border border-[#eee] rounded bg-white" style="height: 24px; background-position: 0 0, 0 4px;"></div>
+                            </div>
+                            <div class="simple-border-dashed bg-[#fafaf8] p-1.5 rounded text-center">
+                                <span class="text-[#5a4a2a] block text-[8px] mb-0.5 font-bold">⚖️ الصافي الختامي</span>
+                                <div class="ruled-light border border-[#eee] rounded bg-white" style="height: 24px; background-position: 0 0, 0 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Mini Calendar -->
+                <footer class="mt-2 simple-border bg-white rounded p-1.5">
+                    <div id="footer-calendar-container" class="flex flex-row items-center justify-between text-[9px]"></div>
+                </footer>
+            </div>
+
+            <!-- Page Number -->
+            <div class="page-num">MYH 2026-2027</div>
+        </main>
     </div>
 
     <script>
-        const { jsPDF } = window.jspdf;
+        // State
+        let currentDateStr = "2026-07-01";
+        let currentMode = "work"; 
+        let currentInk = "#2a2d2b";
         const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        const schedule = [
-            {y: 2026, m: 6}, {y: 2026, m: 7}, {y: 2026, m: 8}, {y: 2026, m: 9}, {y: 2026, m: 10}, {y: 2026, m: 11},
-            {y: 2027, m: 0}, {y: 2027, m: 1}, {y: 2027, m: 2}, {y: 2027, m: 3}, {y: 2027, m: 4}, {y: 2027, m: 5}
+        const dayNames = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+
+        // Quotes
+        const workQuotes = [
+            "🎨 الفن يمسح عن الروح غبار الحياة اليومية. - بابلو بيكاسو",
+            "🎨 التدريس هو أرقى أشكال الفنون، لأن المشكل هو عقول البشر.",
+            "🎨 اللون هو لوحة المفاتيح، العين هي المطرقة، والروح هي الأوتار.",
+            "🎨 الخط الخارجي هو فكرة تم إنقاذها من الفوضى الكونية.",
+            "🎨 العمل الفني الحقيقي ما هو إلا ظلال للكمال الإلهي.",
+            "🎨 لكي تبدع، يجب أن تتخلى أولاً عن الخوف من الخطأ.",
+            "🎨 الفنون التشكيلية هي لغة عالمية صامتة تخاطب القلوب بلا ترجمة."
         ];
 
-        // بناء شبكة التقويم السنوي بروابط HTML مُهيأة للـ PDF
-        function setupYearlyGrid() {
-            const grid = document.getElementById('yearly-grid-container');
-            grid.innerHTML = '';
-            schedule.forEach((item, index) => {
-                let totalDays = new Date(item.y, item.m + 1, 0).getDate();
-                let daysHTML = '';
-                for(let d=1; d<=totalDays; d++) {
-                    let dObj = new Date(item.y, item.m, d);
-                    let isWe = (dObj.getDay() === 5 || dObj.getDay() === 6);
-                    let color = isWe ? 'text-red-500 font-bold' : 'text-stone-600';
-                    // رابط تفاعلي داخلي يشير إلى معرف الصفحة الفريد لليوم
-                    daysHTML += `<a href="#target-day-${item.y}-${item.m}-${d}" class="hover:bg-amber-100 rounded text-center p-0.5 ${color}">${d}</a>`;
-                }
+        const weekendQuotes = [
+            "🌿 الراحة هي التربة الخصبة التي تنبت فيها أفكار الإبداع القادمة.",
+            "🌿 تأمل الطبيعة، ففي صمتها تكمن أروع الألوان والخطوط التشكيلية.",
+            "🌿 الإجازة ليست توقفاً عن الحركة، بل هي إعادة ضبط لبوصلة الشغف.",
+            "🌿 خذ نفساً عميقاً، اترك ريشة العمل، ودع روحك تتأمل جمال الكون الصامت.",
+            "🌿 عطلة سعيدة! التوازن يبدأ بحق جسدك وعقلك في الاسترخاء الكامل."
+        ];
 
-                grid.innerHTML += `
-                    <div class="bg-white p-2 rounded border border-stone-200 shadow-xs flex flex-col justify-between">
-                        <h3 class="text-xs font-black text-stone-700 border-b pb-1 mb-1 bg-stone-50 text-center">${monthsNames[item.m]} ${item.y}</h3>
-                        <div class="grid grid-cols-7 gap-0.5 text-[9px] font-medium">${daysHTML}</div>
+        const personalQuotes = [
+            "🍏 تنظيم ميزانيتك اليومية يمنح عائلتك الأمان والحرية الفكرية لتستمر في الإبداع.",
+            "🍏 التوازن المالي ليس شحاً، بل هو هندسة ذكية لإدارة موارد الحياة بثقة.",
+            "🍏 لكي تبدع في مرسمك، يجب أولاً أن تطمئن في بيتك وتدير مسؤولياتك بانتظام.",
+            "🍏 الصافي الحقيقي ليس في دفتر الحسابات فحسب، بل في راحة بالك وضميرك.",
+            "🍏 الأيام التي ترتب فيها أولوياتك الشخصية بدقة هي الأيام الأكثر إنتاجية."
+        ];
+
+        // Init
+        window.onload = function() {
+            buildYearlyGrid();
+            renderArtCards();
+            loadDate(currentDateStr);
+        };
+
+        // Mode Switching
+        function setMode(mode) {
+            currentMode = mode;
+            const btnWork = document.getElementById('mode-btn-work');
+            const btnPers = document.getElementById('mode-btn-personal');
+            const badge = document.getElementById('current-mode-badge');
+
+            if(mode === 'work') {
+                btnWork.className = "w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#2d4a43] text-[#e5ad35] border border-[#3e665d]";
+                btnPers.className = "w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#14201c] text-stone-400 hover:text-white border border-transparent hover:border-[#2a6a7c]";
+                badge.innerText = "القسم العملي والأكاديمي";
+                badge.className = "w-fit text-[9px] bg-[#2d4a43] text-[#e5ad35] font-bold px-2 py-0.5 rounded border border-[#1b2b26]";
+            } else {
+                btnPers.className = "w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#1f4e5b] text-[#e5ad35] border border-[#2a6a7c]";
+                btnWork.className = "w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#14201c] text-stone-400 hover:text-white border border-transparent hover:border-[#3e665d]";
+                badge.innerText = "قسم الحياة الشخصية والمالية";
+                badge.className = "w-fit text-[9px] bg-[#1f4e5b] text-sky-200 font-bold px-2 py-0.5 rounded border border-[#1f4e5b]";
+            }
+            updateDailySubViews();
+        }
+
+        // View Switching
+        function switchView(viewId) {
+            document.querySelectorAll('.view-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            });
+            const target = document.getElementById(`view-${viewId}`);
+            target.classList.remove('hidden');
+            target.classList.add('flex');
+        }
+
+        function goToDate(dateStr) {
+            currentDateStr = dateStr;
+            loadDate(dateStr);
+            switchView('daily');
+        }
+
+        function goToMonth(year, monthIdx) {
+            const dateStr = `${year}-${String(monthIdx+1).padStart(2, '0')}-01`;
+            goToDate(dateStr);
+        }
+
+        // Ink Color
+        function setInk(el, color) {
+            currentInk = color;
+            document.querySelectorAll('.ink-dot').forEach(d => d.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Render Art Cards - Ruled Wide
+        function renderArtCards() {
+            const container = document.getElementById('art-handwriting-cards');
+            container.innerHTML = '';
+            for(let c = 1; c <= 6; c++) {
+                container.innerHTML += `
+                    <div class="simple-border bg-[#fafafa] rounded p-1.5 flex flex-col relative">
+                        <div class="flex justify-between items-center mb-0.5 pb-0.5 border-b border-[#eee]">
+                            <span class="text-[8px] font-bold text-[#999]">بطاقة ${c}</span>
+                        </div>
+                        <div class="ruled-wide flex-1 rounded border border-[#f0f0f0]" style="background-position: 0 0, 0 14px; min-height: 60px;"></div>
+                    </div>`;
+            }
+        }
+
+        // Update Views
+        function updateDailySubViews() {
+            document.querySelectorAll('.daily-sub-view').forEach(el => el.classList.add('hidden'));
+
+            const dateObj = new Date(currentDateStr);
+            const dayOfWeek = dateObj.getDay(); 
+            const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
+
+            const dayNum = dateObj.getDate();
+            const quoteBar = document.getElementById('dynamic-quote-bar');
+            const topHeader = document.getElementById('calendar-top-month');
+
+            if(currentMode === 'work') {
+                if(isWeekend) {
+                    document.getElementById('sub-view-weekend').classList.remove('hidden');
+                    quoteBar.innerText = weekendQuotes[dayNum % weekendQuotes.length];
+                    topHeader.style.background = "#5c46c0";
+                } else {
+                    document.getElementById('sub-view-work').classList.remove('hidden');
+                    quoteBar.innerText = workQuotes[dayNum % workQuotes.length];
+                    topHeader.style.background = "#c05c46";
+                }
+            } else {
+                document.getElementById('sub-view-personal').classList.remove('hidden');
+                quoteBar.innerText = personalQuotes[dayNum % personalQuotes.length];
+                topHeader.style.background = "#1f4e5b";
+            }
+        }
+
+        // Build Yearly Grid
+        function buildYearlyGrid() {
+            const grid = document.getElementById('yearly-grid');
+            grid.innerHTML = '';
+
+            const schedule = [
+                {y: 2026, m: 6}, {y: 2026, m: 7}, {y: 2026, m: 8}, {y: 2026, m: 9}, 
+                {y: 2026, m: 10}, {y: 2026, m: 11},
+                {y: 2027, m: 0}, {y: 2027, m: 1}, {y: 2027, m: 2}, {y: 2027, m: 3}, 
+                {y: 2027, m: 4}, {y: 2027, m: 5}, {y: 2027, m: 6}
+            ];
+
+            schedule.forEach(item => {
+                let monthBox = document.createElement('div');
+                monthBox.className = "month-box-simple cursor-pointer";
+                monthBox.innerHTML = `
+                    <h3 class="text-[10px] font-bold text-[#333] text-center mb-1 pb-0.5 border-b border-[#eee]">${monthsNames[item.m]} ${item.y}</h3>
+                    <div class="grid grid-cols-7 gap-0.5">
+                        <div class="text-[7px] font-bold text-[#888] text-center">ح</div>
+                        <div class="text-[7px] font-bold text-[#888] text-center">ن</div>
+                        <div class="text-[7px] font-bold text-[#888] text-center">ث</div>
+                        <div class="text-[7px] font-bold text-[#888] text-center">ر</div>
+                        <div class="text-[7px] font-bold text-[#888] text-center">خ</div>
+                        <div class="text-[7px] font-bold text-[#c05c46] text-center">ج</div>
+                        <div class="text-[7px] font-bold text-[#c05c46] text-center">س</div>
                     </div>
                 `;
+
+                let daysGrid = document.createElement('div');
+                daysGrid.className = "grid grid-cols-7 gap-0.5 mt-1";
+
+                let totalDays = new Date(item.y, item.m + 1, 0).getDate();
+                let firstDay = new Date(item.y, item.m, 1).getDay();
+
+                for (let i = 0; i < firstDay; i++) {
+                    daysGrid.innerHTML += `<div></div>`;
+                }
+
+                for (let d = 1; d <= totalDays; d++) {
+                    let dateTest = new Date(item.y, item.m, d);
+                    let isWe = (dateTest.getDay() === 5 || dateTest.getDay() === 6);
+                    let dStr = `${item.y}-${String(item.m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                    daysGrid.innerHTML += `<span onclick="goToDate('${dStr}')" class="mini-day ${isWe ? 'weekend' : 'text-[#444]'}">${d}</span>`;
+                }
+                monthBox.appendChild(daysGrid);
+                grid.appendChild(monthBox);
             });
         }
 
-        // المحرك الرئيسي لتوليد ملف الـ PDF التفاعلي لـ GoodNotes
-        async function generateDigitalPlanner() {
-            const log = document.getElementById('status-log');
-            log.classList.remove('hidden');
-            log.innerText = "جاري تحضير شبكة التقويم والتنقل...";
-            
-            setupYearlyGrid();
-            
-            // إظهار الحاوية مؤقتاً لالتقاطها برمجياً
-            const engine = document.getElementById('planner-render-engine');
-            engine.classList.remove('hidden');
+        // Load Date
+        function loadDate(dateStr) {
+            const dateObj = new Date(dateStr);
+            const dayName = dayNames[dateObj.getDay()];
 
-            // إعداد مستند الـ PDF بأبعاد عرضية تناسب شاشة الآيباد تماماً (Landscape)
-            const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [1024, 768] });
-            
-            // 1. التقاط صفحة التقويم السنوي الرئيسية
-            log.innerText = "جاري معالجة وتحويل الصفحة السنوية التفاعلية...";
-            const canvasYearly = await html2canvas(document.getElementById('render-page-yearly'), { scale: 1.5 });
-            const imgDataYearly = canvasYearly.toDataURL('image/jpeg', 0.85);
-            pdf.addImage(imgDataYearly, 'JPEG', 0, 0, 1024, 768);
-            
-            // إضافة رابط مرجعي داخلي للعودة للرئيسية
-            pdf.addNumberedLink(1, { pageNumber: 1 });
+            document.getElementById('calendar-top-month').innerText = `${monthsNames[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+            document.getElementById('calendar-main-day').innerText = dateObj.getDate();
+            document.getElementById('calendar-day-name').innerText = dayName;
 
-            // 2. توليد صفحات الشهور والأيام المميزة (الطور العملي والشخصي)
-            // لتجنب ملفات الـ PDF الضخمة جداً، قمنا ببرمجة الشهور الرئيسية لعام 2026-2027 كنموذج فائق الدقة للـ GoodNotes
-            let pageCounter = 2;
-            
-            // عينة لأيام مستهدفة تفاعلية لربطها بالقلم
-            for (let i = 0; i < schedule.length; i++) {
-                let monthData = schedule[i];
-                log.innerText = `جاري بناء وتجهيز صفحات شهر: ${monthsNames[monthData.m]} ${monthData.y}...`;
+            document.querySelectorAll('.sidebar-tab').forEach(b => {
+                b.classList.remove('active');
+            });
+            const activeTab = document.querySelector(`.sidebar-tab[data-m="${dateObj.getFullYear()}-${dateObj.getMonth()}"]`);
+            if (activeTab) activeTab.classList.add('active');
 
-                // إضافة صفحة جديدة في مستند الـ PDF
-                pdf.addPage([1024, 768], 'landscape');
-                
-                // بناء هيكل الصفحة اليومية المشتركة (تضم محاكاة الأسطر والدفاتر لخط اليد)
-                let dayContainer = document.createElement('div');
-                dayContainer.className = "ipad-page flex flex-row border border-stone-300";
-                dayContainer.innerHTML = `
-                    <aside class="w-24 bg-[#1b2b26] text-stone-300 flex flex-col items-center py-4 justify-between border-l border-stone-800">
-                        <div class="w-full flex flex-col items-center gap-2">
-                            <span class="text-sm font-black text-[#e5ad35]">MYH</span>
-                            <span class="text-[9px] bg-[#2d4a43] text-[#e5ad35] px-1.5 py-0.5 rounded-full border border-[#3e665d] text-center">طور المفكرة</span>
-                        </div>
-                        <a href="#page-yearly" class="w-full py-2 text-[10px] bg-amber-500 text-gray-900 font-bold text-center rounded shadow-sm hover:bg-amber-400">📅 القائمة الرئيسية</a>
-                        <div class="text-[9px] text-stone-500 font-mono text-center">تم التوليد للآيباد</div>
-                    </aside>
-                    <main class="flex-1 flex flex-col p-5 justify-between bg-[#fbfaf5]">
-                        <div class="flex flex-row justify-between items-center border-b pb-2 mb-2">
-                            <div class="flex flex-col">
-                                <h2 class="text-base font-bold text-stone-800">مفكرة التخطيط اليومي المفتوحة لـ ${monthsNames[monthData.m]} ${monthData.y}</h2>
-                                <p class="text-[10px] text-stone-400 mt-0.5">🎨 يدعم الخط اليدوي، التنظيم العملي، وتدوين الميزانية الشاملة عبر قلم الآيباد</p>
-                            </div>
-                            <div class="bg-stone-900 text-[#e5ad35] text-xs font-black px-3 py-1 rounded shadow">MYH Palette</div>
-                        </div>
-                        <div class="grid grid-cols-12 gap-4 flex-1 items-stretch">
-                            <div class="col-span-5 bg-white p-3 rounded-lg border border-stone-200 flex flex-col justify-between shadow-xs">
-                                <div>
-                                    <h3 class="text-xs font-bold text-[#2d4a43] mb-2 border-b pb-1">🍏 قائمة المسؤوليات العائلية واليومية</h3>
-                                    <div class="space-y-3 mt-1">
-                                        <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                        <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                        <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 border border-stone-400 rounded-sm"></div><div class="flex-1 border-b border-stone-200 h-4"></div></div>
-                                    </div>
-                                </div>
-                                <div class="flex-1 mt-4 border-t-2 border-dashed border-stone-100 pt-2 flex flex-col">
-                                    <span class="text-[10px] font-bold text-stone-400 block mb-1">📝 مفكرة حرة (مسطرة كالكراسات التقليدية):</span>
-                                    <div class="handwriting-lines flex-1 opacity-60"></div>
-                                </div>
-                            </div>
-                            <div class="col-span-7 bg-white p-3 rounded-lg border border-stone-200 flex flex-col justify-between shadow-xs">
-                                <div class="flex-1 flex flex-col">
-                                    <h3 class="text-xs font-bold text-stone-700 mb-1 pb-1 border-b">📊 دفتر الحسابات اليومي لمراقبة الميزانية (اكتب بالقلم)</h3>
-                                    <div class="relative flex-1 border border-stone-200 rounded overflow-hidden min-h-[220px]">
-                                        <div class="handwriting-lines absolute inset-0 opacity-40" style="margin-top:24px;"></div>
-                                        <div class="absolute top-0 bottom-0 right-[65%] border-l border-stone-200 opacity-60"></div>
-                                        <div class="absolute top-0 bottom-0 right-[82%] border-l border-stone-200 opacity-60"></div>
-                                        <div class="absolute top-0 right-0 left-0 h-6 bg-[#f0eff5] border-b border-stone-200 flex text-[9px] font-bold text-stone-600 text-center items-center">
-                                            <div class="w-[65%]">بيان ووصف المعاملة المالية اليومية</div>
-                                            <div class="w-[17%] border-r border-stone-200 text-green-700">وارد (+)</div>
-                                            <div class="w-[18%] border-r border-stone-200 text-red-700">صادر (-)</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                `;
-                
-                document.getElementById('dynamic-pages-container').appendChild(dayContainer);
-                
-                // التقاط الصفحة برمجياً وضخها داخل ملف الـ PDF
-                const canvasDay = await html2canvas(dayContainer, { scale: 1.5 });
-                const imgDataDay = canvasDay.toDataURL('image/jpeg', 0.85);
-                pdf.addImage(imgDataDay, 'JPEG', 0, 0, 1024, 768);
-                
-                // تنظيف الذاكرة المؤقتة للمتصفح
-                dayContainer.remove();
-                pageCounter++;
+            updateDailySubViews();
+            buildFooterCalendar(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+        }
+
+        // Footer Calendar
+        function buildFooterCalendar(year, month, activeDay) {
+            const container = document.getElementById('footer-calendar-container');
+            container.innerHTML = `<span class="font-bold text-[#1b2b26] bg-[#f5f5f5] px-2 py-1 rounded text-[9px] ml-2 border border-[#eee]">${monthsNames[month]} ${year}</span>`;
+
+            let daysDiv = document.createElement('div');
+            daysDiv.className = "flex-1 flex justify-around px-1";
+
+            let totalDays = new Date(year, month + 1, 0).getDate();
+            for (let d = 1; d <= totalDays; d++) {
+                let dStr = `${year}-${String(month+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                let testDate = new Date(year, month, d);
+                let isWe = (testDate.getDay() === 5 || testDate.getDay() === 6);
+
+                let classes = "mini-day ";
+                if (d === activeDay) {
+                    classes += "active";
+                } else if (isWe) {
+                    classes += "weekend";
+                } else {
+                    classes += "text-[#444]";
+                }
+
+                daysDiv.innerHTML += `<span onclick="goToDate('${dStr}')" class="${classes}">${d}</span>`;
             }
-
-            // تخصيص تسمية الملف وحفظه فوراً
-            log.innerText = "اكتمل البناء! جاري تحميل ملف الـ PDF التفاعلي...";
-            pdf.save('MYH_Creative_Palette_Planner_2026-2027.pdf');
-            engine.classList.add('hidden');
+            container.appendChild(daysDiv);
         }
     </script>
 </body>
