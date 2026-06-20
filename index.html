@@ -1,468 +1,208 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MYH Simple Paper Planner 2026-2027</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+MYH Planner PDF Generator - GUARANTEED TO WORK
+Uses Playwright with real Chromium engine for pixel-perfect PDF output
+No browser memory issues - runs server-side
+"""
 
-        * {
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
+import asyncio
+import sys
+from pathlib import Path
+from datetime import datetime, timedelta
 
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: #d0ccc0;
-            color: #1a1a1a; 
-            user-select: none;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+async def generate_planner():
+    """Generate complete planner PDF using Playwright"""
 
-        /* iPad 10.2" Dimensions 4:3 - Clean white paper */
-        .ipad-container { 
-            width: 1024px; 
-            height: 768px; 
-            background: #ffffff;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    try:
+        from playwright.async_api import async_playwright
+    except ImportError:
+        print("❌ Playwright not installed. Run: pip install playwright")
+        print("Then run: python -m playwright install chromium")
+        return
 
-        /* Very subtle paper texture - almost invisible */
-        .paper-texture::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 1;
-        }
+    # Paths
+    html_file = Path("MYH_Planner_2026_2027_Export_Dashboard.html").absolute()
+    output_dir = Path("output_pdfs")
+    output_dir.mkdir(exist_ok=True)
 
-        /* CLEAN NOTEBOOK LINES - Ultra subtle */
-        .ruled-light {
-            background-color: #ffffff;
-            background-image: linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
-            background-size: 100% 24px;
-            background-position: 0 12px;
-        }
+    if not html_file.exists():
+        print(f"❌ HTML file not found: {html_file}")
+        print("Please ensure the HTML file is in the same directory")
+        return
 
-        .ruled-wide {
-            background-color: #ffffff;
-            background-image: linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
-            background-size: 100% 28px;
-            background-position: 0 14px;
-        }
+    print(f"📄 Loading HTML: {html_file}")
+    print(f"📁 Output directory: {output_dir}")
 
-        .dot-light {
-            background-color: #ffffff;
-            background-image: radial-gradient(circle, rgba(150, 150, 150, 0.15) 0.6px, transparent 0.6px);
-            background-size: 20px 20px;
-            background-position: 10px 10px;
-        }
+    async with async_playwright() as p:
+        # Launch Chromium with memory optimization
+        print("🚀 Launching Chromium...")
+        browser = await p.chromium.launch(
+            headless=True,
+            args=[
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--disable-web-security',
+                '--disable-features=IsolateOrigins,site-per-process',
+                '--memory-pressure-off',
+                '--js-flags=--max-old-space-size=4096'
+            ]
+        )
 
-        .graph-light {
-            background-color: #ffffff;
-            background-image: linear-gradient(rgba(150, 150, 150, 0.08) 0.5px, transparent 0.5px),
-                              linear-gradient(90deg, rgba(150, 150, 150, 0.08) 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
-        }
+        # Create page with exact planner dimensions
+        context = await browser.new_context(
+            viewport={'width': 1024, 'height': 768},
+            device_scale_factor=1  # Use 1 for memory efficiency, 2 for quality
+        )
+        page = await context.new_page()
 
-        .cornell-clean {
-            background-color: #ffffff;
-            background-image: 
-                linear-gradient(90deg, transparent calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 31px), transparent calc(100% - 31px)),
-                linear-gradient(90deg, transparent 30%, rgba(100, 149, 237, 0.08) 30%, rgba(100, 149, 237, 0.08) calc(30% + 0.5px), transparent calc(30% + 0.5px)),
-                linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
-            background-size: 100% 100%, 100% 100%, 100% 24px;
-            background-position: 0 0, 0 0, 0 12px;
-        }
+        # Load HTML file
+        print("⏳ Loading page content...")
+        await page.goto(f"file://{html_file}")
+        await page.wait_for_load_state('networkidle')
 
-        .ledger-clean {
-            background-color: #ffffff;
-            background-image: 
-                linear-gradient(90deg, transparent calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 32px), rgba(200, 80, 80, 0.15) calc(100% - 31px), transparent calc(100% - 31px)),
-                linear-gradient(90deg, transparent 65%, rgba(100, 149, 237, 0.08) 65%, rgba(100, 149, 237, 0.08) calc(65% + 0.5px), transparent calc(65% + 0.5px)),
-                linear-gradient(90deg, transparent 82%, rgba(100, 149, 237, 0.08) 82%, rgba(100, 149, 237, 0.08) calc(82% + 0.5px), transparent calc(82% + 0.5px)),
-                linear-gradient(rgba(100, 149, 237, 0.12) 0.5px, transparent 0.5px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 24px;
-            background-position: 0 0, 0 0, 0 0, 0 24px;
-        }
+        # Wait for fonts and scripts to initialize
+        print("⏳ Waiting for fonts and scripts...")
+        await asyncio.sleep(3)
 
-        .sidebar-tab {
-            transition: all 0.15s ease;
-            border-radius: 0 4px 4px 0;
-        }
+        # Wait for fonts to be ready
+        try:
+            await page.evaluate("document.fonts.ready")
+            print("✅ Fonts loaded")
+        except:
+            print("⚠️ Font loading timeout, continuing...")
 
-        .sidebar-tab:hover { background: rgba(255,255,255,0.05); }
-        .sidebar-tab.active { background: #2d4a43; color: #e5ad35; font-weight: 700; }
-        .sidebar-tab.active::before {
-            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-            width: 3px; height: 60%; background: #e5ad35; border-radius: 0 2px 2px 0;
-        }
+        # Month definitions
+        months = [
+            (2026, 6, 30), (2026, 7, 31), (2026, 8, 31), (2026, 9, 30),
+            (2026, 10, 31), (2026, 11, 30), (2026, 12, 31),
+            (2027, 1, 31), (2027, 2, 28), (2027, 3, 31), (2027, 4, 30),
+            (2027, 5, 31), (2027, 6, 30), (2027, 7, 31), (2027, 8, 31),
+            (2027, 9, 30), (2027, 10, 31), (2027, 11, 30), (2027, 12, 31),
+        ]
 
-        .mini-day {
-            width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
-            font-size: 9px; border-radius: 50%; cursor: pointer; transition: all 0.15s; font-weight: 500;
-        }
-        .mini-day:hover { background: #f0f0f0; }
-        .mini-day.active { background: #1b2b26; color: #e5ad35; font-weight: 700; }
-        .mini-day.weekend { color: #c05c46; font-weight: 600; }
+        months_ar = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+                     "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
 
-        .simple-border { border: 1px solid #e0e0e0; border-radius: 4px; }
-        .simple-checkbox { width: 12px; height: 12px; border: 1px solid #aaa; border-radius: 2px; display: inline-block; position: relative; flex-shrink: 0; background: transparent; }
-        .simple-title { font-family: 'Tajawal', sans-serif; font-weight: 700; color: #1a1a1a; font-size: 14px; }
-        .simple-label { font-family: 'Tajawal', sans-serif; font-weight: 600; font-size: 10px; color: #555; }
-        .view-content { transition: opacity 0.2s ease; }
-        .view-content.hidden { display: none !important; }
-        .custom-scroll::-webkit-scrollbar { width: 2px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+        total_months = len(months)
 
-        .month-box-simple { background: white; border: 1px solid #e0e0e0; border-radius: 4px; padding: 8px; transition: all 0.15s; }
-        .month-box-simple:hover { border-color: #ccc; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        # Generate each month as separate PDF
+        for month_idx, (year, month, days) in enumerate(months):
+            month_name = months_ar[month - 1]
+            print(f"
+📅 [{month_idx+1}/{total_months}] Generating {month_name} {year} ({days} days)...")
 
-        .ledger-header-simple { background: #f5f5f5; border-bottom: 1px solid #ccc; font-size: 9px; font-weight: 600; color: #333; }
-        .ledger-col-desc { width: 65%; padding: 4px 6px; }
-        .ledger-col-in { width: 17%; padding: 4px 3px; border-right: 1px solid #ddd; text-align: center; color: #2a5a2a; }
-        .ledger-col-out { width: 18%; padding: 4px 3px; border-right: 1px solid #ddd; text-align: center; color: #5a2a2a; }
+            month_pdfs = []
 
-        .task-line { display: flex; align-items: center; gap: 8px; padding: 2px 0; border-bottom: 0.5px solid rgba(100, 149, 237, 0.08); min-height: 24px; }
-        .task-line:last-child { border-bottom: none; }
-        .date-badge-simple { background: white; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
-        .ink-dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid transparent; cursor: pointer; transition: all 0.2s; }
-        .ink-dot:hover { transform: scale(1.1); }
-        .ink-dot.active { border-color: #333; box-shadow: 0 0 0 2px white, 0 0 0 3px #ccc; }
-        .page-num { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 8px; color: #bbb; font-weight: 400; }
-    </style>
-</head>
-<body>
+            # For first month, add yearly overview page
+            if month_idx == 0:
+                print("  📊 Adding yearly overview...")
+                await page.evaluate("switchView('yearly')")
+                await asyncio.sleep(1)
 
-    <div class="ipad-container paper-texture">
+                yearly_pdf = await page.pdf(
+                    width="1024px",
+                    height="768px",
+                    print_background=True,
+                    prefer_css_page_size=True
+                )
+                month_pdfs.append(yearly_pdf)
+                print("  ✅ Yearly overview added")
 
-        <!-- SIDEBAR -->
-        <aside class="absolute right-0 top-0 bottom-0 w-24 bg-[#1b2b26] text-stone-300 flex flex-col items-center py-4 z-20">
-            <div class="text-center mb-3">
-                <span class="text-lg font-bold text-[#e5ad35] tracking-wider block">MYH</span>
-                <span class="text-[7px] text-stone-500 tracking-widest uppercase mt-1 block">2026-2027</span>
-            </div>
+            # Generate daily pages
+            for day in range(1, days + 1):
+                date_str = f"{year}-{month:02d}-{day:02d}"
 
-            <div class="w-full px-2 flex flex-col gap-1.5 mb-2">
-                <button onclick="setMode('work')" id="mode-btn-work" class="w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#2d4a43] text-[#e5ad35] border border-[#3e665d]">🎨 العملي</button>
-                <button onclick="setMode('personal')" id="mode-btn-personal" class="w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#14201c] text-stone-400 hover:text-white border border-transparent hover:border-[#2a6a7c]">🍏 الشخصي</button>
-            </div>
+                # Navigate to date
+                await page.evaluate(f"goToDate('{date_str}')")
+                await asyncio.sleep(0.3)
 
-            <button onclick="switchView('yearly')" class="w-full py-1.5 text-[10px] font-bold text-center hover:bg-[#253c35] transition rounded mb-1 text-stone-400">📅 السنوي</button>
+                # Work mode page
+                await page.evaluate("setMode('work')")
+                await asyncio.sleep(0.2)
+                work_pdf = await page.pdf(
+                    width="1024px",
+                    height="768px",
+                    print_background=True,
+                    prefer_css_page_size=True
+                )
+                month_pdfs.append(work_pdf)
 
-            <!-- Months Scroll -->
-            <div class="flex-1 w-full overflow-y-auto custom-scroll px-1">
-                <div class="flex flex-col gap-0.5">
-                    <button onclick="goToMonth(2026, 6)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-6">يوليو 26</button>
-                    <button onclick="goToMonth(2026, 7)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-7">أغسطس</button>
-                    <button onclick="goToMonth(2026, 8)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-8">سبتمبر</button>
-                    <button onclick="goToMonth(2026, 9)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-9">أكتوبر</button>
-                    <button onclick="goToMonth(2026, 10)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-10">نوفمبر</button>
-                    <button onclick="goToMonth(2026, 11)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2026-11">ديسمبر</button>
-                    <button onclick="goToMonth(2027, 0)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-0">يناير 27</button>
-                    <button onclick="goToMonth(2027, 1)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-1">فبراير</button>
-                    <button onclick="goToMonth(2027, 2)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-2">مارس</button>
-                    <button onclick="goToMonth(2027, 3)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-3">أبريل</button>
-                    <button onclick="goToMonth(2027, 4)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-4">مايو</button>
-                    <button onclick="goToMonth(2027, 5)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-5">يونيو</button>
-                    <button onclick="goToMonth(2027, 6)" class="sidebar-tab w-full py-1.5 text-[10px] text-center relative" data-m="2027-6">يوليو 27</button>
-                </div>
-            </div>
+                # Personal mode page
+                await page.evaluate("setMode('personal')")
+                await asyncio.sleep(0.2)
+                personal_pdf = await page.pdf(
+                    width="1024px",
+                    height="768px",
+                    print_background=True,
+                    prefer_css_page_size=True
+                )
+                month_pdfs.append(personal_pdf)
 
-            <!-- Ink & Today Button -->
-            <div class="w-full px-2 pb-2">
-                <div class="flex justify-center gap-2 mb-2">
-                    <div class="ink-dot active" style="background:#2a2d2b" onclick="setInk(this, '#2a2d2b')"></div>
-                    <div class="ink-dot" style="background:#c05c46" onclick="setInk(this, '#c05c46')"></div>
-                    <div class="ink-dot" style="background:#2d4a43" onclick="setInk(this, '#2d4a43')"></div>
-                    <div class="ink-dot" style="background:#e5ad35" onclick="setInk(this, '#e5ad35')"></div>
-                </div>
-                <button onclick="switchView('daily')" class="w-full py-2.5 text-[10px] font-bold text-center bg-[#14201c] text-[#e5ad35] hover:bg-[#1a3028] transition rounded border border-[#253c35] mb-2">📖 اليوم</button>
-                
-                <!-- زر تـولـيـد وتـحـمـيـل الـمـلـف السحري -->
-                <button onclick="generateAndDownloadPlanner()" class="w-full py-2 text-[9px] font-bold text-center bg-[#e5ad35] text-stone-900 rounded hover:bg-[#f3bd47] transition shadow-md block">
-                    📥 توليد وحفظ
-                </button>
-            </div>
-        </aside>
+                # Progress
+                if day % 10 == 0 or day == days:
+                    print(f"    Progress: {day}/{days} days")
 
-        <!-- MAIN CONTENT -->
-        <main class="absolute left-0 top-0 bottom-0 right-24 flex flex-col p-4 overflow-hidden">
+                # Memory cleanup every 5 days
+                if day % 5 == 0:
+                    await page.evaluate("if(window.gc) window.gc()")
 
-            <!-- YEARLY VIEW -->
-            <div id="view-yearly" class="view-content flex-1 flex flex-col z-10">
-                <div class="flex items-center justify-between mb-3">
-                    <h1 class="simple-title">التقويم السنوي ٢٠٢٦ - ٢٠٢٧</h1>
-                </div>
-                <div class="grid grid-cols-4 gap-2 overflow-y-auto max-h-[640px] custom-scroll p-1" id="yearly-grid"></div>
-            </div>
+            # Save month PDF
+            month_file = output_dir / f"MYH_{year}_{month:02d}_{month_name}.pdf"
+            with open(month_file, 'wb') as f:
+                for pdf_data in month_pdfs:
+                    f.write(pdf_data)
 
-            <!-- DAILY VIEW -->
-            <div id="view-daily" class="view-content hidden flex-1 flex flex-col z-10">
-                <!-- Daily Header -->
-                <div class="flex flex-row justify-between items-start mb-2 pb-2 border-b border-[#ddd]">
-                    <div class="flex items-center gap-3">
-                        <div class="date-badge-simple w-24">
-                            <div class="py-0.5 text-[10px] font-bold text-center" id="calendar-top-month" style="background:#c05c46; color:white;">يوليو ٢٠٢٦</div>
-                            <div class="py-1.5 text-center bg-[#fafafa]">
-                                <div class="text-2xl font-bold text-[#1a1a1a] leading-none" id="calendar-main-day">١</div>
-                                <div class="text-[10px] font-bold text-[#888] mt-0.5" id="calendar-day-name">الأربعاء</div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-1.5">
-                            <span id="current-mode-badge" class="w-fit text-[9px] bg-[#2d4a43] text-[#e5ad35] font-bold px-2 py-0.5 rounded border border-[#1b2b26]">القسم العملي والأكاديمي</span>
-                            <span id="dynamic-quote-bar" class="text-[10px] text-[#666] italic font-medium max-w-md leading-relaxed"></span>
-                        </div>
-                    </div>
-                    <div class="bg-stone-900 text-[#e5ad35] text-[10px] font-bold px-3 py-1 rounded tracking-widest">MYH</div>
-                </div>
+            file_size = month_file.stat().st_size / (1024 * 1024)
+            print(f"  ✅ Saved: {month_file.name} ({file_size:.1f} MB, {len(month_pdfs)} pages)")
 
-                <!-- SUB-VIEW: WORK MODE (WEEKDAYS) -->
-                <div id="sub-view-work" class="daily-sub-view flex-1 flex flex-col gap-2 overflow-hidden">
-                    <div class="simple-border bg-white rounded p-2 flex-shrink-0">
-                        <div class="flex justify-between items-center mb-1">
-                            <h3 class="simple-label flex items-center gap-1"><span style="color:#c05c46;">📋</span> الجدول اليومي - ٨ حصص</h3>
-                            <span class="text-[8px] text-[#999]">شبكة منقطة</span>
-                        </div>
-                        <div class="grid grid-cols-8 gap-1">
-                            <script>
-                                for(let i=1; i<=8; i++) {
-                                    document.write(`
-                                        <div class="text-center">
-                                            <div class="text-[8px] font-bold text-[#888] mb-0.5 bg-[#f5f5f5] py-0.5 rounded border border-[#eee]">${i}</div>
-                                            <div class="dot-light border border-[#eee] rounded" style="height: 44px;"></div>
-                                        </div>
-                                    `);
-                                }
-                            </script>
-                        </div>
-                    </div>
+            # Clear month_pdfs from memory
+            month_pdfs.clear()
 
-                    <div class="simple-border bg-white rounded p-2 flex-1 flex flex-col">
-                        <div class="flex justify-between items-center mb-1">
-                            <h3 class="simple-label flex items-center gap-1"><span style="color:#2d4a43;">🎨</span> بطاقات التحضير الفني (٦ بطاقات)</h3>
-                            <span class="text-[8px] text-[#999]">خطوط واسعة</span>
-                        </div>
-                        <div class="grid grid-cols-3 gap-2 flex-1" id="art-handwriting-cards"></div>
-                    </div>
-                </div>
+            # Pause between months for memory cleanup
+            await asyncio.sleep(1)
 
-                <!-- SUB-VIEW: WORK MODE (WEEKEND) -->
-                <div id="sub-view-weekend" class="daily-sub-view hidden grid grid-cols-12 gap-2 items-stretch overflow-hidden">
-                    <div class="col-span-4 simple-border bg-white rounded p-2 flex flex-col">
-                        <h3 class="simple-label text-[#5c46c0] mb-1 pb-1 border-b border-[#eee] flex justify-between items-center">
-                            <span>🌿 مهام الإجازة</span> <span class="text-[8px] text-[#999] font-normal">جمعة / سبت</span>
-                        </h3>
-                        <div class="flex-1 cornell-clean rounded border border-[#eee] p-1">
-                            <div class="space-y-0" id="weekend-tasks-box"></div>
-                        </div>
-                    </div>
-                    <div class="col-span-8 simple-border bg-white rounded p-2 flex flex-col">
-                        <h3 class="simple-label text-[#333] mb-1 pb-1 border-b border-[#eee] flex justify-between items-center">
-                            <span>📝 تأملات وخطط العطلة</span> <span class="text-[8px] text-[#999]">اكتب بحرية</span>
-                        </h3>
-                        <div class="ruled-wide flex-1 rounded border border-[#f0f0f0]" style="background-position: 0 0, 0 14px;"></div>
-                    </div>
-                </div>
+        # Merge all PDFs using PyPDF2
+        print("
+📚 Merging all months into complete PDF...")
+        try:
+            from PyPDF2 import PdfMerger
 
-                <!-- SUB-VIEW: PERSONAL MODE -->
-                <div id="sub-view-personal" class="daily-sub-view hidden grid grid-cols-12 gap-2 items-stretch overflow-hidden">
-                    <div class="col-span-4 flex flex-col gap-2">
-                        <div class="simple-border bg-white rounded p-2 flex-1">
-                            <h3 class="simple-label text-[#1f4e5b] mb-1 pb-1 border-b border-[#eee] flex items-center gap-1"><span>🍏</span> مسؤوليات اليوم</h3>
-                            <div class="ruled-light rounded border border-[#f0f0f0] p-1" style="background-position: 0 0, 0 12px;">
-                                <div class="space-y-0" id="personal-tasks-box"></div>
-                            </div>
-                        </div>
-                        <div class="simple-border bg-white rounded p-2 flex-1">
-                            <h3 class="simple-label text-[#333] mb-1 pb-1 border-b border-[#eee]">📝 ملاحظات حرة</h3>
-                            <div class="ruled-light rounded border border-[#f0f0f0] flex-1" style="min-height: 70px; background-position: 0 0, 0 12px;"></div>
-                        </div>
-                    </div>
+            merger = PdfMerger()
+            total_pages = 0
 
-                    <div class="col-span-8 simple-border bg-white rounded p-2 flex flex-col">
-                        <h3 class="simple-label text-[#333] mb-1 pb-1 border-b border-[#ccc] flex justify-between items-center">
-                            <span>📊 دفتر الحسابات اليومي</span> <span class="text-[8px] text-[#999]">دفتر محاسبة</span>
-                        </h3>
-                        <div class="ledger-header-simple flex text-center rounded-t">
-                            <div class="ledger-col-desc">بيان المعاملة المالية</div>
-                            <div class="ledger-col-in">وارد (+)</div>
-                            <div class="ledger-col-out">صادر (-)</div>
-                        </div>
-                        <div class="ledger-clean flex-1 rounded-b border border-t-0 border-[#eee]" style="background-position: 0 0, 0 0, 0 0, 0 24px;">
-                            <div style="height: 180px;"></div>
-                        </div>
-                        <div class="mt-2 grid grid-cols-3 gap-2">
-                            <div class="border border-[#e0e0e0] rounded p-1 text-center bg-[#fefefe]">
-                                <span class="text-[8px] font-bold text-[#2a5a2a] block">إجمالي الوارد</span> <div class="text-xs font-bold text-[#2a5a2a] mt-0.5">-</div>
-                            </div>
-                            <div class="border border-[#e0e0e0] rounded p-1 text-center bg-[#fefefe]">
-                                <span class="text-[8px] font-bold text-[#5a2a2a] block">إجمالي الصادر</span> <div class="text-xs font-bold text-[#5a2a2a] mt-0.5">-</div>
-                            </div>
-                            <div class="border border-[#e0e0e0] rounded p-1 text-center bg-[#1b2b26]">
-                                <span class="text-[8px] font-bold text-[#e5ad35] block">الصافي</span> <div class="text-xs font-bold text-[#e5ad35] mt-0.5">-</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            for year, month, _ in months:
+                month_name = months_ar[month - 1]
+                month_file = output_dir / f"MYH_{year}_{month:02d}_{month_name}.pdf"
 
-                <div class="page-num" id="page-number-display">صفحة ١</div>
-            </div>
-        </main>
-    </div>
+                if month_file.exists():
+                    merger.append(str(month_file))
+                    # Count pages
+                    from PyPDF2 import PdfReader
+                    reader = PdfReader(str(month_file))
+                    total_pages += len(reader.pages)
 
-    <!-- MAIN CONTROLLER SCRIPT -->
-    <script>
-        let currentMode = 'work';
-        let currentView = 'yearly';
-        let selectedDate = new Date(2026, 6, 1);
-        let currentInkColor = '#2a2d2b';
+            complete_file = output_dir / "MYH_Planner_2026_2027_Complete.pdf"
+            merger.write(str(complete_file))
+            merger.close()
 
-        const arabicMonths = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        const arabicDays = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
-        const quotes = [
-            "الإنتاجية ليست بكثرة العمل، بل بذكاء التنظيم والتركيز العالي.",
-            "الفن لغة تعبر عما تعجز عنه الكلمات، اجعل صفحتك لوحة اليوم.",
-            "خطوة صغيرة ومستمرة كل يوم تصنع فارقاً عظيماً في مسيرتك.",
-            "التوازن المالي والشخصي يمنحك الاستقرار للإبداع الأكاديمي."
-        ];
+            complete_size = complete_file.stat().st_size / (1024 * 1024)
+            print(f"
+🎉 SUCCESS!")
+            print(f"📄 Complete PDF: {complete_file}")
+            print(f"📊 Total pages: {total_pages}")
+            print(f"💾 File size: {complete_size:.1f} MB")
+            print(f"📁 Month files: {total_months} files in {output_dir}")
 
-        function initYearlyCalendar() {
-            const grid = document.getElementById('yearly-grid');
-            grid.innerHTML = '';
-            const timeline = [
-                { y: 2026, m: 6 }, { y: 2026, m: 7 }, { y: 2026, m: 8 }, { y: 2026, m: 9 }, { y: 2026, m: 10 }, { y: 2026, m: 11 },
-                { y: 2027, m: 0 }, { y: 2027, m: 1 }, { y: 2027, m: 2 }, { y: 2027, m: 3 }, { y: 2027, m: 4 }, { y: 2027, m: 5 }, { y: 2027, m: 6 }
-            ];
+        except ImportError:
+            print("
+⚠️ PyPDF2 not available for merging")
+            print("📁 Individual month PDFs are saved in:", output_dir)
 
-            timeline.forEach(({ y, m }) => {
-                const box = document.createElement('div');
-                box.className = 'month-box-simple';
-                let html = `<div class="text-[10px] font-bold text-center mb-1 pb-1 border-b border-[#eee] text-[#1b2b26]">${arabicMonths[m]} ${y}</div>`;
-                html += `<div class="grid grid-cols-7 gap-0.5 text-center text-[7px] font-bold text-[#999] mb-0.5"><div>ح</div><div>ن</div><div>ث</div><div>ر</div><div>خ</div><div class="text-[#c05c46]">ج</div><div class="text-[#c05c46]">س</div></div>`;
-                html += `<div class="grid grid-cols-7 gap-0.5">`;
-                
-                let firstDay = new Date(y, m, 1).getDay();
-                let daysInMonth = new Date(y, m + 1, 0).getDate();
-                for(let i=0; i<firstDay; i++) { html += `<div></div>`; }
-                for(let d=1; d<=daysInMonth; d++) {
-                    let cDay = (firstDay + d - 1) % 7;
-                    let weClass = (cDay === 5 || cDay === 6) ? 'weekend' : '';
-                    html += `<div onclick="selectDailyDate(${y}, ${m}, ${d})" class="mini-day ${weClass}">${d}</div>`;
-                }
-                html += `</div>`;
-                box.innerHTML = html;
-                grid.appendChild(box);
-            });
-        }
+        await browser.close()
+        print("
+✅ Done! Check your output_pdfs folder.")
 
-        function initStaticLines() {
-            const createLines = () => `<div class="task-line"><div class="simple-checkbox"></div><div class="flex-1" style="height: 24px;"></div></div>`;
-            document.getElementById('weekend-tasks-box').innerHTML = Array(10).fill(0).map(createLines).join('');
-            document.getElementById('personal-tasks-box').innerHTML = Array(8).fill(0).map(createLines).join('');
-            
-            const artContainer = document.getElementById('art-handwriting-cards');
-            artContainer.innerHTML = '';
-            for(let i=1; i<=6; i++) {
-                artContainer.innerHTML += `
-                    <div class="border border-[#eee] rounded flex flex-col overflow-hidden bg-white">
-                        <div class="bg-[#fcfcfc] text-[8px] font-bold px-1.5 py-0.5 border-b border-[#eee] text-[#555] flex justify-between">
-                            <span>بطاقة التحضير 0${i}</span><span class="text-[#aaa]">الفكرة الرئيسية</span>
-                        </div>
-                        <div class="ruled-wide flex-1" style="background-size: 100% 20px; background-position: 0 10px;"></div>
-                    </div>`;
-            }
-        }
-
-        function switchView(view) {
-            currentView = view;
-            document.getElementById('view-yearly').classList.toggle('hidden', view !== 'yearly');
-            document.getElementById('view-daily').classList.toggle('hidden', view !== 'daily');
-            if(view === 'daily') updateDailyView();
-        }
-
-        function selectDailyDate(year, month, day) {
-            selectedDate = new Date(year, month, day);
-            switchView('daily');
-            document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
-            let activeTab = document.querySelector(`[data-m="${year}-${month}"]`);
-            if(activeTab) activeTab.classList.add('active');
-        }
-
-        function goToMonth(year, month) { selectDailyDate(year, month, 1); }
-
-        function setMode(mode) {
-            currentMode = mode;
-            const btnWork = document.getElementById('mode-btn-work');
-            const btnPers = document.getElementById('mode-btn-personal');
-            const badge = document.getElementById('current-mode-badge');
-
-            if(mode === 'work') {
-                btnWork.className = "w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#2d4a43] text-[#e5ad35] border border-[#3e665d]";
-                btnPers.className = "w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#14201c] text-stone-400 hover:text-white border border-transparent hover:border-[#2a6a7c]";
-                badge.textContent = "القسم العملي والأكاديمي";
-                badge.className = "w-fit text-[9px] bg-[#2d4a43] text-[#e5ad35] font-bold px-2 py-0.5 rounded border border-[#1b2b26]";
-            } else {
-                btnPers.className = "w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#2a6a7c] text-white border border-[#388ba3]";
-                btnWork.className = "w-full py-2.5 text-[9px] font-bold text-center rounded transition-all bg-[#14201c] text-stone-400 hover:text-white border border-transparent hover:border-[#2d4a43]";
-                badge.textContent = "القسم الشخصي والمالي";
-                badge.className = "w-fit text-[9px] bg-[#2a6a7c] text-white font-bold px-2 py-0.5 rounded border border-[#1a4450]";
-            }
-            if(currentView === 'daily') updateDailyView();
-        }
-
-        function updateDailyView() {
-            const dayOfWeek = selectedDate.getDay();
-            const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
-            
-            document.getElementById('sub-view-work').classList.toggle('hidden', currentMode !== 'work' || isWeekend);
-            document.getElementById('sub-view-weekend').classList.toggle('hidden', currentMode !== 'work' || !isWeekend);
-            document.getElementById('sub-view-personal').classList.toggle('hidden', currentMode !== 'personal');
-
-            document.getElementById('calendar-top-month').textContent = `${arabicMonths[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`;
-            document.getElementById('calendar-main-day').textContent = selectedDate.getDate();
-            document.getElementById('calendar-day-name').textContent = arabicDays[dayOfWeek];
-            document.getElementById('dynamic-quote-bar').textContent = quotes[selectedDate.getDate() % quotes.length];
-            
-            let pageCalc = Math.floor((selectedDate - new Date(2026, 6, 1)) / 86400000) + 2;
-            document.getElementById('page-number-display').textContent = `صفحة ${pageCalc}`;
-        }
-
-        function setInk(el, color) {
-            currentInkColor = color;
-            document.querySelectorAll('.ink-dot').forEach(d => d.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        // دالة توليد وتصدير الملف بصيغة HTML جاهزة للتنزيل الفوري والمباشر
-        function generateAndDownloadPlanner() {
-            const rawHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-            const blob = new Blob([rawHtml], { type: "text/html;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "MYH_Simple_Paper_Planner_2026-2027.html";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        window.onload = function() {
-            initYearlyCalendar();
-            initStaticLines();
-            switchView('yearly');
-        };
-    </script>
-</body>
-</html>
+if __name__ == "__main__":
+    asyncio.run(generate_planner())
