@@ -2,76 +2,70 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>MYH Ultimate Planner Generator</title>
+    <title>MYH Planner - محاولة تصحيح</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* أنماط ثابتة للطباعة */
-        .pdf-page { width: 1024px; height: 768px; background: white; page-break-after: always; position: relative; padding: 40px; }
-        .hidden-stage { position: absolute; left: -9999px; }
-        body { font-family: sans-serif; }
+        /* اجعل الصفحات مرئية بوضوح حتى يراها المحول */
+        .pdf-page { width: 1024px; height: 768px; background: white; margin-bottom: 20px; border: 1px solid #ccc; padding: 40px; }
+        body { background: #f0f0f0; }
     </style>
 </head>
 <body>
 
     <div style="padding: 50px; text-align: center;">
-        <h1>MYH Ultimate Planner 2026-2027</h1>
-        <button onclick="startGeneration()" style="padding: 20px; font-size: 20px; cursor: pointer; background: green; color: white;">توليد ملف البلانر الكامل (يرجى الانتظار)</button>
+        <h1>MYH Ultimate Planner Generator</h1>
+        <button onclick="startGeneration()" style="padding: 20px; font-size: 20px; cursor: pointer; background: blue; color: white;">ابدأ التوليد (سأقوم بإنشاء الصفحات الآن)</button>
         <div id="status" style="margin-top: 20px; font-weight: bold;"></div>
     </div>
 
-    <div id="pdf-staging" class="hidden-stage"></div>
+    <div id="pdf-container"></div>
 
     <script>
         const arabicMonths = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
         async function startGeneration() {
             const status = document.getElementById('status');
-            const stage = document.getElementById('pdf-staging');
-            status.textContent = "جاري بناء الصفحات... لا تغلق الصفحة";
+            const container = document.getElementById('pdf-container');
+            status.textContent = "جاري بناء الصفحات... انتظر قليلاً";
             
-            stage.innerHTML = ''; // تنظيف
+            container.innerHTML = ''; // تنظيف
 
-            // 1. بناء الفهرس (Hyperlink Hub)
+            // 1. بناء الفهرس
             const indexPage = document.createElement('div');
             indexPage.className = "pdf-page";
-            indexPage.id = "page-index";
-            indexPage.innerHTML = `<h1>الفهرس العام</h1><div id="links-container"></div>`;
-            stage.appendChild(indexPage);
+            indexPage.innerHTML = `<h1>الفهرس العام</h1>`;
+            container.appendChild(indexPage);
 
-            // 2. بناء الأشهر والأيام (حلقة تكرارية)
+            // 2. بناء الأشهر (اختصار للسرعة في التجربة، يمكنك زيادة العدد لاحقاً)
             for(let m = 0; m < 12; m++) {
                 let daysInMonth = new Date(2026, m + 1, 0).getDate();
                 for(let d = 1; d <= daysInMonth; d++) {
                     const page = document.createElement('div');
                     page.className = "pdf-page";
-                    page.id = `day-${m}-${d}`; // الـ ID للارتباط التشعبي
-                    page.innerHTML = `
-                        <h2>${arabicMonths[m]} 2026 - يوم ${d}</h2>
-                        <p>هذه صفحة يومية مرتبطة بالتاريخ المحدد.</p>
-                        <a href="#page-index">العودة للفهرس</a>
-                    `;
-                    stage.appendChild(page);
+                    page.innerHTML = `<h2>${arabicMonths[m]} 2026 - يوم ${d}</h2><p>هذه صفحة يومية.</p>`;
+                    container.appendChild(page);
                 }
             }
 
-            status.textContent = "جاري تحويل الصفحات إلى PDF (قد يستغرق وقتاً)...";
+            status.textContent = "الصفحات جاهزة، جاري التحويل إلى PDF... (قد يأخذ وقت)";
 
-            // 3. التوليد عبر html2pdf
+            // انتظر ثانية واحدة لضمان انتهاء المتصفح من رسم العناصر في الـ DOM
+            await new Promise(r => setTimeout(r, 1000));
+
+            // 3. التوليد
             const opt = {
                 margin: 0,
-                filename: 'MYH_Planner_2026.pdf',
+                filename: 'MYH_Planner_Fixed.pdf',
                 image: { type: 'jpeg', quality: 0.9 },
-                html2canvas: { scale: 2, useCORS: true },
+                html2canvas: { scale: 1, useCORS: true }, // قللنا السكيل لضمان عدم حدوث Crash
                 jsPDF: { unit: 'px', format: [1024, 768], orientation: 'landscape' }
             };
 
-            try {
-                await html2pdf().set(opt).from(stage).save();
-                status.textContent = "تم التوليد بنجاح!";
-            } catch (e) {
-                status.textContent = "حدث خطأ: قد تكون الذاكرة غير كافية.";
-                console.error(e);
-            }
+            html2pdf().set(opt).from(container).save().then(() => {
+                status.textContent = "تم التوليد بنجاح! تحقق من ملف التحميل.";
+            }).catch(err => {
+                status.textContent = "خطأ: " + err;
+            });
         }
     </script>
 </body>
