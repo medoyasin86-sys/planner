@@ -1,4 +1,3 @@
-<!-- الكود البرمجي الكامل والمحدث لنسخه مباشرة -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MYH Ultimate Dynamic Planner 2026-2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght=300;400;500;700;900&display=swap');
@@ -82,56 +80,30 @@
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #bcbab0; border-radius: 4px; }
 
-        .pdf-page {
-            width: 1024px;
-            height: 768px;
-            page-break-after: always;
-            position: relative;
-            background: #ffffff;
-            display: flex;
-            flex-direction: row;
-            overflow: hidden;
-        }
-        .task-line {
-            display: flex;
-            align-items: center;
-            border-bottom: 1px dashed #e5e7eb;
-            gap: 8px;
-        }
-        
-        /* تصميم الـ Checkbox الجديد التفاعلي في الواجهة الحية */
+        /* تصميم الـ Checkbox التفاعلي الخفيف */
         .interactive-checkbox {
             appearance: none;
-            width: 13px;
-            height: 13px;
-            border: 1.5px solid #2d4a43;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #2d4a43;
             border-radius: 3px;
             outline: none;
             cursor: pointer;
-            transition: all 0.1s ease;
-            display: inline-block;
             position: relative;
             flex-shrink: 0;
+            background: white;
         }
         .interactive-checkbox:checked {
             background-color: #2d4a43;
-            border-color: #2d4a43;
         }
         .interactive-checkbox:checked::after {
             content: '✓';
             color: #e5ad35;
-            font-size: 9px;
+            font-size: 10px;
             position: absolute;
             top: -2px;
-            left: 1.5px;
+            left: 2px;
             font-weight: bold;
-        }
-
-        .simple-checkbox {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-            flex-shrink: 0;
         }
 
         .accounting-table {
@@ -150,10 +122,35 @@
             border-bottom: 1px dashed #e5e7eb;
             height: 24px;
         }
+
+        /* 🖨️ إعدادات الطباعة والتصدير الفخمة للـ PDF */
+        @media print {
+            body { background: white; overflow: visible; height: auto; width: auto; }
+            .ipad-container { display: none !important; }
+            #print-stage { display: block !important; opacity: 1 !important; position: static !important; }
+            .pdf-page {
+                width: 1024px;
+                height: 748px; /* ملائمة تماماً لصفحات الطباعة بالعرض */
+                page-break-after: always;
+                page-break-inside: avoid;
+                display: flex !important;
+                flex-direction: row !important;
+                overflow: hidden;
+                background: white;
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+        #print-stage { display: none; }
+        .pdf-page { width: 1024px; height: 768px; background: white; display: flex; flex-direction: row; overflow: hidden; border-bottom: 1px solid #eee; }
+        .task-line { display: flex; align-items: center; border-bottom: 1px dashed #e5e7eb; gap: 8px; }
+        .simple-print-box { width: 12px; height: 12px; border: 2px solid #2d4a43; border-radius: 3px; flex-shrink: 0; }
     </style>
 </head>
 <body onload="initAppEngine()">
 
+    <!-- الواجهة الحية التفاعلية على المتصفح أو الآيباد -->
     <div class="ipad-container">
         <div class="flex flex-1 relative overflow-hidden w-full h-full">
 
@@ -183,39 +180,32 @@
                 <div id="view-welcome" class="view-content flex flex-col justify-between h-full">
                     <div>
                         <div class="border-b pb-2 mb-2">
-                            <h1 class="text-base font-bold text-[#1b2b26]">📦 محطة التصدير الآمنة والمجزأة للآيباد 2026-2027</h1>
-                            <p class="text-xs text-stone-500">تم توزيع المخطط إلى 4 حزم تراكمية لتفادي قيود الذاكرة في نظام iOS بنسبة 100%.</p>
+                            <h1 class="text-base font-bold text-[#1b2b26]">📦 محطة التصدير السريع والمضمون للآيباد 2026-2027</h1>
+                            <p class="text-xs text-stone-500">اضغط على أي حزمة لتوليد المخطط فوراً وفتحه في نافذة الطباعة لحفظه كـ PDF متكامل الحلقات.</p>
                         </div>
 
-                        <div class="bg-amber-50 border border-amber-200 rounded p-3 text-xs text-amber-950 mb-3">
-                            <h4 class="font-bold mb-1">🛠️ التحديث الحالي:</h4>
-                            <p class="mb-1">✔️ <strong>القسم العملي:</strong> تم إدراج مربعات تحقق تفاعلية ($Checkboxes$) حية ومنبثقة لقائمة المهام اليومية للاستخدام الرقمي المباشر.</p>
-                            <p>✔️ <strong>تطابق تام للـ PDF:</strong> تم تحسين أداء مربعات الخيارات لتُطبع بشكل نقي وأنيق أثناء تصدير حزم الملفات.</p>
+                        <div class="bg-emerald-50 border border-emerald-200 rounded p-3 text-xs text-emerald-950 mb-4">
+                            <h4 class="font-bold mb-1">💡 طريقة الحفظ المضمونة:</h4>
+                            <p>عند الضغط على الحزمة، ستفتح لك نافذة جهات الطباعة تلقائياً. اختر منها <strong>"حفظ بتنسيق PDF" (Save as PDF)</strong> واجعل الاتجاه <strong>أفقي (Landscape)</strong> ليتم حفظ التحفة الرقمية بأبعاد شاشتك تماماً.</p>
                         </div>
 
-                        <h3 class="text-xs font-bold text-stone-700 mb-2">📥 اختر حزمة التصدير الربع سنوية (اضغط لحفظ الحزمة فورا):</h3>
+                        <h3 class="text-xs font-bold text-stone-700 mb-2">📥 اختر حزمة التصدير (تفتح مباشرة في نافذة الحفظ):</h3>
                         <div class="grid grid-cols-2 gap-2 mb-4">
-                            <button onclick="buildAndExportInteractivePDF(0, 5)" class="p-2.5 bg-emerald-700 text-white rounded text-xs font-bold text-right hover:bg-emerald-800">
+                            <button onclick="generateAndPrintPDF(0, 5)" class="p-3 bg-emerald-700 text-white rounded text-xs font-bold text-right hover:bg-emerald-800 shadow-sm">
                                 📅 الحزمة 1: يونيو 2026 - أكتوبر 2026 (5 أشهر)
                             </button>
-                            <button onclick="buildAndExportInteractivePDF(5, 10)" class="p-2.5 bg-emerald-700 text-white rounded text-xs font-bold text-right hover:bg-emerald-800">
+                            <button onclick="generateAndPrintPDF(5, 10)" class="p-3 bg-emerald-700 text-white rounded text-xs font-bold text-right hover:bg-emerald-800 shadow-sm">
                                 📅 الحزمة 2: نوفمبر 2026 - مارس 2027 (5 أشهر)
                             </button>
-                            <button onclick="buildAndExportInteractivePDF(10, 15)" class="p-2.5 bg-emerald-700 text-white rounded text-xs font-bold text-right hover:bg-emerald-800">
+                            <button onclick="generateAndPrintPDF(10, 15)" class="p-3 bg-emerald-700 text-white rounded text-xs font-bold text-right hover:bg-emerald-800 shadow-sm">
                                 📅 الحزمة 3: أبريل 2027 - أغسطس 2027 (5 أشهر)
                             </button>
-                            <button onclick="buildAndExportInteractivePDF(15, 19)" class="p-2.5 bg-emerald-700 text-white rounded text-xs font-bold text-right hover:bg-emerald-800">
+                            <button onclick="generateAndPrintPDF(15, 19)" class="p-3 bg-emerald-700 text-white rounded text-xs font-bold text-right hover:bg-emerald-800 shadow-sm">
                                 📅 الحزمة 4: سبتمبر 2027 - ديسمبر 2027 (4 أشهر)
                             </button>
                         </div>
-
-                        <div id="export-loading-bar" class="hidden w-full bg-stone-100 rounded-full h-2">
-                            <div class="bg-blue-600 h-2 rounded-full transition-all duration-150" style="width: 0%" id="export-progress"></div>
-                        </div>
-                        <p id="export-status-text" class="text-[10px] text-blue-800 font-bold mt-1 text-center"></p>
                     </div>
-
-                    <div class="text-center text-[10px] text-stone-400 border-t pt-2 font-mono">MYH PREMIUM MEMORY-SAFE PLANNED SYSTEM v3.6</div>
+                    <div class="text-center text-[10px] text-stone-400 border-t pt-2 font-mono">MYH PREMIUM DIGITAL SYSTEM v4.0</div>
                 </div>
 
                 <div id="view-yearly" class="view-content hidden flex flex-col">
@@ -249,9 +239,8 @@
                             
                             <div class="flex-1 grid grid-cols-12 gap-2 overflow-hidden">
                                 <div class="col-span-4 border rounded p-2 bg-white flex flex-col h-full">
-                                    <span class="text-[10px] font-bold block border-b pb-1 text-[#2d4a43] mb-1">🎯 قائمة المهام اليومية التفاعلية:</span>
-                                    <!-- هنا تم حقن مربعات الـ Checkboxes التفاعلية هندسياً -->
-                                    <div class="flex-1 flex flex-col gap-1 overflow-y-auto custom-scroll mt-1" id="live-work-tasks-box"></div>
+                                    <span class="text-[10px] font-bold block border-b pb-1 text-[#2d4a43] mb-1">🎯 قائمة المهام اليومية (مربعات تحقق نشطة):</span>
+                                    <div class="flex-1 flex flex-col gap-1.5 overflow-y-auto custom-scroll mt-1" id="live-work-tasks-box"></div>
                                 </div>
                                 <div class="col-span-8 border rounded p-2 bg-white flex flex-col overflow-hidden h-full">
                                     <div class="grid grid-cols-2 gap-1.5 flex-1 overflow-y-auto custom-scroll" id="art-handwriting-cards"></div>
@@ -268,16 +257,16 @@
                             <div class="col-span-7 border rounded bg-white p-2 ruled-wide h-full"></div>
                         </div>
 
-                        <!-- 🍏 القسم الشخصي والمالي المطور -->
+                        <!-- 🍏 القسم الشخصي والمالي -->
                         <div id="sub-view-personal" class="daily-sub-view hidden grid grid-cols-12 gap-2 flex-1 overflow-hidden h-full">
                             <div class="col-span-4 border rounded bg-white p-2 flex flex-col h-full">
-                                <span class="text-[10px] font-bold block border-b pb-1 text-[#1f4e5b] mb-1">🍏 المسؤوليات الشخصية والعائلية (طولي):</span>
+                                <span class="text-[10px] font-bold block border-b pb-1 text-[#1f4e5b] mb-1">🍏 المسؤوليات الشخصية والعائلية:</span>
                                 <div class="flex-1 p-1 ruled-light" id="personal-tasks-box"></div>
                             </div>
                             
                             <div id="personal-accounting-wrapper" class="col-span-8 border rounded bg-white p-2 flex flex-col justify-between h-full overflow-hidden">
                                 <div class="flex-1 overflow-hidden flex flex-col">
-                                    <span class="text-[10px] font-bold block border-b pb-1 text-stone-700 mb-1">📊 دفتر المحاسبة المالي اليومي العتيق (طولي):</span>
+                                    <span class="text-[10px] font-bold block border-b pb-1 text-stone-700 mb-1">📊 دفتر المحاسبة المالي اليومي العتيق:</span>
                                     <div class="flex-1 overflow-y-auto custom-scroll mt-1">
                                         <table class="accounting-table">
                                             <thead>
@@ -291,22 +280,11 @@
                                         </table>
                                     </div>
                                 </div>
-                                
-                                <div class="border-t border-stone-300 pt-1.5 grid grid-cols-12 text-center text-[10px] font-bold bg-stone-50 p-1 rounded mt-2 flex-shrink-0">
-                                    <div class="col-span-6 text-right pr-2 border-l border-stone-300 text-stone-600">إجمالي الجملة الحسابية:</div>
-                                    <div class="col-span-3 text-emerald-700 border-l border-stone-300"></div>
-                                    <div class="col-span-3 text-red-700"></div>
-                                    
-                                    <div class="col-span-12 border-t border-dashed border-stone-300 mt-1 pt-1 grid grid-cols-12">
-                                        <div class="col-span-6 text-right pr-2 font-black text-[#1b2b26]">صافي رصيد اليوم المتبقي:</div>
-                                        <div class="col-span-6 text-center font-black text-blue-800 bg-white border border-stone-200 rounded py-0.5 mx-4"></div>
-                                    </div>
-                                </div>
                             </div>
 
                             <div id="personal-weekend-card-wrapper" class="hidden col-span-8 border rounded bg-amber-50/40 border-amber-200 p-2 flex flex-col justify-between h-full overflow-hidden">
                                 <div class="flex-1 flex flex-col">
-                                    <span class="text-[10px] font-bold block border-b pb-1 text-amber-900 mb-1">💳 بطاقة حسابات الأسبوع المصغرة والتحليل المالي:</span>
+                                    <span class="text-[10px] font-bold block border-b pb-1 text-amber-900 mb-1">💳 بطاقة حسابات الأسبوع والتحليل المالي:</span>
                                     <div class="grid grid-cols-2 gap-2 mt-2">
                                         <div class="border rounded bg-white p-1.5"><span class="text-[8.5px] font-bold text-stone-500 block">🛍️ جملة نفقات الأسبوع التراكمية:</span><div class="h-8 border-b border-dashed border-stone-200 mt-1"></div></div>
                                         <div class="border rounded bg-white p-1.5"><span class="text-[8.5px] font-bold text-stone-500 block">📈 الميزانية الأسبوعية المتبقية:</span><div class="h-8 border-b border-dashed border-stone-200 mt-1"></div></div>
@@ -314,7 +292,6 @@
                                     <span class="text-[9px] font-bold text-stone-600 block mt-3 mb-1">📝 ملاحظات مالية وتوفيرية للأسبوع القادم:</span>
                                     <div class="flex-1 ruled-light min-height-[120px]"></div>
                                 </div>
-                                <div class="bg-amber-900 text-[#e5ad35] text-[8.5px] p-1 font-bold rounded text-center">مراجعة ختامية معتمدة للحسابات الأسبوعية الشخصية (MYH)</div>
                             </div>
                         </div>
                     </div>
@@ -330,7 +307,8 @@
         </footer>
     </div>
 
-    <div id="pdf-rendering-virtual-stage" class="absolute pointer-events-none opacity-0 left-[-9999px] top-[-9999px]"></div>
+    <!-- 🌐 منصة التوليد والطباعة غير المرئية لحماية الذاكرة -->
+    <div id="print-stage"></div>
 
     <script>
         let currentMode = 'work';
@@ -389,14 +367,13 @@
             }
             document.getElementById('classes-grid-box').innerHTML = clHtml;
 
-            // حقن مربعات الخيارات في الواجهة الحية
             let liveTasksHtml = '';
-            for(let i=0; i<10; i++) {
-                liveTasksHtml += `<div class="flex items-center gap-2 border-b border-stone-100 py-1"><input type="checkbox" class="interactive-checkbox"><div class="flex-1 text-[10px] text-stone-300"></div></div>`;
+            for(let i=1; i<=10; i++) {
+                liveTasksHtml += `<div class="flex items-center gap-2 border-b border-stone-100 py-1"><input type="checkbox" class="interactive-checkbox"><div class="flex-1 border-b border-stone-100" style="height:14px"></div></div>`;
             }
             document.getElementById('live-work-tasks-box').innerHTML = liveTasksHtml;
 
-            const lineHtml = () => `<div class="task-line"><div class="simple-checkbox border border-stone-300"></div><div class="flex-1" style="height:22px"></div></div>`;
+            const lineHtml = () => `<div class="task-line"><div class="simple-print-box"></div><div class="flex-1" style="height:22px"></div></div>`;
             document.getElementById('weekend-tasks-box').innerHTML = Array(22).fill(0).map(lineHtml).join('');
             document.getElementById('personal-tasks-box').innerHTML = Array(22).fill(0).map(lineHtml).join('');
 
@@ -484,58 +461,12 @@
             document.getElementById('page-number-display').textContent = `PAGE ${pageCalc}`;
         }
 
-        async function buildAndExportInteractivePDF(startIndex, endIndex) {
-            const loadingBar = document.getElementById('export-loading-bar');
-            const progress = document.getElementById('export-progress');
-            const txtStatus = document.getElementById('export-status-text');
-            
-            loadingBar.classList.remove('hidden');
-            progress.style.width = "5%";
-            txtStatus.textContent = "جاري تجميع القوالب وتوليد السجل المالي والعملي المحدث طويلاً...";
-
-            const stage = document.getElementById('pdf-rendering-virtual-stage');
+        // 🔥 الدالة المبتكرة والجديدة للتصدير والطباعة الفورية المستقرة 100%
+        function generateAndPrintPDF(startIndex, endIndex) {
+            const stage = document.getElementById('print-stage');
             stage.innerHTML = ''; 
 
-            const mainIndexPage = document.createElement('div');
-            mainIndexPage.className = "pdf-page p-6 flex flex-col justify-between";
-            mainIndexPage.id = "pdf-page-index";
-            
-            let indexHTML = `
-                <div class="border-b pb-1 flex justify-between items-center w-full">
-                    <div>
-                        <h1 class="text-base font-bold text-[#1b2b26]">MYH Interactive Premium Planner 2026-2027</h1>
-                        <p class="text-[10px] text-stone-500">الحزمة التصديرية الآمنة من الشهر ${startIndex+1} إلى ${endIndex} - انقر على اليوم للقفز السريع</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2 my-auto w-full">
-            `;
-
-            for (let i = startIndex; i < endIndex; i++) {
-                const { y, m } = timeline[i];
-                indexHTML += `<div class="bg-stone-50 p-1 border rounded">`;
-                indexHTML += `<div class="text-[8px] font-bold text-center mb-0.5 bg-stone-200/60 rounded">${arabicMonths[m]} ${y}</div>`;
-                indexHTML += `<div class="grid grid-cols-7 gap-0.5 text-center text-[6px] text-stone-400"><div>ح</div><div>ن</div><div>ث</div><div>ر</div><div>خ</div><div>ج</div><div>س</div></div>`;
-                indexHTML += `<div class="grid grid-cols-7 gap-0.5">`;
-
-                let firstDay = new Date(y, m, 1).getDay();
-                let daysInMonth = new Date(y, m + 1, 0).getDate();
-                for(let k=0; k<firstDay; k++) indexHTML += `<div></div>`;
-                for(let d=1; d<=daysInMonth; d++) {
-                    let cDay = (firstDay + d - 1) % 7;
-                    let weClass = (cDay === 5 || cDay === 6) ? 'text-red-600 font-bold' : 'text-stone-800';
-                    indexHTML += `<a href="#target-day-${y}-${m}-${d}" class="text-center block ${weClass} text-[7.5px] hover:bg-stone-200 rounded">${d}</a>`;
-                }
-                indexHTML += `</div></div>`;
-            }
-
-            indexHTML += `</div>`;
-            mainIndexPage.innerHTML = indexHTML;
-            stage.appendChild(mainIndexPage);
-
-            progress.style.width = "20%";
-            await new Promise(r => setTimeout(r, 100));
-
-            let pageNumberCounter = 1;
+            let pageCounter = 1;
 
             for (let i = startIndex; i < endIndex; i++) {
                 const { y, m } = timeline[i];
@@ -546,177 +477,112 @@
                     const dayOfWeek = (firstDayIndex + d - 1) % 7;
                     const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
                     
-                    const dayPageWork = document.createElement('div');
-                    dayPageWork.className = "pdf-page";
-                    dayPageWork.id = `target-day-${y}-${m}-${d}`;
-
-                    let workTemplate = `
+                    // 1. صفحة القسم العملي والأكاديمي
+                    const pageWork = document.createElement('div');
+                    pageWork.className = "pdf-page";
+                    let workHTML = `
                         <aside class="w-24 bg-[#1b2b26] text-stone-400 flex flex-col items-center py-4 text-center justify-between h-full">
-                            <div class="w-full">
-                                <a href="#pdf-page-index" class="text-[10px] font-black text-[#e5ad35] block bg-[#253c35] py-1 mb-2 rounded mx-1">🏠 الفهرس</a>
-                                <div class="text-[9px] font-bold text-white">${arabicMonths[m]} ${y}</div>
-                            </div>
-                            <div class="text-[8px] text-stone-600 font-mono">PAGE ${pageNumberCounter++}</div>
+                            <span class="text-[10px] font-black text-[#e5ad35] block">${arabicMonths[m]} ${y}</span>
+                            <span class="text-[8px] text-stone-600 font-mono">PAGE ${pageCounter++}</span>
                         </aside>
                         <main class="flex-1 p-4 flex flex-col justify-between h-full">
-                            <div class="flex justify-between items-start border-b pb-1.5">
+                            <div class="flex justify-between items-start border-b pb-1">
                                 <div class="flex items-center gap-3">
-                                    <div class="bg-white border rounded w-16 text-center overflow-hidden">
+                                    <div class="bg-white border rounded w-14 text-center">
                                         <div class="bg-[#c05c46] text-white text-[8px] font-bold py-0.5">${arabicMonths[m]}</div>
-                                        <div class="text-lg font-black text-stone-800">${d}</div>
-                                        <div class="text-[7.5px] text-stone-400 font-bold">${arabicDays[dayOfWeek]}</div>
+                                        <div class="text-base font-black text-stone-800">${d}</div>
                                     </div>
-                                    <span class="text-[9px] bg-[#2d4a43] text-[#e5ad35] font-bold px-1.5 py-0.5 rounded">القسم العملي والأكاديمي المطور</span>
+                                    <span class="text-[9px] bg-[#2d4a43] text-[#e5ad35] font-bold px-1.5 py-0.5 rounded">القسم العملي والأكاديمي</span>
                                 </div>
                             </div>
                     `;
 
-                    if (!isWeekend) {
-                        workTemplate += `
-                            <div class="flex-1 flex flex-col gap-1.5 mt-2 overflow-hidden">
-                                <div class="border rounded p-1 bg-white">
-                                    <div class="grid grid-cols-8 gap-1">
+                    if(!isWeekend) {
+                        workHTML += `
+                            <div class="flex-1 flex flex-col gap-1.5 mt-2">
+                                <div class="grid grid-cols-8 gap-1">
                         `;
-                        for(let line=1; line<=8; line++) {
-                            workTemplate += `<div class="text-center"><div class="text-[7px] bg-stone-100 border text-stone-400">${line}</div><div class="dot-light border border-stone-100 rounded" style="height:42px"></div></div>`;
-                        }
-                        workTemplate += `</div></div>
-                                <div class="flex-1 grid grid-cols-12 gap-2 overflow-hidden">
-                                    <div class="col-span-4 border rounded p-2 bg-white flex flex-col h-full">
-                                        <span class="text-[9px] font-bold block border-b pb-0.5 text-[#2d4a43] mb-1">🎯 قائمة المهام اليومية:</span>
-                                        <div class="flex-1 flex flex-col gap-1.5 mt-1">
+                        for(let l=1; l<=8; l++) workHTML += `<div class="text-center"><div class="text-[7px] bg-stone-100 border text-stone-400">${l}</div><div class="dot-light border border-stone-100 rounded" style="height:40px"></div></div>`;
+                        workHTML += `</div>
+                                <div class="flex-1 grid grid-cols-12 gap-2 mt-1">
+                                    <div class="col-span-4 border rounded p-2 bg-white flex flex-col">
+                                        <span class="text-[8.5px] font-bold border-b text-[#2d4a43]">🎯 قائمة المهام اليومية:</span>
+                                        <div class="flex-1 flex flex-col gap-2 mt-1">
                         `;
-                        // طباعة المهام بمربعات تحقق ناصعة في الـ PDF
-                        for(let tLine=0; tLine<10; tLine++) {
-                            workTemplate += `<div class="task-line"><div class="simple-checkbox border-2 border-[#2d4a43]"></div><div class="flex-1" style="height:18px"></div></div>`;
-                        }
-                        workTemplate += `</div></div>
-                                    <div class="col-span-8 border rounded p-2 bg-white flex flex-col overflow-hidden h-full">
-                                        <div class="grid grid-cols-2 gap-1.5 flex-1">
+                        for(let t=0; t<10; t++) workHTML += `<div class="task-line"><div class="simple-print-box"></div><div class="flex-1" style="height:16px"></div></div>`;
+                        workHTML += `</div></div>
+                                    <div class="col-span-8 border rounded p-2 bg-white grid grid-cols-2 gap-1.5">
                         `;
-                        for(let card=1; card<=4; card++) {
-                            workTemplate += `<div class="border rounded flex flex-col bg-white"><div class="bg-stone-50 text-[7px] px-1 py-0.5 border-b text-stone-400">بطاقة تحضير فني 0${card}</div><div class="ruled-wide flex-1" style="min-height:90px"></div></div>`;
-                        }
-                        workTemplate += `</div></div></div></div>`;
+                        for(let c=1; c<=4; c++) workHTML += `<div class="border rounded flex flex-col"><div class="bg-stone-50 text-[7px] px-1 border-b text-stone-400">بطاقة تحضير فني 0${c}</div><div class="ruled-wide flex-1"></div></div>`;
+                        workHTML += `</div></div></div>`;
                     } else {
-                        workTemplate += `
-                            <div class="flex-1 grid grid-cols-12 gap-2 mt-2 overflow-hidden">
-                                <div class="col-span-5 border rounded bg-white p-2 flex flex-col h-full">
-                                    <span class="text-[9px] font-bold block border-b pb-0.5 text-[#c05c46] mb-1">🌿 مهام واستراحة نهاية الأسبوع:</span>
-                                    <div class="flex-1 ruled-light mt-1"></div>
-                                </div>
-                                <div class="col-span-7 border rounded bg-white p-2 ruled-wide h-full"></div>
+                        workHTML += `
+                            <div class="flex-1 grid grid-cols-12 gap-2 mt-2">
+                                <div class="col-span-5 border rounded p-2 flex flex-col bg-white"><span class="text-[9px] font-bold text-[#c05c46] border-b">🌿 استراحة نهاية الأسبوع</span><div class="flex-1 ruled-light mt-1"></div></div>
+                                <div class="col-span-7 border rounded p-2 ruled-wide bg-white"></div>
                             </div>
                         `;
                     }
+                    workHTML += `</main>`;
+                    pageWork.innerHTML = workHTML;
+                    stage.appendChild(pageWork);
 
-                    workTemplate += `</main>`;
-                    dayPageWork.innerHTML = workTemplate;
-                    stage.appendChild(dayPageWork);
-
-                    const dayPagePersonal = document.createElement('div');
-                    dayPagePersonal.className = "pdf-page";
-                    
-                    let personalTemplate = `
+                    // 2. صفحة القسم الشخصي والمالي
+                    const pagePersonal = document.createElement('div');
+                    pagePersonal.className = "pdf-page";
+                    let persHTML = `
                         <aside class="w-24 bg-[#14201c] text-stone-400 flex flex-col items-center py-4 text-center justify-between h-full">
-                            <div class="w-full">
-                                <a href="#pdf-page-index" class="text-[10px] font-black text-[#e5ad35] block bg-[#1b2b26] py-1 mb-2 rounded mx-1">🏠 الفهرس</a>
-                                <div class="text-[9px] font-bold text-stone-300">${arabicMonths[m]} ${y}</div>
-                            </div>
-                            <div class="text-[8px] text-stone-600 font-mono">PAGE ${pageNumberCounter++}</div>
+                            <span class="text-[10px] font-bold text-stone-300">${arabicMonths[m]} ${y}</span>
+                            <span class="text-[8px] text-stone-600 font-mono">PAGE ${pageCounter++}</span>
                         </aside>
                         <main class="flex-1 p-4 flex flex-col justify-between h-full">
-                            <div class="flex justify-between items-start border-b pb-1.5">
+                            <div class="flex justify-between items-start border-b pb-1">
                                 <div class="flex items-center gap-3">
-                                    <div class="bg-white border rounded w-16 text-center overflow-hidden">
+                                    <div class="bg-white border rounded w-14 text-center">
                                         <div class="bg-[#2a6a7c] text-white text-[8px] font-bold py-0.5">${arabicMonths[m]}</div>
-                                        <div class="text-lg font-black text-stone-800">${d}</div>
-                                        <div class="text-[7.5px] text-stone-400 font-bold">${arabicDays[dayOfWeek]}</div>
+                                        <div class="text-base font-black text-stone-800">${d}</div>
                                     </div>
                                     <span class="text-[9px] bg-[#2a6a7c] text-white font-bold px-1.5 py-0.5 rounded">القسم الشخصي والمالي المتوازن</span>
                                 </div>
                             </div>
-                            <div class="flex-1 grid grid-cols-12 gap-2 mt-2 overflow-hidden h-full">
-                                <div class="col-span-4 border rounded bg-white p-2 flex flex-col h-full">
-                                    <span class="text-[9px] font-bold block border-b pb-0.5 text-[#1f4e5b] mb-1">🍏 المسؤوليات الشخصية والعائلية:</span>
+                            <div class="flex-1 grid grid-cols-12 gap-2 mt-2">
+                                <div class="col-span-4 border rounded p-2 bg-white flex flex-col">
+                                    <span class="text-[8.5px] font-bold text-[#1f4e5b] border-b">🍏 المسؤوليات الشخصية والعائلية:</span>
                                     <div class="flex-1 ruled-light mt-1"></div>
                                 </div>
                     `;
 
-                    if (!isWeekend) {
-                        personalTemplate += `
-                            <div class="col-span-8 border rounded bg-white p-2 flex flex-col justify-between h-full overflow-hidden">
+                    if(!isWeekend) {
+                        persHTML += `
+                            <div class="col-span-8 border rounded p-2 bg-white flex flex-col justify-between">
                                 <div class="flex-1 flex flex-col overflow-hidden">
-                                    <span class="text-[9px] font-bold block border-b pb-0.5 text-stone-700 mb-1">📊 دفتر المحاسبة المالي اليومي العتيق:</span>
-                                    <div class="flex-1 overflow-y-auto mt-1">
-                                        <table class="accounting-table">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 55%;">بيان المعاملة المالية ونوع النفقة</th>
-                                                    <th style="width: 22.5%; color: #16a34a;">وارد (+)</th>
-                                                    <th style="width: 22.5%; color: #dc2626;">صادر (-)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                    <span class="text-[8.5px] font-bold border-b text-stone-700">📊 دفتر المحاسبة المالي اليومي:</span>
+                                    <table class="accounting-table mt-1">
+                                        <thead><tr><th style="width:60%">بيان المعاملة المالية</th><th style="width:20%">وارد</th><th style="width:20%">صادر</th></tr></thead>
+                                        <tbody>
                         `;
-                        for(let r=0; r<16; r++) {
-                            personalTemplate += `<tr><td class="h-6"></td><td></td><td></td></tr>`;
-                        }
-                        personalTemplate += `
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="border-t border-stone-300 pt-1 grid grid-cols-12 text-center text-[9px] font-bold bg-stone-50 p-1 rounded mt-2 flex-shrink-0">
-                                    <div class="col-span-6 text-right pr-2 border-l border-stone-300 text-stone-600">إجمالي الجملة الحسابية:</div>
-                                    <div class="col-span-3 text-emerald-700 border-l border-stone-300"></div>
-                                    <div class="col-span-3 text-red-700"></div>
-                                    <div class="col-span-12 border-t border-dashed border-stone-300 mt-1 pt-1 grid grid-cols-12">
-                                        <div class="col-span-6 text-right pr-2 font-black text-[#1b2b26]">صافي رصيد اليوم المتبقي:</div>
-                                        <div class="col-span-6 text-center font-black text-blue-800 bg-white border border-stone-200 rounded py-0.5 mx-4"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                        for(let r=0; r<14; r++) persHTML += `<tr><td class="h-5"></td><td></td><td></td></tr>`;
+                        persHTML += `</tbody></table></div></div>`;
                     } else {
-                        personalTemplate += `
-                            <div class="col-span-8 border rounded bg-amber-50/40 border-amber-200 p-2 flex flex-col justify-between h-full overflow-hidden">
-                                <div class="flex-1 flex flex-col">
-                                    <span class="text-[9px] font-bold block border-b pb-0.5 text-amber-900 mb-1">💳 بطاقة حسابات الأسبوع المصغرة والتحليل المالي:</span>
-                                    <div class="grid grid-cols-2 gap-2 mt-2">
-                                        <div class="border rounded bg-white p-1.5"><span class="text-[7.5px] font-bold text-stone-500 block">🛍️ جملة نفقات الأسبوع التراكمية:</span><div class="h-8 border-b border-dashed border-stone-200 mt-1"></div></div>
-                                        <div class="border rounded bg-white p-1.5"><span class="text-[7.5px] font-bold text-stone-500 block">📈 الميزانية الأسبوعية المتبقية:</span><div class="h-8 border-b border-dashed border-stone-200 mt-1"></div></div>
-                                    </div>
-                                    <span class="text-[8.5px] font-bold text-stone-600 block mt-4 mb-1">📝 ملاحظات مالية وتوفيرية للأسبوع القادم:</span>
-                                    <div class="flex-1 ruled-light min-height-[150px]"></div>
-                                </div>
-                                <div class="bg-amber-900 text-[#e5ad35] text-[8px] p-1 font-bold rounded text-center mt-2">مراجعة ختامية معتمدة للحسابات الأسبوعية الشخصية (MYH)</div>
-                            </div>
+                        persHTML += `
+                            <div class="col-span-8 border rounded bg-amber-50/40 p-2 flex flex-col justify-between">
+                                <div class="flex-1"><span class="text-[9px] font-bold text-amber-900 border-b">💳 بطاقة حسابات الأسبوع والتحليل المالي:</span>
+                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                    <div class="border rounded bg-white p-1"><span class="text-[7.5px] font-bold text-stone-500 block">🛍️ نفقات الأسبوع:</span><div class="h-6 border-b border-dashed mt-1"></div></div>
+                                    <div class="border rounded bg-white p-1"><span class="text-[7.5px] font-bold text-stone-500 block">📈 الميزانية المتبقية:</span><div class="h-6 border-b border-dashed mt-1"></div></div>
+                                </div></div></div>
                         `;
                     }
-
-                    personalTemplate += `</div></main>`;
-                    dayPagePersonal.innerHTML = personalTemplate;
-                    stage.appendChild(dayPagePersonal);
+                    persHTML += `</div></main>`;
+                    pagePersonal.innerHTML = persHTML;
+                    stage.appendChild(pagePersonal);
                 }
             }
 
-            progress.style.width = "60%";
-            txtStatus.textContent = "جاري حزم المستند وضبط محاذاة الخطوط الطولية لـ iPad 10.2...";
-            
-            const opt = {
-                margin: 0,
-                filename: `MYH_Premium_Planner_Package_${startIndex+1}_to_${endIndex}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF: { unit: 'px', format: [1024, 768], orientation: 'landscape' }
-            };
-
-            html2pdf().set(opt).from(stage).save().then(() => {
-                progress.style.width = "100%";
-                txtStatus.textContent = "🎉 تم تحميل الحزمة المحددة بالتحديثات الطولية بنجاح ومطابقة الأبعاد للآيباد!";
-                setTimeout(() => { loadingBar.classList.add('hidden'); txtStatus.textContent = ''; }, 3500);
-            });
+            // تفعيل أمر الطباعة الأصيل للمتصفح ونظام iOS فوراً
+            setTimeout(() => {
+                window.print();
+            }, 500);
         }
     </script>
 </body>
