@@ -1,61 +1,41 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>MYH Ultimate Planner - 10.2 Inch iPad</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* أبعاد الآيباد 10.2 الثابتة للطباعة */
         @page { size: 1024px 768px landscape; margin: 0; }
-        body { margin: 0; padding: 0; background: #d0ccc0; font-family: 'Tajawal', sans-serif; }
-        
-        .ipad-page {
-            width: 1024px; height: 768px;
-            background: white;
-            position: relative;
-            overflow: hidden;
-            page-break-after: always;
-            display: flex;
-        }
-
-        /* تنسيق دقيق للارتباطات التشعبية */
-        .day-link { text-decoration: none; display: block; cursor: pointer; transition: 0.1s; }
-        .day-link:hover { background: #e5ad35; color: white; }
-
-        @media print {
-            body { background: white; }
-            .no-print { display: none; }
-        }
+        body { margin: 0; background: #bcbab0; padding: 20px; }
+        .page { width: 1024px; height: 768px; background: white; margin-bottom: 20px; display: flex; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        @media print { body { padding: 0; } .page { margin: 0; box-shadow: none; page-break-after: always; } }
     </style>
 </head>
 <body>
-
-    <div id="ui-panel" class="no-print p-10 text-center">
-        <h1 class="text-2xl font-bold mb-4">محرك التوليد الدقيق لـ iPad 10.2</h1>
-        <button onclick="generatePlanner()" class="bg-black text-white px-8 py-4 rounded-lg font-bold hover:bg-gray-800">
-            توليد الملف الكامل (بأبعاد 10.2 المعتمدة)
-        </button>
-        <p class="mt-4 text-sm text-gray-700">تأكد من اختيار "حفظ كـ PDF" وإلغاء الهوامش (Margins: None)</p>
+    <div style="padding: 20px; background: white; border-radius: 10px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">أداة توليد الشهر (النسخة المستقرة)</h2>
+        <p>اختر الشهر والسن واضغط توليد:</p>
+        <input type="number" id="year" value="2026" placeholder="السنة">
+        <input type="number" id="month" value="6" placeholder="الشهر (1-12)">
+        <button onclick="generateMonth()" style="padding: 10px 20px; background: green; color: white; border: none; cursor: pointer;">توليد هذا الشهر</button>
     </div>
-
-    <div id="planner-stage"></div>
+    <div id="canvas"></div>
 
     <script>
-        function generatePlanner() {
-            const stage = document.getElementById('planner-stage');
-            stage.innerHTML = '<h1>جاري بناء الصفحات... لا تغلق المتصفح</h1>';
+        function generateMonth() {
+            const y = document.getElementById('year').value;
+            const m = document.getElementById('month').value - 1;
+            const canvas = document.getElementById('canvas');
+            canvas.innerHTML = '';
             
-            // هنا يتم حقن الصفحات برمجياً - قمت بضبط الأبعاد 1024x768px
-            // لضمان تطابقها تماماً مع مساحة عمل GoodNotes على iPad 10.2
-            
-            // [ملاحظة: هذا الكود يقوم بإنشاء هيكل الصفحات، 
-            // سأقوم بتوليد الصفحات الأساسية الآن]
-            
-            alert("تم إعداد الصفحات. الآن اضغط (Ctrl+P) أو (Cmd+P) واختر 'Save as PDF' ثم اجعل الهوامش None.");
-            
-            // منطق بناء الروابط التشعبية (Hyperlinks)
-            // نستخدم المعرفات (IDs) للربط بين الفهرس والأيام
-            // مثل: <a href="#day-2026-6-1">1</a>
+            const days = new Date(y, m + 1, 0).getDate();
+            for(let d=1; d<=days; d++) {
+                const div = document.createElement('div');
+                div.className = 'page';
+                div.innerHTML = `<div style="padding: 40px; width: 100%;">
+                    <h1>التاريخ: ${d}/${m+1}/${y}</h1>
+                    <div style="border: 2px solid #ccc; height: 500px; margin-top: 20px;"></div>
+                </div>`;
+                canvas.appendChild(div);
+            }
+            alert("تم التوليد! الآن اضغط (مشاركة -> طباعة -> حفظ كـ PDF)");
         }
     </script>
 </body>
