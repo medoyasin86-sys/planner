@@ -1,51 +1,55 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>Planner Generator Pro</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Planner Generator - Final</title>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 </head>
 <body>
-
     <div style="padding: 50px; text-align: center;">
-        <h1>MYH Planner Generator (Direct PDF)</h1>
-        <button onclick="generatePDF()" style="padding: 20px; font-size: 20px; cursor: pointer; background: red; color: white;">توليد ملف الـ PDF الآن</button>
+        <h1>MYH Planner Generator - Final Attempt</h1>
+        <button id="btn" style="padding: 20px; font-size: 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 10px;">بدء التوليد (المباشر)</button>
         <p id="status"></p>
     </div>
 
     <script>
-        async function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('l', 'mm', 'a4'); // l = landscape, mm = مليمتر
+        document.getElementById('btn').addEventListener('click', async () => {
             const status = document.getElementById('status');
-
-            status.textContent = "جاري البناء، يرجى الانتظار...";
-
-            const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-
-            // حلقة تكرارية لبناء الشهور والأيام
+            status.textContent = "جاري البناء... انتظر قليلاً";
+            
+            const { PDFDocument, rgb, StandardFonts } = PDFLib;
+            const pdfDoc = await PDFDocument.create();
+            
+            // تحميل خط عربي (ملاحظة: الخطوط العربية معقدة، سنبدأ بالإنجليزية للتجربة ثم نطور)
+            // إذا كنت تريد العربية، سنحتاج لملف خط .ttf، سنبدأ هنا بالنصوص للتأكد من عمل الصفحة
+            
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
             for (let m = 0; m < months.length; m++) {
                 let days = new Date(2026, m + 1, 0).getDate();
-                
                 for (let d = 1; d <= days; d++) {
-                    // إضافة صفحة جديدة (لا نضيف صفحة قبل الأولى)
-                    if (m > 0 || d > 1) doc.addPage();
-                    
-                    // رسم المحتوى
-                    doc.setFontSize(20);
-                    doc.text(`شهر ${months[m]} - يوم ${d}`, 20, 20);
-                    doc.setFontSize(12);
-                    doc.text("هذا البلانر تم إنشاؤه ببرمجة مباشرة لضمان عدم حدوث أخطاء.", 20, 40);
-                    
-                    // إمكانية إضافة إحداثيات للروابط (Anchors)
-                    // doc.link(20, 50, 50, 10, { url: '#index' }); 
+                    const page = pdfDoc.addPage([595, 842]); // حجم A4
+                    page.drawText(`${months[m]} 2026 - Day ${d}`, {
+                        x: 50,
+                        y: 800,
+                        size: 30,
+                        color: rgb(0, 0, 0),
+                    });
+                    page.drawText("My Custom Planner - MYH", { x: 50, y: 750, size: 15 });
                 }
             }
 
-            // حفظ الملف
-            doc.save('MYH_Planner_2026.pdf');
-            status.textContent = "تم بنجاح! الملف جاهز للتحميل.";
-        }
+            const pdfBytes = await pdfDoc.save();
+            
+            // تحميل الملف
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'MYH_Planner_Final.pdf';
+            link.click();
+            
+            status.textContent = "تم التوليد بنجاح! تحقق من التحميل.";
+        });
     </script>
 </body>
 </html>
